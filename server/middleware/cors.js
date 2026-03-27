@@ -7,9 +7,13 @@ function createCorsMiddleware() {
   const port = process.env.PORT || 3000;
   const selfOrigins = [`http://localhost:${port}`, `http://127.0.0.1:${port}`];
 
+  // Development: allow all origins
+  if (process.env.NODE_ENV !== 'production') {
+    return cors({ origin: true, credentials: true });
+  }
+
   return cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin (server-to-server, curl, same-origin in some browsers)
       if (!origin) return callback(null, true);
       if (allowedOrigins.includes(origin) || selfOrigins.includes(origin)) {
         return callback(null, true);

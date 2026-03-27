@@ -15,7 +15,6 @@
       min-height: 100vh;
     }
 
-    /* --- Sidebar --- */
     .sidebar {
       position: fixed;
       top: 0; left: 0;
@@ -29,11 +28,8 @@
       z-index: 10;
     }
     .sidebar .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 32px;
-      padding: 0 8px;
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 32px; padding: 0 8px;
     }
     .sidebar .brand-icon {
       width: 32px; height: 32px;
@@ -42,227 +38,110 @@
       display: flex; align-items: center; justify-content: center;
       font-weight: 700; font-size: 14px; color: #fff;
     }
-    .sidebar .brand span {
-      font-size: 15px;
-      font-weight: 600;
-      color: #fafafa;
-    }
+    .sidebar .brand span { font-size: 15px; font-weight: 600; color: #fafafa; }
     .sidebar nav { flex: 1; }
     .sidebar nav a {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: 8px;
-      color: #a1a1aa;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      transition: all .15s;
-      margin-bottom: 2px;
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 8px;
+      color: #a1a1aa; text-decoration: none;
+      font-size: 14px; font-weight: 500;
+      transition: all .15s; margin-bottom: 2px;
     }
     .sidebar nav a:hover { background: #27272a; color: #fafafa; }
     .sidebar nav a.active { background: rgba(99,102,241,0.12); color: #818cf8; }
     .sidebar nav a svg { width: 18px; height: 18px; flex-shrink: 0; }
-    .sidebar-footer {
-      border-top: 1px solid #27272a;
-      padding-top: 16px;
-    }
+    .sidebar-footer { border-top: 1px solid #27272a; padding-top: 16px; }
     .sidebar-footer a {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: 8px;
-      color: #71717a;
-      text-decoration: none;
-      font-size: 13px;
-      transition: all .15s;
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 8px;
+      color: #71717a; text-decoration: none; font-size: 13px; transition: all .15s;
     }
     .sidebar-footer a:hover { color: #fca5a5; background: rgba(239,68,68,0.08); }
     .sidebar-footer a svg { width: 18px; height: 18px; flex-shrink: 0; }
 
-    /* --- Main --- */
-    .main {
-      margin-left: 240px;
-      padding: 32px 40px;
-      min-height: 100vh;
-    }
+    .main { margin-left: 240px; padding: 32px 40px; min-height: 100vh; }
 
-    /* --- Header --- */
     .page-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      display: flex; justify-content: space-between; align-items: center;
       margin-bottom: 32px;
     }
-    .page-header h1 {
-      font-size: 22px;
-      font-weight: 600;
-      color: #fafafa;
-    }
-    .page-header .subtitle {
-      font-size: 13px;
-      color: #71717a;
-      margin-top: 4px;
-    }
-    .filters {
-      display: flex;
-      gap: 10px;
-    }
+    .page-header h1 { font-size: 22px; font-weight: 600; color: #fafafa; }
+    .page-header .subtitle { font-size: 13px; color: #71717a; margin-top: 4px; }
+    .filters { display: flex; gap: 10px; }
     .filters select {
-      padding: 8px 14px;
-      background: #18181b;
-      border: 1px solid #27272a;
-      border-radius: 8px;
-      font-size: 13px;
-      color: #e4e4e7;
-      cursor: pointer;
-      transition: border-color .2s;
-      -webkit-appearance: none;
-      appearance: none;
+      padding: 8px 14px; background: #18181b;
+      border: 1px solid #27272a; border-radius: 8px;
+      font-size: 13px; color: #e4e4e7; cursor: pointer;
+      -webkit-appearance: none; appearance: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2371717a' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
+      background-repeat: no-repeat; background-position: right 12px center;
       padding-right: 32px;
     }
     .filters select:focus { outline: none; border-color: #6366f1; }
 
-    /* --- Stats Grid --- */
     .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 28px;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px; margin-bottom: 28px;
     }
     .stat-card {
-      background: #18181b;
-      border: 1px solid #27272a;
-      padding: 20px 24px;
-      border-radius: 12px;
-      transition: border-color .2s;
+      background: #18181b; border: 1px solid #27272a;
+      padding: 20px 24px; border-radius: 12px; transition: border-color .2s;
     }
     .stat-card:hover { border-color: #3f3f46; }
     .stat-card .label {
-      font-size: 12px;
-      font-weight: 500;
-      color: #71717a;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 14px;
+      font-size: 12px; font-weight: 500; color: #71717a;
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;
     }
-    .stat-card .site-val {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 4px 0;
-    }
-    .stat-card .site-val + .site-val {
-      border-top: 1px solid #27272a;
-      margin-top: 6px;
-      padding-top: 10px;
-    }
-    .stat-card .site-name {
-      font-size: 13px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .stat-card .site-name .dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      display: inline-block;
-    }
-    .dot-travel { background: #6366f1; }
-    .dot-icons { background: #22c55e; }
     .stat-card .num {
-      font-size: 22px;
-      font-weight: 700;
-      color: #fafafa;
+      font-size: 28px; font-weight: 700; color: #fafafa;
       font-variant-numeric: tabular-nums;
     }
+    .stat-card .sub {
+      font-size: 12px; color: #52525b; margin-top: 4px;
+    }
 
-    /* --- Chart Cards --- */
+    .page-stats-section { margin-bottom: 28px; }
+    .page-stats-section h2 {
+      font-size: 16px; font-weight: 600; color: #a1a1aa;
+      margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+
     .chart-card {
-      background: #18181b;
-      border: 1px solid #27272a;
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 20px;
+      background: #18181b; border: 1px solid #27272a;
+      border-radius: 12px; padding: 24px; margin-bottom: 20px;
     }
-    .chart-card h3 {
-      font-size: 14px;
-      font-weight: 600;
-      color: #fafafa;
-      margin-bottom: 20px;
-    }
-    .charts-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-bottom: 20px;
-    }
+    .chart-card h3 { font-size: 14px; font-weight: 600; color: #fafafa; margin-bottom: 20px; }
     canvas { max-height: 300px; }
 
-    /* --- Recent List --- */
     .recent-card {
-      background: #18181b;
-      border: 1px solid #27272a;
-      border-radius: 12px;
-      padding: 24px;
+      background: #18181b; border: 1px solid #27272a;
+      border-radius: 12px; padding: 24px;
     }
-    .recent-card h3 {
-      font-size: 14px;
-      font-weight: 600;
-      color: #fafafa;
-      margin-bottom: 16px;
-    }
+    .recent-card h3 { font-size: 14px; font-weight: 600; color: #fafafa; margin-bottom: 16px; }
     .recent-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 0;
-      border-bottom: 1px solid #1e1e21;
-      font-size: 13px;
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 0; border-bottom: 1px solid #1e1e21; font-size: 13px;
     }
     .recent-item:last-child { border-bottom: none; }
-    .recent-time {
-      color: #52525b;
-      min-width: 72px;
-      font-size: 12px;
-      font-variant-numeric: tabular-nums;
-    }
+    .recent-time { color: #52525b; min-width: 72px; font-size: 12px; font-variant-numeric: tabular-nums; }
     .badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 2px 8px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.3px;
+      display: inline-flex; align-items: center;
+      padding: 2px 8px; border-radius: 6px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.3px;
     }
-    .badge-travel { background: rgba(99,102,241,0.15); color: #818cf8; }
-    .badge-icons { background: rgba(34,197,94,0.15); color: #4ade80; }
-    .badge-pageview { background: rgba(161,161,170,0.1); color: #a1a1aa; }
-    .badge-event { background: rgba(251,191,36,0.15); color: #fbbf24; }
+    .badge-enter { background: rgba(34,197,94,0.15); color: #4ade80; }
+    .badge-leave { background: rgba(251,191,36,0.15); color: #fbbf24; }
+    .badge-page { background: rgba(99,102,241,0.15); color: #818cf8; }
     .recent-path { color: #a1a1aa; }
 
-    /* --- Responsive --- */
-    @media (max-width: 1024px) {
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
-      .charts-row { grid-template-columns: 1fr; }
-    }
     @media (max-width: 768px) {
       .sidebar { display: none; }
       .main { margin-left: 0; padding: 20px 16px; }
-      .stats-grid { grid-template-columns: 1fr 1fr; }
       .page-header { flex-direction: column; align-items: flex-start; gap: 16px; }
     }
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="brand">
       <div class="brand-icon">A</div>
@@ -282,18 +161,15 @@
     </div>
   </aside>
 
-  <!-- Main Content -->
   <div class="main">
     <div class="page-header">
       <div>
         <h1>Dashboard</h1>
-        <div class="subtitle">Overview of your analytics data</div>
+        <div class="subtitle">Page analytics overview</div>
       </div>
       <div class="filters">
         <select id="site-filter">
           <option value="all">All Sites</option>
-          <option value="travel">Travel</option>
-          <option value="icons">Icons</option>
         </select>
         <select id="time-range">
           <option value="7">Last 7 days</option>
@@ -303,67 +179,11 @@
       </div>
     </div>
 
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="label">Today Pageviews</div>
-        <div class="site-val">
-          <span class="site-name"><span class="dot dot-travel"></span>Travel</span>
-          <span class="num" id="today-travel">0</span>
-        </div>
-        <div class="site-val">
-          <span class="site-name"><span class="dot dot-icons"></span>Icons</span>
-          <span class="num" id="today-icons">0</span>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="label">Week Pageviews</div>
-        <div class="site-val">
-          <span class="site-name"><span class="dot dot-travel"></span>Travel</span>
-          <span class="num" id="week-travel">0</span>
-        </div>
-        <div class="site-val">
-          <span class="site-name"><span class="dot dot-icons"></span>Icons</span>
-          <span class="num" id="week-icons">0</span>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="label">Total Pageviews</div>
-        <div class="site-val">
-          <span class="site-name"><span class="dot dot-travel"></span>Travel</span>
-          <span class="num" id="total-travel">0</span>
-        </div>
-        <div class="site-val">
-          <span class="site-name"><span class="dot dot-icons"></span>Icons</span>
-          <span class="num" id="total-icons">0</span>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="label">Unique Sessions</div>
-        <div class="site-val">
-          <span class="site-name"><span class="dot dot-travel"></span>Travel</span>
-          <span class="num" id="sessions-travel">0</span>
-        </div>
-        <div class="site-val">
-          <span class="site-name"><span class="dot dot-icons"></span>Icons</span>
-          <span class="num" id="sessions-icons">0</span>
-        </div>
-      </div>
-    </div>
+    <div id="overview-container"></div>
 
     <div class="chart-card">
-      <h3>Daily Pageview Trend</h3>
+      <h3>Daily Enter Trend</h3>
       <canvas id="dailyChart"></canvas>
-    </div>
-
-    <div class="charts-row">
-      <div class="chart-card">
-        <h3>Top 10 Pages</h3>
-        <canvas id="topPagesChart"></canvas>
-      </div>
-      <div class="chart-card">
-        <h3>Top 10 Events</h3>
-        <canvas id="topEventsChart"></canvas>
-      </div>
     </div>
 
     <div class="recent-card">

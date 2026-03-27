@@ -23,7 +23,7 @@ app.use(cookieParser());
 // CORS
 app.use(createCorsMiddleware());
 
-// Serve SDK static files
+// Serve SDK
 app.use('/sdk', express.static(path.join(__dirname, '..', 'sdk')));
 
 // Root redirect
@@ -52,7 +52,7 @@ app.post('/dashboard/login', (req, res) => {
   if (password === process.env.DASHBOARD_SECRET) {
     res.cookie('dashboard_token', process.env.DASHBOARD_SECRET, {
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      maxAge: 24 * 60 * 60 * 1000,
       sameSite: 'lax'
     });
     return res.redirect('/dashboard');

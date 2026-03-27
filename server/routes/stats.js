@@ -1,141 +1,108 @@
 const express = require('express');
 const router = express.Router();
-const Pageview = require('../models/Pageview');
-const Event = require('../models/Event');
+const PageAnalyticsDailyStat = require('../models/PageAnalyticsDailyStat');
+const PageAnalyticsEvent = require('../models/PageAnalyticsEvent');
 
-// GET /api/stats/overview
+// GET /api/stats/sites — return all known sites
+router.get('/sites', async (req, res) => {
+  try {
+    const sites = await PageAnalyticsDailyStat.distinct('site');
+    res.json({ sites });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: 'internal error' });
+  }
+});
+
+// GET /api/stats/overview?site=xxx
 router.get('/overview', async (req, res) => {
   try {
-    const { from, to } = req.query;
-    const now = new Date();
-    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const weekStart = new Date(todayStart);
-    weekStart.setDate(weekStart.getDate() - 7);
+    const { site } = req.query;
+    const match = site ? { site } : {};
 
-    const dateFilter = {};
-    if (from) dateFilter.$gte = new Date(from);
-    if (to) dateFilter.$lte = new Date(to);
+    const today = new Date().toISOString().slice(0, 10);
+    const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString().slice(0, 10);
 
-    const result = {};
-    for (const site of ['travel', 'icons']) {
-      const baseQuery = { site };
-      if (from || to) baseQuery.createdAt = dateFilter;
+    // Get all pages for the site(s)
+    const allStats = await PageAnalyticsDailyStat.find(match).lean();
 
-      const totalPageviews = await Pageview.countDocuments(baseQuery);
-      const uniqueSessions = await Pageview.distinct('sessionId', baseQuery).then(s => s.filter(Boolean).length);
-      const todayPageviews = await Pageview.countDocuments({ site, createdAt: { $gte: todayStart } });
-      const weekPageviews = await Pageview.countDocuments({ site, createdAt: { $gte: weekStart } });
-
-      result[site] = { totalPageviews, uniqueSessions, todayPageviews, weekPageviews };
+    // Group by page
+    const pages = {};
+    for (const row of allStats) {
+      if (!pages[row.page]) {
+        pages[row.page] = { totalEnter: 0, totalDurationSec: 0, todayEnter: 0, weekEnter: 0 };
+      }
+      const p = pages[row.page];
+      p.totalEnter += row.enterCount;
+      p.totalDurationSec += row.totalDurationMs;
+      if (row.dateKey === today) {
+        p.todayEnter += row.enterCount;
+      }
+      if (row.dateKey >= weekAgo) {
+        p.weekEnter += row.enterCount;
+      }
     }
 
-    res.json(result);
+    // Convert ms to seconds and calc avg
+    for (const key of Object.keys(pages)) {
+      const p = pages[key];
+      p.totalDurationSec = Math.round(p.totalDurationSec / 1000);
+      p.avgDurationSec = p.totalEnter > 0 ? Math.round(p.totalDurationSec / p.totalEnter) : 0;
+    }
+
+    res.json({ site: site || 'all', pages });
   } catch (err) {
     res.status(500).json({ ok: false, error: 'internal error' });
   }
 });
 
-// GET /api/stats/daily
+// GET /api/stats/daily?site=xxx&page=xxx&from=&to=
 router.get('/daily', async (req, res) => {
   try {
-    const { site, from, to } = req.query;
+    const { site, page, from, to } = req.query;
     if (!site) return res.status(400).json({ ok: false, error: 'site is required' });
 
     const match = { site };
+    if (page) match.page = page;
     if (from || to) {
-      match.createdAt = {};
-      if (from) match.createdAt.$gte = new Date(from);
-      if (to) match.createdAt.$lte = new Date(to);
+      match.dateKey = {};
+      if (from) match.dateKey.$gte = from;
+      if (to) match.dateKey.$lte = to;
     }
 
-    const pageviews = await Pageview.aggregate([
-      { $match: match },
-      { $group: { _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } }, count: { $sum: 1 } } },
-      { $sort: { _id: 1 } },
-      { $project: { _id: 0, date: '$_id', count: 1 } }
-    ]);
+    const stats = await PageAnalyticsDailyStat.find(match).sort({ dateKey: 1 }).lean();
 
-    const events = await Event.aggregate([
-      { $match: match },
-      { $group: { _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } }, count: { $sum: 1 } } },
-      { $sort: { _id: 1 } },
-      { $project: { _id: 0, date: '$_id', count: 1 } }
-    ]);
-
-    res.json({ site, pageviews, events });
-  } catch (err) {
-    res.status(500).json({ ok: false, error: 'internal error' });
-  }
-});
-
-// GET /api/stats/top-pages
-router.get('/top-pages', async (req, res) => {
-  try {
-    const { site, limit } = req.query;
-    if (!site) return res.status(400).json({ ok: false, error: 'site is required' });
-
-    const pages = await Pageview.aggregate([
-      { $match: { site } },
-      { $group: { _id: '$path', count: { $sum: 1 } } },
-      { $sort: { count: -1 } },
-      { $limit: parseInt(limit) || 10 },
-      { $project: { _id: 0, path: '$_id', count: 1 } }
-    ]);
-
-    res.json({ site, pages });
-  } catch (err) {
-    res.status(500).json({ ok: false, error: 'internal error' });
-  }
-});
-
-// GET /api/stats/events
-router.get('/events', async (req, res) => {
-  try {
-    const { site, from, to } = req.query;
-    if (!site) return res.status(400).json({ ok: false, error: 'site is required' });
-
-    const match = { site };
-    if (from || to) {
-      match.createdAt = {};
-      if (from) match.createdAt.$gte = new Date(from);
-      if (to) match.createdAt.$lte = new Date(to);
+    // Group by date
+    const byDate = {};
+    for (const row of stats) {
+      if (!byDate[row.dateKey]) byDate[row.dateKey] = { date: row.dateKey, enterCount: 0, totalDurationSec: 0 };
+      byDate[row.dateKey].enterCount += row.enterCount;
+      byDate[row.dateKey].totalDurationSec += Math.round(row.totalDurationMs / 1000);
     }
 
-    const events = await Event.aggregate([
-      { $match: match },
-      { $group: { _id: '$eventName', count: { $sum: 1 } } },
-      { $sort: { count: -1 } },
-      { $project: { _id: 0, eventName: '$_id', count: 1 } }
-    ]);
-
-    res.json({ site, events });
+    res.json({ site, daily: Object.values(byDate) });
   } catch (err) {
     res.status(500).json({ ok: false, error: 'internal error' });
   }
 });
 
-// GET /api/stats/recent
+// GET /api/stats/recent?site=xxx
 router.get('/recent', async (req, res) => {
   try {
     const { site } = req.query;
     if (!site) return res.status(400).json({ ok: false, error: 'site is required' });
 
-    const pageviews = await Pageview.find({ site })
+    const events = await PageAnalyticsEvent.find({ site })
       .sort({ createdAt: -1 })
       .limit(50)
       .lean();
 
-    const events = await Event.find({ site })
-      .sort({ createdAt: -1 })
-      .limit(50)
-      .lean();
-
-    const items = [
-      ...pageviews.map(p => ({ type: 'pageview', path: p.path, createdAt: p.createdAt })),
-      ...events.map(e => ({ type: 'event', eventName: e.eventName, path: e.path, createdAt: e.createdAt }))
-    ]
-      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-      .slice(0, 50);
+    const items = events.map(e => ({
+      page: e.page,
+      path: e.path,
+      action: e.action,
+      durationSec: Math.round((e.durationMs || 0) / 1000),
+      createdAt: e.createdAt
+    }));
 
     res.json({ site, items });
   } catch (err) {
