@@ -1,6 +1,12 @@
 const TOKEN = document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith('dashboard_token='))?.split('=')[1] || '';
 const API = '';
 
+// Chart.js dark theme defaults
+Chart.defaults.color = '#71717a';
+Chart.defaults.borderColor = '#27272a';
+Chart.defaults.plugins.legend.labels.usePointStyle = true;
+Chart.defaults.plugins.legend.labels.pointStyleWidth = 8;
+
 async function apiFetch(path) {
   const res = await fetch(API + path, {
     headers: { 'Authorization': 'Bearer ' + TOKEN }
@@ -44,14 +50,16 @@ async function loadDaily() {
   for (const site of sites) {
     const data = await apiFetch(`/api/stats/daily?site=${site}&from=${from}&to=${to}`);
     datasets.push({
-      label: site.charAt(0).toUpperCase() + site.slice(1) + ' Pageviews',
+      label: site.charAt(0).toUpperCase() + site.slice(1),
       data: data.pageviews.map(d => ({ x: d.date, y: d.count })),
-      borderColor: site === 'travel' ? '#4f86f7' : '#2ec27e',
-      backgroundColor: site === 'travel' ? 'rgba(79,134,247,0.1)' : 'rgba(46,194,126,0.1)',
+      borderColor: site === 'travel' ? '#6366f1' : '#22c55e',
+      backgroundColor: site === 'travel' ? 'rgba(99,102,241,0.08)' : 'rgba(34,197,94,0.08)',
       borderWidth: 2,
-      tension: 0.3,
+      tension: 0.4,
       fill: true,
-      borderDash: site === 'icons' ? [5, 5] : []
+      pointRadius: 3,
+      pointBackgroundColor: site === 'travel' ? '#6366f1' : '#22c55e',
+      pointBorderWidth: 0,
     });
   }
 
@@ -61,7 +69,11 @@ async function loadDaily() {
     data: { datasets },
     options: {
       responsive: true,
-      scales: { x: { type: 'category' }, y: { beginAtZero: true } },
+      interaction: { intersect: false, mode: 'index' },
+      scales: {
+        x: { type: 'category', grid: { display: false } },
+        y: { beginAtZero: true, grid: { color: '#1e1e21' } }
+      },
       plugins: { legend: { position: 'top' } }
     }
   });
@@ -80,13 +92,18 @@ async function loadTopPages() {
       datasets: [{
         label: 'Pageviews',
         data: data.pages.map(p => p.count),
-        backgroundColor: site === 'travel' ? '#4f86f7' : '#2ec27e'
+        backgroundColor: site === 'travel' ? 'rgba(99,102,241,0.6)' : 'rgba(34,197,94,0.6)',
+        borderRadius: 4,
+        borderSkipped: false
       }]
     },
     options: {
       responsive: true,
       indexAxis: 'y',
-      scales: { x: { beginAtZero: true } },
+      scales: {
+        x: { beginAtZero: true, grid: { color: '#1e1e21' } },
+        y: { grid: { display: false } }
+      },
       plugins: { legend: { display: false } }
     }
   });
@@ -105,13 +122,18 @@ async function loadTopEvents() {
       datasets: [{
         label: 'Events',
         data: data.events.map(e => e.count),
-        backgroundColor: site === 'travel' ? '#4f86f7' : '#2ec27e'
+        backgroundColor: site === 'travel' ? 'rgba(99,102,241,0.6)' : 'rgba(34,197,94,0.6)',
+        borderRadius: 4,
+        borderSkipped: false
       }]
     },
     options: {
       responsive: true,
       indexAxis: 'y',
-      scales: { x: { beginAtZero: true } },
+      scales: {
+        x: { beginAtZero: true, grid: { color: '#1e1e21' } },
+        y: { grid: { display: false } }
+      },
       plugins: { legend: { display: false } }
     }
   });
@@ -136,7 +158,7 @@ async function loadRecent() {
     const siteBadge = `<span class="badge badge-${item.site}">${item.site}</span>`;
     const typeBadge = `<span class="badge badge-${item.type}">${item.type}</span>`;
     const detail = item.type === 'pageview' ? item.path : `${item.eventName} ${item.path}`;
-    return `<div class="recent-item"><span class="recent-time">${time}</span>${siteBadge}${typeBadge}<span>${detail}</span></div>`;
+    return `<div class="recent-item"><span class="recent-time">${time}</span>${siteBadge}${typeBadge}<span class="recent-path">${detail}</span></div>`;
   }).join('');
 }
 

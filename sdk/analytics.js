@@ -2,6 +2,9 @@
   var SITE = config.site;
   var API_BASE = config.apiBase;
 
+  var host = location.hostname;
+  if (host === 'localhost' || host === '127.0.0.1' || host === '0.0.0.0') return;
+
   function getSessionId() {
     var id = sessionStorage.getItem('_analytics_sid');
     if (!id) {

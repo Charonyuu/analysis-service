@@ -26,6 +26,11 @@ app.use(createCorsMiddleware());
 // Serve SDK static files
 app.use('/sdk', express.static(path.join(__dirname, '..', 'sdk')));
 
+// Root redirect
+app.get('/', (req, res) => {
+  res.redirect('/dashboard');
+});
+
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
@@ -57,7 +62,7 @@ app.post('/dashboard/login', (req, res) => {
 
 app.get('/dashboard/logout', (req, res) => {
   res.clearCookie('dashboard_token');
-  res.redirect('/dashboard/login');
+  res.redirect('/dashboard/login?logout=1');
 });
 
 // Dashboard auth middleware
