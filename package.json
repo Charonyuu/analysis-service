@@ -1,0 +1,26 @@
+{
+  "name": "analytics-service",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "npx nodemon server/index.js",
+    "check:1": "node scripts/check-phase1.js",
+    "check:2": "node scripts/check-phase2.js",
+    "check:3": "node scripts/check-phase3.js",
+    "check:4": "node scripts/check-phase4.js",
+    "check:all": "npm run check:1 && npm run check:2 && npm run check:3 && npm run check:4"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.3.1",
+    "mongoose": "^9.3.3"
+  }
+}

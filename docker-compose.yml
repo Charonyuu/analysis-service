@@ -1,0 +1,23 @@
+services:
+  analytics:
+    build: .
+    ports:
+      - "${PORT:-3099}:${PORT:-3099}"
+    environment:
+      - PORT=${PORT:-3099}
+      - MONGODB_URI=mongodb://mongo:27017/analytics
+      - DASHBOARD_SECRET=${DASHBOARD_SECRET:-charonyu1219}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:3001,http://localhost:3002}
+      - NODE_ENV=${NODE_ENV:-production}
+    depends_on:
+      - mongo
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:7
+    volumes:
+      - mongo_data:/data/db
+    restart: unless-stopped
+
+volumes:
+  mongo_data:

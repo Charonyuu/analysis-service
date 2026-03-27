@@ -1,0 +1,150 @@
+const TOKEN = document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith('dashboard_token='))?.split('=')[1] || '';
+const API = '';
+
+async function apiFetch(path) {
+  const res = await fetch(API + path, {
+    headers: { 'Authorization': 'Bearer ' + TOKEN }
+  });
+  if (!res.ok) throw new Error('API error: ' + res.status);
+  return res.json();
+}
+
+let dailyChart, topPagesChart, topEventsChart;
+
+function getDateRange(days) {
+  const to = new Date();
+  const from = new Date();
+  from.setDate(from.getDate() - days);
+  return {
+    from: from.toISOString().slice(0, 10),
+    to: to.toISOString().slice(0, 10)
+  };
+}
+
+async function loadOverview() {
+  const data = await apiFetch('/api/stats/overview');
+  document.getElementById('today-travel').textContent = data.travel.todayPageviews;
+  document.getElementById('today-icons').textContent = data.icons.todayPageviews;
+  document.getElementById('week-travel').textContent = data.travel.weekPageviews;
+  document.getElementById('week-icons').textContent = data.icons.weekPageviews;
+  document.getElementById('total-travel').textContent = data.travel.totalPageviews;
+  document.getElementById('total-icons').textContent = data.icons.totalPageviews;
+  document.getElementById('sessions-travel').textContent = data.travel.uniqueSessions;
+  document.getElementById('sessions-icons').textContent = data.icons.uniqueSessions;
+}
+
+async function loadDaily() {
+  const days = parseInt(document.getElementById('time-range').value);
+  const { from, to } = getDateRange(days);
+  const siteFilter = document.getElementById('site-filter').value;
+
+  const sites = siteFilter === 'all' ? ['travel', 'icons'] : [siteFilter];
+  const datasets = [];
+
+  for (const site of sites) {
+    const data = await apiFetch(`/api/stats/daily?site=${site}&from=${from}&to=${to}`);
+    datasets.push({
+      label: site.charAt(0).toUpperCase() + site.slice(1) + ' Pageviews',
+      data: data.pageviews.map(d => ({ x: d.date, y: d.count })),
+      borderColor: site === 'travel' ? '#4f86f7' : '#2ec27e',
+      backgroundColor: site === 'travel' ? 'rgba(79,134,247,0.1)' : 'rgba(46,194,126,0.1)',
+      borderWidth: 2,
+      tension: 0.3,
+      fill: true,
+      borderDash: site === 'icons' ? [5, 5] : []
+    });
+  }
+
+  if (dailyChart) dailyChart.destroy();
+  dailyChart = new Chart(document.getElementById('dailyChart'), {
+    type: 'line',
+    data: { datasets },
+    options: {
+      responsive: true,
+      scales: { x: { type: 'category' }, y: { beginAtZero: true } },
+      plugins: { legend: { position: 'top' } }
+    }
+  });
+}
+
+async function loadTopPages() {
+  const siteFilter = document.getElementById('site-filter').value;
+  const site = siteFilter === 'all' ? 'travel' : siteFilter;
+  const data = await apiFetch(`/api/stats/top-pages?site=${site}&limit=10`);
+
+  if (topPagesChart) topPagesChart.destroy();
+  topPagesChart = new Chart(document.getElementById('topPagesChart'), {
+    type: 'bar',
+    data: {
+      labels: data.pages.map(p => p.path),
+      datasets: [{
+        label: 'Pageviews',
+        data: data.pages.map(p => p.count),
+        backgroundColor: site === 'travel' ? '#4f86f7' : '#2ec27e'
+      }]
+    },
+    options: {
+      responsive: true,
+      indexAxis: 'y',
+      scales: { x: { beginAtZero: true } },
+      plugins: { legend: { display: false } }
+    }
+  });
+}
+
+async function loadTopEvents() {
+  const siteFilter = document.getElementById('site-filter').value;
+  const site = siteFilter === 'all' ? 'icons' : siteFilter;
+  const data = await apiFetch(`/api/stats/events?site=${site}`);
+
+  if (topEventsChart) topEventsChart.destroy();
+  topEventsChart = new Chart(document.getElementById('topEventsChart'), {
+    type: 'bar',
+    data: {
+      labels: data.events.map(e => e.eventName),
+      datasets: [{
+        label: 'Events',
+        data: data.events.map(e => e.count),
+        backgroundColor: site === 'travel' ? '#4f86f7' : '#2ec27e'
+      }]
+    },
+    options: {
+      responsive: true,
+      indexAxis: 'y',
+      scales: { x: { beginAtZero: true } },
+      plugins: { legend: { display: false } }
+    }
+  });
+}
+
+async function loadRecent() {
+  const siteFilter = document.getElementById('site-filter').value;
+  const sites = siteFilter === 'all' ? ['travel', 'icons'] : [siteFilter];
+  let allItems = [];
+
+  for (const site of sites) {
+    const data = await apiFetch(`/api/stats/recent?site=${site}`);
+    allItems = allItems.concat(data.items.map(i => ({ ...i, site })));
+  }
+
+  allItems.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  allItems = allItems.slice(0, 50);
+
+  const container = document.getElementById('recent-items');
+  container.innerHTML = allItems.map(item => {
+    const time = new Date(item.createdAt).toLocaleTimeString();
+    const siteBadge = `<span class="badge badge-${item.site}">${item.site}</span>`;
+    const typeBadge = `<span class="badge badge-${item.type}">${item.type}</span>`;
+    const detail = item.type === 'pageview' ? item.path : `${item.eventName} ${item.path}`;
+    return `<div class="recent-item"><span class="recent-time">${time}</span>${siteBadge}${typeBadge}<span>${detail}</span></div>`;
+  }).join('');
+}
+
+async function loadAll() {
+  await Promise.all([loadOverview(), loadDaily(), loadTopPages(), loadTopEvents(), loadRecent()]);
+}
+
+document.getElementById('site-filter').addEventListener('change', loadAll);
+document.getElementById('time-range').addEventListener('change', loadAll);
+
+loadAll();
