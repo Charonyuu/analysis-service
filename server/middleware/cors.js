@@ -2,7 +2,8 @@ const cors = require('cors');
 
 function createCorsMiddleware() {
   const allowedOrigins = (process.env.ALLOWED_ORIGINS || '').split(',').filter(Boolean);
-  // Also allow same-origin requests from the server itself
+  const allowedPatterns = (process.env.ALLOWED_ORIGIN_PATTERNS || '').split(',').filter(Boolean)
+    .map(p => new RegExp('^' + p.replace(/\./g, '\\.').replace(/\*/g, '.*') + '$'));
   const port = process.env.PORT || 3000;
   const selfOrigins = [`http://localhost:${port}`, `http://127.0.0.1:${port}`];
 
@@ -11,6 +12,9 @@ function createCorsMiddleware() {
       // Allow requests with no origin (server-to-server, curl, same-origin in some browsers)
       if (!origin) return callback(null, true);
       if (allowedOrigins.includes(origin) || selfOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      if (allowedPatterns.some(re => re.test(origin))) {
         return callback(null, true);
       }
       return callback(null, false);
