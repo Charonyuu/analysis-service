@@ -149,7 +149,7 @@ async function loadRecent() {
     return `<div class="recent-item">
       <span class="recent-time">${time}</span>
       ${pageBadge}${actionBadge}
-      <span class="recent-path">${item.path || ''}${duration}</span>
+      <span class="recent-path" title="${item.path || ''}">${(item.path || '').length > 60 ? (item.path.slice(0, 60) + '...') : (item.path || '')}${duration}</span>
     </div>`;
   }).join('');
 }
@@ -167,5 +167,15 @@ async function init() {
 
 document.getElementById('site-filter').addEventListener('change', loadAll);
 document.getElementById('time-range').addEventListener('change', loadAll);
+
+document.getElementById('btn-refresh').addEventListener('click', async function () {
+  const btn = this;
+  btn.classList.add('loading');
+  btn.disabled = true;
+  try { await loadAll(); } finally {
+    btn.classList.remove('loading');
+    btn.disabled = false;
+  }
+});
 
 init();

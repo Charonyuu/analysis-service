@@ -5,20 +5,10 @@ services:
       - "${PORT:-3099}:${PORT:-3099}"
     environment:
       - PORT=${PORT:-3099}
-      - MONGODB_URI=mongodb://mongo:27017/analytics
+      - MONGODB_URI=${MONGODB_URI}
       - DASHBOARD_SECRET=${DASHBOARD_SECRET:-charonyu1219}
       - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:3001,http://localhost:3002}
       - ALLOWED_ORIGIN_PATTERNS=${ALLOWED_ORIGIN_PATTERNS:-https://*.app.charonyu.cc}
+      - VALID_SITES=${VALID_SITES:-travel,icons}
       - NODE_ENV=${NODE_ENV:-production}
-    depends_on:
-      - mongo
     restart: unless-stopped
-
-  mongo:
-    image: mongo:7
-    volumes:
-      - mongo_data:/data/db
-    restart: unless-stopped
-
-volumes:
-  mongo_data:
