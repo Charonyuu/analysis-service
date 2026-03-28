@@ -8,6 +8,7 @@ const { collectLimiter, statsLimiter } = require('./middleware/rateLimit');
 const authBearer = require('./middleware/auth');
 const collectRoutes = require('./routes/collect');
 const statsRoutes = require('./routes/stats');
+const feedbackRoutes = require('./routes/feedback');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -41,6 +42,10 @@ app.use('/api', collectLimiter, collectRoutes);
 
 // Stats API (with auth + rate limiting)
 app.use('/api/stats', statsLimiter, authBearer, statsRoutes);
+
+// Feedback API (POST is public, GET/PATCH/DELETE require auth)
+app.post('/api/feedback', collectLimiter, feedbackRoutes);
+app.use('/api/feedback', authBearer, feedbackRoutes);
 
 // --- Dashboard login ---
 app.get('/dashboard/login', (req, res) => {

@@ -1,6 +1,7 @@
 const API = '';
-const SITE_COLORS = { travel: '#6366f1', icons: '#22c55e' };
-const DEFAULT_COLORS = ['#f59e0b', '#ec4899', '#06b6d4', '#f97316'];
+const SITE_COLORS = { travel: '#6366f1', icons: '#22c55e', pixel_frame: '#f59e0b' };
+const DEFAULT_COLORS = ['#ec4899', '#06b6d4', '#f97316'];
+const SITE_NAMES = { travel: '旅趣 Tripi', icons: '像素圖庫', pixel_frame: '像素框 App' };
 
 Chart.defaults.color = '#71717a';
 Chart.defaults.borderColor = '#27272a';
@@ -20,6 +21,10 @@ const PAGE_SIZE = 20;
 
 function siteColor(site, idx) {
   return SITE_COLORS[site] || DEFAULT_COLORS[idx % DEFAULT_COLORS.length];
+}
+
+function siteName(site) {
+  return SITE_NAMES[site] || site;
 }
 
 function fmtSec(s) {
@@ -43,7 +48,7 @@ function buildSidebar() {
     const color = siteColor(site, allSites.indexOf(site));
     return `<a href="#" class="nav-site" data-site="${site}">
       <span class="nav-dot" style="background:${color}"></span>
-      ${site.charAt(0).toUpperCase() + site.slice(1)}
+      ${siteName(site)}
     </a>`;
   }).join('');
 
@@ -52,7 +57,7 @@ function buildSidebar() {
   allSites.forEach(site => {
     const opt = document.createElement('option');
     opt.value = site;
-    opt.textContent = site.charAt(0).toUpperCase() + site.slice(1);
+    opt.textContent = siteName(site);
     mobileSelect.appendChild(opt);
   });
 
@@ -71,7 +76,14 @@ function buildSidebar() {
 
 function switchSite(site) {
   currentSite = site;
+  currentView = 'analytics';
   recentPage = 0;
+
+  // Switch view
+  document.getElementById('view-analytics').classList.add('active');
+  document.getElementById('view-feedback').classList.remove('active');
+  document.getElementById('nav-feedback').classList.remove('active');
+  document.querySelector('.header-actions').style.display = 'flex';
 
   // Update active state
   document.querySelectorAll('.nav-site').forEach(a => {
@@ -79,8 +91,8 @@ function switchSite(site) {
   });
 
   // Update title
-  const title = site === 'all' ? 'All Sites' : site.charAt(0).toUpperCase() + site.slice(1);
-  document.getElementById('page-title').textContent = title;
+  document.getElementById('page-title').textContent = site === 'all' ? 'All Sites' : siteName(site);
+  document.querySelector('.page-header .subtitle').textContent = 'Page analytics overview';
 
   // Update mobile select
   document.getElementById('mobile-site-filter').value = site;
@@ -108,7 +120,7 @@ async function loadOverview() {
       html += `<div class="page-stats-section">
         <h2 style="display:flex;align-items:center;gap:8px">
           <span class="nav-dot" style="background:${color}"></span>
-          ${site.charAt(0).toUpperCase() + site.slice(1)}
+          ${siteName(site)}
         </h2>
         <div class="stats-grid">
           <div class="stat-card">
@@ -310,19 +322,166 @@ async function init() {
   const data = await apiFetch('/api/stats/sites');
   allSites = data.sites;
   buildSidebar();
+  buildFeedbackFilter();
   await loadAll();
+  loadUnreadCount();
 }
 
+// --- View switching ---
+let currentView = 'analytics';
+
+function showView(view) {
+  currentView = view;
+  document.getElementById('view-analytics').classList.toggle('active', view === 'analytics');
+  document.getElementById('view-feedback').classList.toggle('active', view === 'feedback');
+
+  // Update header
+  if (view === 'feedback') {
+    document.getElementById('page-title').textContent = 'Feedback';
+    document.querySelector('.page-header .subtitle').textContent = 'User feedback from all apps';
+    document.querySelector('.header-actions').style.display = view === 'analytics' ? 'flex' : 'none';
+  }
+
+  // Deactivate site nav when on feedback
+  if (view === 'feedback') {
+    document.querySelectorAll('.nav-site').forEach(a => a.classList.remove('active'));
+    document.getElementById('nav-feedback').classList.add('active');
+    loadFeedback();
+  } else {
+    document.getElementById('nav-feedback').classList.remove('active');
+    document.querySelector('.header-actions').style.display = 'flex';
+    switchSite(currentSite);
+  }
+}
+
+// --- Feedback ---
+let feedbackPage = 0;
+
+async function loadFeedback() {
+  const siteFilter = document.getElementById('feedback-site-filter').value;
+  const query = siteFilter ? `?site=${siteFilter}&page=${feedbackPage}` : `?page=${feedbackPage}`;
+  const data = await apiFetch('/api/feedback' + query);
+
+  const container = document.getElementById('feedback-list');
+
+  if (data.items.length === 0) {
+    container.innerHTML = '<div class="feedback-empty">No feedback yet</div>';
+    document.getElementById('feedback-pagination').innerHTML = '';
+    return;
+  }
+
+  container.innerHTML = data.items.map(item => {
+    const time = new Date(item.createdAt).toLocaleString();
+    const color = siteColor(item.site, 0);
+    const displayName = siteName(item.site);
+    const unreadClass = item.read ? '' : ' unread';
+
+    return `<div class="feedback-item${unreadClass}" data-id="${item._id}">
+      <div class="feedback-item-header">
+        <div class="feedback-meta">
+          <span class="badge" style="background:${color}22;color:${color}">${displayName}</span>
+          ${item.name ? `<span class="name">${item.name}</span>` : ''}
+          ${item.email ? `<span>${item.email}</span>` : ''}
+          <span>${time}</span>
+        </div>
+        <div class="feedback-actions">
+          ${!item.read ? `<button onclick="markRead('${item._id}')">Mark Read</button>` : ''}
+          <button class="btn-delete" onclick="deleteFeedback('${item._id}')">Delete</button>
+        </div>
+      </div>
+      <div class="feedback-message">${escapeHtml(item.message)}</div>
+    </div>`;
+  }).join('');
+
+  // Pagination
+  const totalPages = Math.ceil(data.total / data.pageSize);
+  const pag = document.getElementById('feedback-pagination');
+  if (totalPages <= 1) { pag.innerHTML = ''; return; }
+  pag.innerHTML = `
+    <button id="fb-prev" ${feedbackPage === 0 ? 'disabled' : ''}>Prev</button>
+    <span>${feedbackPage + 1} / ${totalPages}</span>
+    <button id="fb-next" ${feedbackPage >= totalPages - 1 ? 'disabled' : ''}>Next</button>
+  `;
+  document.getElementById('fb-prev').addEventListener('click', () => { feedbackPage--; loadFeedback(); });
+  document.getElementById('fb-next').addEventListener('click', () => { feedbackPage++; loadFeedback(); });
+
+  // Update unread badge
+  updateUnreadBadge(data.unread);
+}
+
+function updateUnreadBadge(count) {
+  const badge = document.getElementById('unread-badge');
+  if (count > 0) {
+    badge.textContent = count;
+    badge.style.display = 'inline';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+async function markRead(id) {
+  await fetch(API + '/api/feedback/' + id + '/read', { method: 'PATCH', credentials: 'same-origin' });
+  loadFeedback();
+}
+
+async function deleteFeedback(id) {
+  if (!confirm('Delete this feedback?')) return;
+  await fetch(API + '/api/feedback/' + id, { method: 'DELETE', credentials: 'same-origin' });
+  loadFeedback();
+}
+
+async function loadUnreadCount() {
+  try {
+    const data = await apiFetch('/api/feedback?limit=0');
+    updateUnreadBadge(data.unread);
+  } catch (e) {}
+}
+
+// Build feedback site filter
+function buildFeedbackFilter() {
+  const select = document.getElementById('feedback-site-filter');
+  while (select.options.length > 1) select.remove(1);
+  allSites.forEach(site => {
+    const opt = document.createElement('option');
+    opt.value = site;
+    opt.textContent = siteName(site);
+    select.appendChild(opt);
+  });
+}
+
+// --- Event listeners ---
 document.getElementById('time-range').addEventListener('change', loadAll);
 
 document.getElementById('btn-refresh').addEventListener('click', async function () {
   const btn = this;
   btn.classList.add('loading');
   btn.disabled = true;
-  try { await loadAll(); } finally {
+  try {
+    if (currentView === 'analytics') await loadAll();
+    else await loadFeedback();
+  } finally {
     btn.classList.remove('loading');
     btn.disabled = false;
   }
 });
+
+document.getElementById('nav-feedback').addEventListener('click', function (e) {
+  e.preventDefault();
+  showView('feedback');
+});
+
+document.getElementById('feedback-site-filter').addEventListener('change', function () {
+  feedbackPage = 0;
+  loadFeedback();
+});
+
+// Override switchSite to also switch view back
+const _origSwitchSite = switchSite;
 
 init();

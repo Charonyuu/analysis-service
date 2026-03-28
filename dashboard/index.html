@@ -218,6 +218,45 @@
     .pagination button:disabled { opacity: 0.3; cursor: default; }
     .pagination span { font-size: 13px; color: #71717a; }
 
+    /* --- Feedback --- */
+    .feedback-item {
+      background: #1e1e21; border: 1px solid #27272a;
+      border-radius: 10px; padding: 16px; margin-bottom: 10px;
+      transition: border-color .2s;
+    }
+    .feedback-item.unread { border-left: 3px solid #6366f1; }
+    .feedback-item-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 8px; gap: 8px; flex-wrap: wrap;
+    }
+    .feedback-meta {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; color: #71717a;
+    }
+    .feedback-meta .name { color: #e4e4e7; font-weight: 500; }
+    .feedback-actions { display: flex; gap: 6px; }
+    .feedback-actions button {
+      padding: 4px 10px; border-radius: 6px; font-size: 12px;
+      border: 1px solid #3f3f46; background: #27272a; color: #a1a1aa;
+      cursor: pointer; transition: all .15s;
+    }
+    .feedback-actions button:hover { background: #3f3f46; color: #e4e4e7; }
+    .feedback-actions .btn-delete:hover { background: rgba(239,68,68,0.15); color: #fca5a5; border-color: rgba(239,68,68,0.3); }
+    .feedback-message {
+      font-size: 14px; color: #d4d4d8; line-height: 1.6;
+      white-space: pre-wrap; word-break: break-word;
+    }
+    .feedback-empty {
+      color: #52525b; padding: 40px; text-align: center;
+    }
+    .unread-badge {
+      background: #6366f1; color: #fff; font-size: 11px; font-weight: 700;
+      padding: 1px 7px; border-radius: 10px; margin-left: 6px;
+    }
+
+    .view-analytics, .view-feedback { display: none; }
+    .view-analytics.active, .view-feedback.active { display: block; }
+
     /* --- Responsive --- */
     @media (max-width: 1024px) {
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
@@ -268,6 +307,12 @@
       </a>
       <div class="nav-label">Sites</div>
       <div id="nav-sites"></div>
+
+      <div class="nav-label">Tools</div>
+      <a href="#" id="nav-feedback">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Feedback<span id="unread-badge" class="unread-badge" style="display:none"></span>
+      </a>
     </nav>
     <div class="sidebar-footer">
       <a href="/dashboard/logout">
@@ -297,24 +342,38 @@
       </div>
     </div>
 
-    <div id="overview-container"></div>
+    <!-- Analytics View -->
+    <div class="view-analytics active" id="view-analytics">
+      <div id="overview-container"></div>
 
-    <div class="chart-card">
-      <h3>Daily Enter Trend</h3>
-      <canvas id="dailyChart"></canvas>
-    </div>
-
-    <div class="chart-card">
-      <h3>Click Events</h3>
-      <canvas id="clicksChart"></canvas>
-    </div>
-
-    <div class="recent-card">
-      <div class="recent-header">
-        <h3>Recent Activity</h3>
+      <div class="chart-card">
+        <h3>Daily Enter Trend</h3>
+        <canvas id="dailyChart"></canvas>
       </div>
-      <div id="recent-items"></div>
-      <div class="pagination" id="pagination"></div>
+
+      <div class="chart-card">
+        <h3>Click Events</h3>
+        <canvas id="clicksChart"></canvas>
+      </div>
+
+      <div class="recent-card">
+        <div class="recent-header">
+          <h3>Recent Activity</h3>
+        </div>
+        <div id="recent-items"></div>
+        <div class="pagination" id="pagination"></div>
+      </div>
+    </div>
+
+    <!-- Feedback View -->
+    <div class="view-feedback" id="view-feedback">
+      <div class="header-actions" style="margin-bottom:20px">
+        <select id="feedback-site-filter">
+          <option value="">All</option>
+        </select>
+      </div>
+      <div id="feedback-list"></div>
+      <div class="pagination" id="feedback-pagination"></div>
     </div>
   </div>
 
