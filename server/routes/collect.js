@@ -14,36 +14,44 @@ router.post('/analytics', async (req, res) => {
 
     if (!site) return res.status(400).json({ ok: false, error: 'site is required' });
     if (!page) return res.status(400).json({ ok: false, error: 'page is required' });
-    if (!action || !['enter', 'leave'].includes(action)) {
-      return res.status(400).json({ ok: false, error: 'action must be enter or leave' });
+    const validActions = ['enter', 'leave', 'heartbeat', 'click'];
+    if (!action || !validActions.includes(action)) {
+      return res.status(400).json({ ok: false, error: 'invalid action' });
     }
 
-    // Save raw event
-    await PageAnalyticsEvent.create({
-      site,
-      page: String(page).slice(0, 100),
-      path: path ? String(path).slice(0, 500) : '',
-      action,
-      durationMs: action === 'leave' ? (parseInt(durationMs) || 0) : 0,
-      visitorId: visitorId ? String(visitorId).slice(0, 64) : '',
-      sessionId: sessionId ? String(sessionId).slice(0, 64) : '',
-      userAgent: req.headers['user-agent'] ? String(req.headers['user-agent']).slice(0, 500) : ''
-    });
+    const { eventName } = req.body;
 
-    // Update daily stat
-    const dateKey = todayKey();
-    const update = {};
-    if (action === 'enter') {
-      update.$inc = { enterCount: 1 };
-    } else {
-      update.$inc = { totalDurationMs: parseInt(durationMs) || 0 };
+    // Save raw event (skip heartbeat to keep DB lean)
+    if (action !== 'heartbeat') {
+      await PageAnalyticsEvent.create({
+        site,
+        page: String(page).slice(0, 100),
+        path: path ? String(path).slice(0, 500) : '',
+        action,
+        eventName: action === 'click' ? String(eventName || '').slice(0, 100) : undefined,
+        durationMs: action === 'leave' ? (parseInt(durationMs) || 0) : 0,
+        visitorId: visitorId ? String(visitorId).slice(0, 64) : '',
+        sessionId: sessionId ? String(sessionId).slice(0, 64) : '',
+        userAgent: req.headers['user-agent'] ? String(req.headers['user-agent']).slice(0, 500) : ''
+      });
     }
 
-    await PageAnalyticsDailyStat.findOneAndUpdate(
-      { site, page, dateKey },
-      update,
-      { upsert: true }
-    );
+    // Update daily stat (only for enter/leave/heartbeat)
+    if (action !== 'click') {
+      const dateKey = todayKey();
+      const update = {};
+      if (action === 'enter') {
+        update.$inc = { enterCount: 1 };
+      } else {
+        update.$inc = { totalDurationMs: parseInt(durationMs) || 0 };
+      }
+
+      await PageAnalyticsDailyStat.findOneAndUpdate(
+        { site, page, dateKey },
+        update,
+        { upsert: true }
+      );
+    }
 
     res.status(201).json({ ok: true });
   } catch (err) {

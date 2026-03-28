@@ -100,11 +100,32 @@ router.get('/recent', async (req, res) => {
       page: e.page,
       path: e.path,
       action: e.action,
+      eventName: e.eventName || '',
       durationSec: Math.round((e.durationMs || 0) / 1000),
       createdAt: e.createdAt
     }));
 
     res.json({ site, items });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: 'internal error' });
+  }
+});
+
+// GET /api/stats/clicks?site=xxx
+router.get('/clicks', async (req, res) => {
+  try {
+    const { site } = req.query;
+    if (!site) return res.status(400).json({ ok: false, error: 'site is required' });
+
+    const clicks = await PageAnalyticsEvent.aggregate([
+      { $match: { site, action: 'click', eventName: { $ne: '' } } },
+      { $group: { _id: '$eventName', count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: 20 },
+      { $project: { _id: 0, eventName: '$_id', count: 1 } }
+    ]);
+
+    res.json({ site, clicks });
   } catch (err) {
     res.status(500).json({ ok: false, error: 'internal error' });
   }

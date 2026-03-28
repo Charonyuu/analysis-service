@@ -10,7 +10,7 @@ async function apiFetch(path) {
 }
 
 let allSites = [];
-let dailyChart;
+let dailyChart, clicksChart;
 
 function fmtSec(s) {
   if (s < 60) return s + 's';
@@ -122,6 +122,46 @@ async function loadDaily() {
   });
 }
 
+async function loadClicks() {
+  const siteFilter = document.getElementById('site-filter').value;
+  const sites = siteFilter === 'all' ? allSites : [siteFilter];
+
+  let allClicks = {};
+  for (const site of sites) {
+    const data = await apiFetch(`/api/stats/clicks?site=${site}`);
+    for (const c of data.clicks) {
+      const key = sites.length > 1 ? `${site}:${c.eventName}` : c.eventName;
+      allClicks[key] = (allClicks[key] || 0) + c.count;
+    }
+  }
+
+  const sorted = Object.entries(allClicks).sort((a, b) => b[1] - a[1]).slice(0, 15);
+
+  if (clicksChart) clicksChart.destroy();
+  clicksChart = new Chart(document.getElementById('clicksChart'), {
+    type: 'bar',
+    data: {
+      labels: sorted.map(s => s[0]),
+      datasets: [{
+        label: 'Clicks',
+        data: sorted.map(s => s[1]),
+        backgroundColor: '#ec489999',
+        borderRadius: 4,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      responsive: true,
+      indexAxis: 'y',
+      scales: {
+        x: { beginAtZero: true, grid: { color: '#1e1e21' } },
+        y: { grid: { display: false } }
+      },
+      plugins: { legend: { display: false } }
+    }
+  });
+}
+
 async function loadRecent() {
   const siteFilter = document.getElementById('site-filter').value;
   const sites = siteFilter === 'all' ? allSites : [siteFilter];
@@ -145,17 +185,25 @@ async function loadRecent() {
     const time = new Date(item.createdAt).toLocaleString();
     const pageBadge = `<span class="badge badge-page">${item.page}</span>`;
     const actionBadge = `<span class="badge badge-${item.action}">${item.action}</span>`;
-    const duration = item.action === 'leave' && item.durationSec ? ` (${fmtSec(item.durationSec)})` : '';
+    let detail = '';
+    if (item.action === 'click') {
+      detail = item.eventName || '';
+    } else if (item.action === 'leave' && item.durationSec) {
+      const path = (item.path || '').length > 50 ? (item.path.slice(0, 50) + '...') : (item.path || '');
+      detail = `${path} (${fmtSec(item.durationSec)})`;
+    } else {
+      detail = (item.path || '').length > 60 ? (item.path.slice(0, 60) + '...') : (item.path || '');
+    }
     return `<div class="recent-item">
       <span class="recent-time">${time}</span>
       ${pageBadge}${actionBadge}
-      <span class="recent-path" title="${item.path || ''}">${(item.path || '').length > 60 ? (item.path.slice(0, 60) + '...') : (item.path || '')}${duration}</span>
+      <span class="recent-path" title="${item.path || ''}">${detail}</span>
     </div>`;
   }).join('');
 }
 
 async function loadAll() {
-  await Promise.all([loadOverview(), loadDaily(), loadRecent()]);
+  await Promise.all([loadOverview(), loadDaily(), loadClicks(), loadRecent()]);
 }
 
 async function init() {

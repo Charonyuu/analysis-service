@@ -8,6 +8,9 @@
 
   var enterTime = null;
   var leaveSent = false;
+  var lastHeartbeat = 0;
+  var heartbeatTimer = null;
+  var HEARTBEAT_INTERVAL = 15000; // 15 seconds
 
   function uuid() {
     return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
@@ -52,13 +55,32 @@
 
   function sendEnter() {
     enterTime = Date.now();
+    lastHeartbeat = 0;
+    leaveSent = false;
     send({ action: "enter" });
+    startHeartbeat();
+  }
+
+  function sendHeartbeat() {
+    if (!enterTime || leaveSent) return;
+    var now = Date.now();
+    var delta = now - enterTime - lastHeartbeat;
+    lastHeartbeat = now - enterTime;
+    send({ action: "heartbeat", durationMs: delta });
+  }
+
+  function startHeartbeat() {
+    if (heartbeatTimer) clearInterval(heartbeatTimer);
+    heartbeatTimer = setInterval(sendHeartbeat, HEARTBEAT_INTERVAL);
   }
 
   function sendLeave() {
     if (leaveSent) return;
     leaveSent = true;
-    send({ action: "leave", durationMs: enterTime ? Date.now() - enterTime : 0 });
+    if (heartbeatTimer) clearInterval(heartbeatTimer);
+    var totalDuration = enterTime ? Date.now() - enterTime : 0;
+    var remaining = totalDuration - lastHeartbeat;
+    send({ action: "leave", durationMs: remaining > 0 ? remaining : 0 });
   }
 
   if (document.readyState === "loading") {
@@ -66,6 +88,15 @@
   } else {
     sendEnter();
   }
+
+  // Click tracking: any element with data-track="eventName"
+  document.addEventListener("click", function (e) {
+    var el = e.target.closest ? e.target.closest("[data-track]") : null;
+    if (!el) return;
+    var eventName = el.getAttribute("data-track");
+    if (!eventName) return;
+    send({ action: "click", eventName: eventName });
+  }, true);
 
   document.addEventListener("visibilitychange", function () {
     if (document.visibilityState === "hidden") sendLeave();
