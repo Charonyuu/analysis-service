@@ -13,24 +13,21 @@
       background: #0f0f10;
       color: #e4e4e7;
       min-height: 100vh;
+      font-size: 14px;
     }
 
-    /* --- Sidebar (desktop only) --- */
+    /* --- Sidebar --- */
     .sidebar {
-      position: fixed;
-      top: 0; left: 0;
-      width: 240px;
-      height: 100vh;
-      background: #18181b;
-      border-right: 1px solid #27272a;
+      position: fixed; top: 0; left: 0;
+      width: 240px; height: 100vh;
+      background: #18181b; border-right: 1px solid #27272a;
       padding: 24px 16px;
-      display: flex;
-      flex-direction: column;
-      z-index: 10;
+      display: flex; flex-direction: column;
+      z-index: 10; overflow-y: auto;
     }
     .sidebar .brand {
       display: flex; align-items: center; gap: 10px;
-      margin-bottom: 32px; padding: 0 8px;
+      margin-bottom: 28px; padding: 0 8px;
     }
     .sidebar .brand-icon {
       width: 32px; height: 32px;
@@ -41,16 +38,25 @@
     }
     .sidebar .brand span { font-size: 15px; font-weight: 600; color: #fafafa; }
     .sidebar nav { flex: 1; }
+    .nav-label {
+      font-size: 11px; font-weight: 600; color: #52525b;
+      text-transform: uppercase; letter-spacing: 0.8px;
+      padding: 0 12px; margin-bottom: 6px; margin-top: 20px;
+    }
+    .nav-label:first-child { margin-top: 0; }
     .sidebar nav a {
       display: flex; align-items: center; gap: 10px;
       padding: 10px 12px; border-radius: 8px;
       color: #a1a1aa; text-decoration: none;
       font-size: 14px; font-weight: 500;
-      transition: all .15s; margin-bottom: 2px;
+      transition: all .15s; margin-bottom: 2px; cursor: pointer;
     }
     .sidebar nav a:hover { background: #27272a; color: #fafafa; }
     .sidebar nav a.active { background: rgba(99,102,241,0.12); color: #818cf8; }
     .sidebar nav a svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .nav-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
     .sidebar-footer { border-top: 1px solid #27272a; padding-top: 16px; }
     .sidebar-footer a {
       display: flex; align-items: center; gap: 10px;
@@ -79,6 +85,14 @@
       font-weight: 700; font-size: 12px; color: #fff;
     }
     .mobile-header .brand span { font-size: 14px; font-weight: 600; color: #fafafa; }
+    .mobile-header select {
+      padding: 6px 28px 6px 10px; background: #27272a;
+      border: 1px solid #3f3f46; border-radius: 6px;
+      font-size: 13px; color: #e4e4e7; cursor: pointer;
+      -webkit-appearance: none; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2371717a' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 8px center;
+    }
     .mobile-header a {
       color: #71717a; text-decoration: none; font-size: 12px;
       padding: 6px 10px; border-radius: 6px; transition: all .15s;
@@ -96,22 +110,21 @@
     .page-header h1 { font-size: 22px; font-weight: 600; color: #fafafa; }
     .page-header .subtitle { font-size: 13px; color: #71717a; margin-top: 4px; }
     .header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .filters select {
-      padding: 8px 14px; background: #18181b;
+    .header-actions select {
+      padding: 8px 32px 8px 14px; background: #18181b;
       border: 1px solid #27272a; border-radius: 8px;
-      font-size: 13px; color: #e4e4e7; cursor: pointer;
+      font-size: 14px; color: #e4e4e7; cursor: pointer;
       -webkit-appearance: none; appearance: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2371717a' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
       background-repeat: no-repeat; background-position: right 12px center;
-      padding-right: 32px;
     }
-    .filters select:focus { outline: none; border-color: #6366f1; }
+    .header-actions select:focus { outline: none; border-color: #6366f1; }
 
     .btn-refresh {
       display: flex; align-items: center; gap: 6px;
       padding: 8px 14px; background: #27272a;
       border: 1px solid #3f3f46; border-radius: 8px;
-      font-size: 13px; color: #e4e4e7; cursor: pointer;
+      font-size: 14px; color: #e4e4e7; cursor: pointer;
       transition: all .15s; white-space: nowrap;
     }
     .btn-refresh:hover { background: #3f3f46; border-color: #52525b; }
@@ -131,18 +144,18 @@
     }
     .stat-card:hover { border-color: #3f3f46; }
     .stat-card .label {
-      font-size: 11px; font-weight: 500; color: #71717a;
+      font-size: 12px; font-weight: 500; color: #71717a;
       text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;
     }
     .stat-card .num {
       font-size: 24px; font-weight: 700; color: #fafafa;
       font-variant-numeric: tabular-nums;
     }
-    .stat-card .sub { font-size: 11px; color: #52525b; margin-top: 4px; }
+    .stat-card .sub { font-size: 12px; color: #52525b; margin-top: 4px; }
 
     .page-stats-section { margin-bottom: 24px; }
     .page-stats-section h2 {
-      font-size: 15px; font-weight: 600; color: #a1a1aa;
+      font-size: 16px; font-weight: 600; color: #a1a1aa;
       margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;
     }
 
@@ -159,10 +172,14 @@
       background: #18181b; border: 1px solid #27272a;
       border-radius: 12px; padding: 24px; overflow: hidden;
     }
-    .recent-card h3 { font-size: 14px; font-weight: 600; color: #fafafa; margin-bottom: 16px; }
+    .recent-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 16px;
+    }
+    .recent-header h3 { font-size: 14px; font-weight: 600; color: #fafafa; }
     .recent-item {
       display: flex; align-items: center; gap: 8px;
-      padding: 10px 0; border-bottom: 1px solid #1e1e21; font-size: 13px;
+      padding: 10px 0; border-bottom: 1px solid #1e1e21; font-size: 14px;
       min-width: 0; overflow: hidden;
     }
     .recent-item:last-child { border-bottom: none; }
@@ -172,7 +189,7 @@
     }
     .badge {
       display: inline-flex; align-items: center; flex-shrink: 0;
-      padding: 2px 8px; border-radius: 6px;
+      padding: 3px 8px; border-radius: 6px;
       font-size: 11px; font-weight: 600; letter-spacing: 0.3px;
       white-space: nowrap;
     }
@@ -181,10 +198,25 @@
     .badge-click { background: rgba(236,72,153,0.15); color: #f472b6; }
     .badge-page { background: rgba(99,102,241,0.15); color: #818cf8; }
     .recent-path {
-      color: #a1a1aa;
+      color: #a1a1aa; font-size: 13px;
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
       min-width: 0;
     }
+
+    /* --- Pagination --- */
+    .pagination {
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px; margin-top: 16px;
+    }
+    .pagination button {
+      padding: 6px 14px; background: #27272a;
+      border: 1px solid #3f3f46; border-radius: 6px;
+      font-size: 13px; color: #e4e4e7; cursor: pointer;
+      transition: all .15s;
+    }
+    .pagination button:hover { background: #3f3f46; }
+    .pagination button:disabled { opacity: 0.3; cursor: default; }
+    .pagination span { font-size: 13px; color: #71717a; }
 
     /* --- Responsive --- */
     @media (max-width: 1024px) {
@@ -202,15 +234,10 @@
       .stat-card .num { font-size: 20px; }
       .chart-card { padding: 16px; }
       .recent-card { padding: 16px; }
-      .recent-item { font-size: 12px; gap: 6px; }
-      .recent-time { font-size: 11px; }
-      .badge { font-size: 10px; padding: 2px 6px; }
+      .recent-item { font-size: 13px; gap: 6px; }
     }
     @media (max-width: 400px) {
       .stats-grid { grid-template-columns: 1fr; }
-      .header-actions { flex-direction: column; }
-      .filters { width: 100%; }
-      .filters select { flex: 1; }
     }
   </style>
 </head>
@@ -221,20 +248,26 @@
       <div class="brand-icon">A</div>
       <span>Analytics</span>
     </div>
+    <select id="mobile-site-filter">
+      <option value="all">All Sites</option>
+    </select>
     <a href="/dashboard/logout">Logout</a>
   </div>
 
-  <!-- Sidebar (desktop) -->
+  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="brand">
       <div class="brand-icon">A</div>
       <span>Analytics</span>
     </div>
     <nav>
-      <a href="/dashboard" class="active">
+      <div class="nav-label">Overview</div>
+      <a href="#" class="nav-site active" data-site="all">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-        Dashboard
+        All Sites
       </a>
+      <div class="nav-label">Sites</div>
+      <div id="nav-sites"></div>
     </nav>
     <div class="sidebar-footer">
       <a href="/dashboard/logout">
@@ -244,24 +277,19 @@
     </div>
   </aside>
 
-  <!-- Main Content -->
+  <!-- Main -->
   <div class="main">
     <div class="page-header">
       <div>
-        <h1>Dashboard</h1>
+        <h1 id="page-title">All Sites</h1>
         <div class="subtitle">Page analytics overview</div>
       </div>
       <div class="header-actions">
-        <div class="filters">
-          <select id="site-filter">
-            <option value="all">All Sites</option>
-          </select>
-          <select id="time-range">
-            <option value="7">Last 7 days</option>
-            <option value="30">Last 30 days</option>
-            <option value="90">Last 90 days</option>
-          </select>
-        </div>
+        <select id="time-range">
+          <option value="7">Last 7 days</option>
+          <option value="30">Last 30 days</option>
+          <option value="90">Last 90 days</option>
+        </select>
         <button class="btn-refresh" id="btn-refresh">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
           Refresh
@@ -282,8 +310,11 @@
     </div>
 
     <div class="recent-card">
-      <h3>Recent Activity</h3>
+      <div class="recent-header">
+        <h3>Recent Activity</h3>
+      </div>
       <div id="recent-items"></div>
+      <div class="pagination" id="pagination"></div>
     </div>
   </div>
 
