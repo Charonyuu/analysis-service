@@ -4,7 +4,7 @@ const PageAnalyticsEvent = require('../models/PageAnalyticsEvent');
 const PageAnalyticsDailyStat = require('../models/PageAnalyticsDailyStat');
 
 function todayKey() {
-  return new Date().toISOString().slice(0, 10);
+  return new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Taipei' });
 }
 
 // POST /api/analytics

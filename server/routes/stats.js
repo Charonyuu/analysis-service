@@ -19,8 +19,8 @@ router.get('/overview', async (req, res) => {
     const { site } = req.query;
     const match = site ? { site } : {};
 
-    const today = new Date().toISOString().slice(0, 10);
-    const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString().slice(0, 10);
+    const today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Taipei' });
+    const weekAgo = new Date(Date.now() - 7 * 86400000).toLocaleDateString('sv-SE', { timeZone: 'Asia/Taipei' });
 
     // Get all pages for the site(s)
     const allStats = await PageAnalyticsDailyStat.find(match).lean();
