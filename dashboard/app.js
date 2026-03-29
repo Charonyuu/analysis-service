@@ -182,30 +182,45 @@ async function loadDaily() {
   const days = parseInt(document.getElementById('time-range').value);
   const { from, to } = getDateRange(days);
   const sites = currentSite === 'all' ? allSites : [currentSite];
-  const datasets = [];
+
+  // Collect all data first
+  const allData = {};
+  const allDates = new Set();
 
   for (const site of sites) {
     const data = await apiFetch(`/api/stats/daily?site=${site}&from=${from}&to=${to}`);
+    const byDate = {};
+    for (const d of data.daily) {
+      byDate[d.date] = d.enterCount;
+      allDates.add(d.date);
+    }
+    allData[site] = byDate;
+  }
+
+  // Sort dates chronologically
+  const sortedDates = Array.from(allDates).sort();
+
+  const datasets = sites.map(site => {
     const color = siteColor(site, allSites.indexOf(site));
-    datasets.push({
-      label: site,
-      data: data.daily.map(d => ({ x: d.date, y: d.enterCount })),
+    return {
+      label: siteName(site),
+      data: sortedDates.map(d => allData[site][d] || 0),
       borderColor: color,
       backgroundColor: color + '14',
       borderWidth: 2, tension: 0.4, fill: true,
       pointRadius: 3, pointBackgroundColor: color, pointBorderWidth: 0,
-    });
-  }
+    };
+  });
 
   if (dailyChart) dailyChart.destroy();
   dailyChart = new Chart(document.getElementById('dailyChart'), {
     type: 'line',
-    data: { datasets },
+    data: { labels: sortedDates, datasets },
     options: {
       responsive: true,
       interaction: { intersect: false, mode: 'index' },
       scales: {
-        x: { type: 'category', grid: { display: false } },
+        x: { grid: { display: false } },
         y: { beginAtZero: true, grid: { color: '#1e1e21' } }
       },
       plugins: { legend: { position: 'top' } }
