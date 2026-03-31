@@ -1,7 +1,7 @@
 const API = '';
-const SITE_COLORS = { travel: '#6366f1', icons: '#22c55e', pixel_frame: '#f59e0b' };
+const SITE_COLORS = { travel: '#6366f1', icons: '#22c55e', pixel_frame: '#f59e0b', resume: '#0d9488' };
 const DEFAULT_COLORS = ['#ec4899', '#06b6d4', '#f97316'];
-const SITE_NAMES = { travel: '旅趣 Tripi', icons: '像素圖庫', pixel_frame: '像素框 App' };
+const SITE_NAMES = { travel: '旅趣 Tripi', icons: '像素圖庫', pixel_frame: '像素框 App', resume: '個人履歷' };
 
 Chart.defaults.color = '#71717a';
 Chart.defaults.borderColor = '#27272a';
