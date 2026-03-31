@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Icon Splitter</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+      background: #0f0f10;
+      color: #e4e4e7;
+      min-height: 100vh;
+      font-size: 14px;
+    }
+
+    /* --- Sidebar --- */
+    .sidebar {
+      position: fixed; top: 0; left: 0;
+      width: 240px; height: 100vh;
+      background: #18181b; border-right: 1px solid #27272a;
+      padding: 24px 16px;
+      display: flex; flex-direction: column;
+      z-index: 10;
+    }
+    .sidebar .brand {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 28px; padding: 0 8px;
+    }
+    .sidebar .brand-icon {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 14px; color: #fff;
+    }
+    .sidebar .brand span { font-size: 15px; font-weight: 600; color: #fafafa; }
+    .nav-label {
+      font-size: 11px; font-weight: 600; color: #52525b;
+      text-transform: uppercase; letter-spacing: 0.8px;
+      padding: 0 12px; margin-bottom: 6px; margin-top: 20px;
+    }
+    .nav-label:first-child { margin-top: 0; }
+    .sidebar nav a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 8px;
+      color: #a1a1aa; text-decoration: none;
+      font-size: 14px; font-weight: 500;
+      transition: all .15s; margin-bottom: 2px;
+    }
+    .sidebar nav a:hover { background: #27272a; color: #fafafa; }
+    .sidebar nav a.active { background: rgba(99,102,241,0.12); color: #818cf8; }
+    .sidebar nav a svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .sidebar-footer { margin-top: auto; border-top: 1px solid #27272a; padding-top: 16px; }
+    .sidebar-footer a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 8px;
+      color: #71717a; text-decoration: none; font-size: 13px; transition: all .15s;
+    }
+    .sidebar-footer a:hover { color: #fca5a5; background: rgba(239,68,68,0.08); }
+    .sidebar-footer a svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+    /* --- Main --- */
+    .main { margin-left: 240px; padding: 32px 40px; min-height: 100vh; }
+
+    .page-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 32px;
+    }
+    .page-header h1 { font-size: 22px; font-weight: 600; color: #fafafa; }
+    .page-header .subtitle { font-size: 13px; color: #71717a; margin-top: 4px; }
+
+    /* --- Upload Zone --- */
+    .upload-zone {
+      border: 2px dashed #3f3f46;
+      border-radius: 12px;
+      padding: 48px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s;
+      margin-bottom: 24px;
+    }
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: #6366f1;
+      background: rgba(99,102,241,0.05);
+    }
+    .upload-zone svg { width: 48px; height: 48px; color: #52525b; margin-bottom: 12px; }
+    .upload-zone p { color: #71717a; font-size: 14px; }
+    .upload-zone .hint { font-size: 12px; color: #52525b; margin-top: 6px; }
+    .upload-zone input { display: none; }
+
+    /* --- Options --- */
+    .options-bar {
+      display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; align-items: end;
+    }
+    .opt-group { display: flex; flex-direction: column; gap: 4px; }
+    .opt-group label {
+      font-size: 11px; font-weight: 600; color: #71717a;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .opt-group input, .opt-group select {
+      padding: 8px 12px; background: #18181b;
+      border: 1px solid #27272a; border-radius: 8px;
+      font-size: 14px; color: #e4e4e7; width: 100px;
+    }
+    .opt-group input:focus, .opt-group select:focus {
+      outline: none; border-color: #6366f1;
+    }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px;
+      border: 1px solid #3f3f46; border-radius: 8px;
+      font-size: 14px; font-weight: 500; cursor: pointer;
+      transition: all .15s; white-space: nowrap;
+    }
+    .btn:active { transform: scale(0.96); }
+    .btn-primary {
+      background: #6366f1; border-color: #6366f1; color: #fff;
+    }
+    .btn-primary:hover { background: #4f46e5; }
+    .btn-primary:disabled { opacity: 0.4; cursor: default; }
+    .btn-secondary {
+      background: #27272a; color: #e4e4e7;
+    }
+    .btn-secondary:hover { background: #3f3f46; }
+    .btn-danger {
+      background: transparent; border-color: #7f1d1d; color: #fca5a5;
+    }
+    .btn-danger:hover { background: rgba(239,68,68,0.1); }
+
+    /* --- Preview --- */
+    .preview-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 16px;
+    }
+    .preview-header h2 { font-size: 16px; font-weight: 600; color: #fafafa; }
+    .preview-actions { display: flex; gap: 8px; }
+
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .icon-card {
+      background: #18181b; border: 2px solid #27272a;
+      border-radius: 10px; padding: 12px;
+      text-align: center; cursor: pointer;
+      transition: all .15s; position: relative;
+    }
+    .icon-card:hover { border-color: #3f3f46; }
+    .icon-card.selected { border-color: #6366f1; background: rgba(99,102,241,0.08); }
+    .icon-card .check {
+      position: absolute; top: 8px; right: 8px;
+      width: 22px; height: 22px; border-radius: 6px;
+      border: 2px solid #3f3f46; background: #27272a;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .15s;
+    }
+    .icon-card.selected .check {
+      background: #6366f1; border-color: #6366f1;
+    }
+    .icon-card.selected .check::after {
+      content: '';
+      width: 6px; height: 10px;
+      border: solid #fff; border-width: 0 2px 2px 0;
+      transform: rotate(45deg); margin-top: -2px;
+    }
+    .icon-card img {
+      width: 80px; height: 80px;
+      object-fit: contain;
+      image-rendering: pixelated;
+      background: repeating-conic-gradient(#27272a 0% 25%, transparent 0% 50%) 50% / 16px 16px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+    .icon-card .icon-name {
+      font-size: 11px; color: #a1a1aa;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .icon-card .icon-name-input {
+      font-size: 11px; color: #e4e4e7;
+      background: #27272a; border: 1px solid #3f3f46;
+      border-radius: 4px; padding: 2px 6px;
+      width: 100%; text-align: center;
+    }
+    .icon-card .icon-name-input:focus {
+      outline: none; border-color: #6366f1;
+    }
+
+    /* --- Status --- */
+    .status-bar {
+      background: #18181b; border: 1px solid #27272a;
+      border-radius: 10px; padding: 16px 20px;
+      margin-bottom: 24px;
+      display: none;
+    }
+    .status-bar.visible { display: flex; align-items: center; gap: 12px; }
+    .status-bar .spinner {
+      width: 20px; height: 20px; border: 2px solid #3f3f46;
+      border-top-color: #6366f1; border-radius: 50%;
+      animation: spin .6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .status-bar .msg { font-size: 14px; color: #a1a1aa; }
+    .status-bar.success { border-color: #166534; }
+    .status-bar.success .msg { color: #4ade80; }
+    .status-bar.error { border-color: #7f1d1d; }
+    .status-bar.error .msg { color: #fca5a5; }
+
+    /* --- Original Preview --- */
+    .original-preview {
+      background: #18181b; border: 1px solid #27272a;
+      border-radius: 12px; padding: 16px; margin-bottom: 24px;
+      text-align: center;
+    }
+    .original-preview img {
+      max-width: 100%; max-height: 300px;
+      border-radius: 8px;
+      background: repeating-conic-gradient(#27272a 0% 25%, transparent 0% 50%) 50% / 16px 16px;
+    }
+    .original-preview .filename {
+      font-size: 12px; color: #52525b; margin-top: 8px;
+    }
+
+    /* --- Responsive --- */
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; padding: 16px; }
+      .upload-zone { padding: 32px 16px; }
+      .icon-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">A</div>
+      <span>Analytics</span>
+    </div>
+    <nav>
+      <div class="nav-label">Dashboard</div>
+      <a href="/dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Analytics
+      </a>
+      <div class="nav-label">Tools</div>
+      <a href="/dashboard/icons" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+        Icon Splitter
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="/dashboard/logout">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Logout
+      </a>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="page-header">
+      <div>
+        <h1>Icon Splitter</h1>
+        <div class="subtitle">Upload sprite sheet, preview split results, publish to R2</div>
+      </div>
+    </div>
+
+    <!-- Upload -->
+    <div class="upload-zone" id="upload-zone">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <p>Drop sprite sheet here or click to upload</p>
+      <div class="hint">PNG / JPG, max 20MB</div>
+      <input type="file" id="file-input" accept="image/*">
+    </div>
+
+    <!-- Options -->
+    <div class="options-bar">
+      <div class="opt-group">
+        <label>Grid</label>
+        <select id="opt-grid">
+          <option value="2">2 x 2</option>
+          <option value="3">3 x 3</option>
+          <option value="4" selected>4 x 4</option>
+          <option value="5">5 x 5</option>
+          <option value="6">6 x 6</option>
+        </select>
+      </div>
+      <div class="opt-group">
+        <label>Output Size</label>
+        <input type="number" id="opt-size" value="256" min="64" max="1024" step="64">
+      </div>
+      <div class="opt-group">
+        <label>Padding</label>
+        <input type="number" id="opt-padding" value="0.12" min="0" max="0.4" step="0.02">
+      </div>
+      <div class="opt-group">
+        <label>BG Threshold</label>
+        <input type="number" id="opt-threshold" value="240" min="200" max="255">
+      </div>
+      <div class="opt-group" style="align-self:end">
+        <button class="btn btn-primary" id="btn-split" disabled>Split</button>
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div class="status-bar" id="status-bar">
+      <div class="spinner" id="status-spinner"></div>
+      <div class="msg" id="status-msg">Processing...</div>
+    </div>
+
+    <!-- Original Preview -->
+    <div class="original-preview" id="original-preview" style="display:none">
+      <img id="original-img">
+      <div class="filename" id="original-filename"></div>
+    </div>
+
+    <!-- Results -->
+    <div id="results-section" style="display:none">
+      <div class="preview-header">
+        <h2>Split Results (<span id="selected-count">0</span> / <span id="total-count">0</span> selected)</h2>
+        <div class="preview-actions">
+          <button class="btn btn-secondary" id="btn-select-all">Select All</button>
+          <button class="btn btn-secondary" id="btn-deselect-all">Deselect All</button>
+          <button class="btn btn-primary" id="btn-publish" disabled>Push to Staging</button>
+        </div>
+      </div>
+      <div class="icon-grid" id="icon-grid"></div>
+    </div>
+  </div>
+
+  <script src="/dashboard/icons.js"></script>
+</body>
+</html>

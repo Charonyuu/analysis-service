@@ -9,6 +9,7 @@ const authBearer = require('./middleware/auth');
 const collectRoutes = require('./routes/collect');
 const statsRoutes = require('./routes/stats');
 const feedbackRoutes = require('./routes/feedback');
+const iconsRoutes = require('./routes/icons');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -46,6 +47,9 @@ app.use('/api/stats', statsLimiter, authBearer, statsRoutes);
 // Feedback API (POST is public, GET/PATCH/DELETE require auth)
 app.post('/api/feedback', collectLimiter, feedbackRoutes);
 app.use('/api/feedback', authBearer, feedbackRoutes);
+
+// Icons API (全部需要 auth)
+app.use('/api/icons', authBearer, iconsRoutes);
 
 // --- Dashboard login ---
 app.get('/dashboard/login', (req, res) => {
@@ -86,6 +90,15 @@ app.get('/dashboard', dashboardAuth, (req, res) => {
 
 app.get('/dashboard/app.js', dashboardAuth, (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'dashboard', 'app.js'));
+});
+
+// Icon Splitter page
+app.get('/dashboard/icons', dashboardAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'dashboard', 'icons.html'));
+});
+
+app.get('/dashboard/icons.js', dashboardAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'dashboard', 'icons.js'));
 });
 
 // Start server
