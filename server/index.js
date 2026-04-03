@@ -10,6 +10,9 @@ const collectRoutes = require('./routes/collect');
 const statsRoutes = require('./routes/stats');
 const feedbackRoutes = require('./routes/feedback');
 const iconsRoutes = require('./routes/icons');
+const iapRoutes = require('./routes/iap');
+const iapAdminRoutes = require('./routes/iapAdmin');
+require('./services/cleanupCron');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -50,6 +53,12 @@ app.use('/api/feedback', authBearer, feedbackRoutes);
 
 // Icons API (全部需要 auth)
 app.use('/api/icons', authBearer, iconsRoutes);
+
+// IAP public API — POST /iap/verify, GET /iap/user/:userId, POST /iap/coupon/redeem
+app.use('/iap', iapRoutes);
+
+// IAP admin API (auth required)
+app.use('/api/iap', authBearer, iapAdminRoutes);
 
 // --- Dashboard login ---
 app.get('/dashboard/login', (req, res) => {
@@ -99,6 +108,15 @@ app.get('/dashboard/icons', dashboardAuth, (req, res) => {
 
 app.get('/dashboard/icons.js', dashboardAuth, (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'dashboard', 'icons.js'));
+});
+
+// Coins dashboard page
+app.get('/dashboard/coins', dashboardAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'dashboard', 'coins.html'));
+});
+
+app.get('/dashboard/coins.js', dashboardAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'dashboard', 'coins.js'));
 });
 
 // Start server

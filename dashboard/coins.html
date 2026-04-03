@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coins Dashboard</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+      background: #0f0f10;
+      color: #e4e4e7;
+      min-height: 100vh;
+      font-size: 14px;
+    }
+
+    .sidebar {
+      position: fixed; top: 0; left: 0;
+      width: 240px; height: 100vh;
+      background: #18181b; border-right: 1px solid #27272a;
+      padding: 24px 16px;
+      display: flex; flex-direction: column;
+      z-index: 10; overflow-y: auto;
+    }
+    .sidebar .brand {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 28px; padding: 0 8px;
+    }
+    .sidebar .brand-icon {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 14px; color: #fff;
+    }
+    .sidebar .brand span { font-size: 15px; font-weight: 600; color: #fafafa; }
+    .sidebar nav { flex: 1; }
+    .nav-label {
+      font-size: 11px; font-weight: 600; color: #52525b;
+      text-transform: uppercase; letter-spacing: 0.8px;
+      padding: 0 12px; margin-bottom: 6px; margin-top: 20px;
+    }
+    .nav-label:first-child { margin-top: 0; }
+    .sidebar nav a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 8px;
+      color: #a1a1aa; text-decoration: none;
+      font-size: 14px; font-weight: 500;
+      transition: all .15s; margin-bottom: 2px;
+    }
+    .sidebar nav a:hover { background: #27272a; color: #fafafa; }
+    .sidebar nav a.active { background: rgba(99,102,241,0.12); color: #818cf8; }
+    .sidebar nav a svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .sidebar-footer { border-top: 1px solid #27272a; padding-top: 16px; }
+    .sidebar-footer a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 8px;
+      color: #71717a; text-decoration: none; font-size: 13px; transition: all .15s;
+    }
+    .sidebar-footer a:hover { color: #fca5a5; background: rgba(239,68,68,0.08); }
+    .sidebar-footer a svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+    .main { margin-left: 240px; padding: 32px 40px; min-height: 100vh; }
+
+    .page-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 32px; gap: 16px;
+    }
+    .page-header h1 { font-size: 22px; font-weight: 600; color: #fafafa; }
+    .page-header .subtitle { font-size: 13px; color: #71717a; margin-top: 4px; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: 8px; font-size: 14px;
+      font-weight: 500; cursor: pointer; transition: all .15s; border: none;
+    }
+    .btn-primary { background: #6366f1; color: #fff; }
+    .btn-primary:hover { background: #4f46e5; }
+    .btn-secondary { background: #27272a; color: #e4e4e7; border: 1px solid #3f3f46; }
+    .btn-secondary:hover { background: #3f3f46; }
+    .btn-danger { background: rgba(239,68,68,0.12); color: #fca5a5; border: 1px solid rgba(239,68,68,0.2); }
+    .btn-danger:hover { background: rgba(239,68,68,0.2); }
+    .btn svg { width: 14px; height: 14px; }
+
+    /* Stats grid */
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 12px; margin-bottom: 28px;
+    }
+    .stat-card {
+      background: #18181b; border: 1px solid #27272a;
+      padding: 18px 20px; border-radius: 12px;
+    }
+    .stat-card .label {
+      font-size: 12px; font-weight: 500; color: #71717a;
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;
+    }
+    .stat-card .num {
+      font-size: 28px; font-weight: 700; color: #fafafa;
+      font-variant-numeric: tabular-nums;
+    }
+    .stat-card .icon {
+      font-size: 20px; margin-bottom: 10px;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex; gap: 4px; margin-bottom: 24px;
+      border-bottom: 1px solid #27272a; padding-bottom: 0;
+    }
+    .tab-btn {
+      padding: 10px 18px; background: none; border: none;
+      color: #71717a; font-size: 14px; font-weight: 500;
+      cursor: pointer; border-bottom: 2px solid transparent;
+      margin-bottom: -1px; transition: all .15s;
+    }
+    .tab-btn:hover { color: #a1a1aa; }
+    .tab-btn.active { color: #818cf8; border-bottom-color: #6366f1; }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Table */
+    .table-card {
+      background: #18181b; border: 1px solid #27272a;
+      border-radius: 12px; overflow: hidden; margin-bottom: 20px;
+    }
+    .table-card-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 20px; border-bottom: 1px solid #27272a;
+    }
+    .table-card-header h3 { font-size: 14px; font-weight: 600; color: #fafafa; }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      padding: 10px 16px; text-align: left;
+      font-size: 11px; font-weight: 600; color: #52525b;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      border-bottom: 1px solid #27272a;
+    }
+    td {
+      padding: 12px 16px; font-size: 13px; color: #d4d4d8;
+      border-bottom: 1px solid #1e1e21;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+    .monospace { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; color: #a1a1aa; }
+    .coins-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: rgba(251,191,36,0.12); color: #fbbf24;
+      padding: 3px 10px; border-radius: 20px;
+      font-size: 13px; font-weight: 600;
+    }
+    .product-badge {
+      display: inline-block; padding: 2px 8px; border-radius: 6px;
+      font-size: 11px; font-weight: 600;
+    }
+    .product-small { background: rgba(99,102,241,0.15); color: #818cf8; }
+    .product-big { background: rgba(139,92,246,0.15); color: #a78bfa; }
+    .product-coupon { background: rgba(34,197,94,0.15); color: #4ade80; }
+
+    /* Coupon status */
+    .status-badge {
+      display: inline-block; padding: 2px 8px; border-radius: 6px;
+      font-size: 11px; font-weight: 600;
+    }
+    .status-active { background: rgba(34,197,94,0.15); color: #4ade80; }
+    .status-expired { background: rgba(239,68,68,0.15); color: #fca5a5; }
+    .status-full { background: rgba(251,191,36,0.15); color: #fbbf24; }
+
+    /* Pagination */
+    .pagination {
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px; padding: 16px;
+    }
+    .pagination button {
+      padding: 6px 14px; background: #27272a;
+      border: 1px solid #3f3f46; border-radius: 6px;
+      font-size: 13px; color: #e4e4e7; cursor: pointer; transition: all .15s;
+    }
+    .pagination button:hover { background: #3f3f46; }
+    .pagination button:disabled { opacity: 0.3; cursor: default; }
+    .pagination span { font-size: 13px; color: #71717a; }
+
+    /* Modal */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7); z-index: 100;
+      align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #18181b; border: 1px solid #27272a;
+      border-radius: 16px; padding: 28px; width: 420px; max-width: 90vw;
+    }
+    .modal h3 { font-size: 16px; font-weight: 600; color: #fafafa; margin-bottom: 20px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 500; color: #a1a1aa; margin-bottom: 6px; }
+    .form-group input {
+      width: 100%; padding: 9px 12px;
+      background: #0f0f10; border: 1px solid #3f3f46;
+      border-radius: 8px; font-size: 14px; color: #e4e4e7;
+      outline: none; transition: border-color .15s;
+    }
+    .form-group input:focus { border-color: #6366f1; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
+
+    .empty-state {
+      text-align: center; padding: 48px 20px; color: #52525b;
+      font-size: 14px;
+    }
+    .empty-state .empty-icon { font-size: 32px; margin-bottom: 12px; }
+
+    .progress-bar-bg {
+      background: #27272a; border-radius: 4px; height: 6px; width: 120px;
+    }
+    .progress-bar-fill {
+      height: 6px; border-radius: 4px;
+      background: linear-gradient(90deg, #6366f1, #8b5cf6);
+      transition: width .3s;
+    }
+
+    @media (max-width: 900px) {
+      .main { margin-left: 0; padding: 16px; }
+      .sidebar { display: none; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">A</div>
+      <span>Analytics</span>
+    </div>
+    <nav>
+      <div class="nav-label">Overview</div>
+      <a href="/dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        All Sites
+      </a>
+      <div class="nav-label">Tools</div>
+      <a href="/dashboard/icons">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+        Icon Splitter
+      </a>
+      <a href="/dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Feedback
+      </a>
+      <a href="/dashboard/coins" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        Coins
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="/dashboard/logout">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Logout
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="page-header">
+      <div>
+        <h1>Coins System</h1>
+        <div class="subtitle">IAP purchases, coin balances, and coupon management</div>
+      </div>
+      <button class="btn btn-secondary" id="btn-refresh">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+        Refresh
+      </button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid" id="stats-grid">
+      <div class="stat-card">
+        <div class="icon">👤</div>
+        <div class="label">Total Users</div>
+        <div class="num" id="stat-users">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="icon">🪙</div>
+        <div class="label">Coins Granted</div>
+        <div class="num" id="stat-coins">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="icon">💳</div>
+        <div class="label">Transactions</div>
+        <div class="num" id="stat-txns">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="icon">🎟️</div>
+        <div class="label">Coupons</div>
+        <div class="num" id="stat-coupons">—</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="users">Users</button>
+      <button class="tab-btn" data-tab="transactions">Transactions</button>
+      <button class="tab-btn" data-tab="coupons">Coupons</button>
+    </div>
+
+    <!-- Users Tab -->
+    <div class="tab-panel active" id="tab-users">
+      <div class="table-card">
+        <div class="table-card-header">
+          <h3>User Balances</h3>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>User ID</th>
+              <th>Coins</th>
+              <th>Created</th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody"></tbody>
+        </table>
+        <div class="empty-state" id="users-empty" style="display:none">
+          <div class="empty-icon">👤</div>
+          No users yet
+        </div>
+        <div class="pagination" id="users-pagination"></div>
+      </div>
+    </div>
+
+    <!-- Transactions Tab -->
+    <div class="tab-panel" id="tab-transactions">
+      <div class="table-card">
+        <div class="table-card-header">
+          <h3>Purchase History</h3>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Transaction ID</th>
+              <th>User ID</th>
+              <th>Product</th>
+              <th>Coins</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="txns-tbody"></tbody>
+        </table>
+        <div class="empty-state" id="txns-empty" style="display:none">
+          <div class="empty-icon">💳</div>
+          No transactions yet
+        </div>
+        <div class="pagination" id="txns-pagination"></div>
+      </div>
+    </div>
+
+    <!-- Coupons Tab -->
+    <div class="tab-panel" id="tab-coupons">
+      <div class="table-card">
+        <div class="table-card-header">
+          <h3>Coupons</h3>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-secondary" id="btn-bulk-coupon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+              Bulk Generate
+            </button>
+            <button class="btn btn-primary" id="btn-new-coupon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              New Coupon
+            </button>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Coins</th>
+              <th>Usage</th>
+              <th>Expires</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="coupons-tbody"></tbody>
+        </table>
+        <div class="empty-state" id="coupons-empty" style="display:none">
+          <div class="empty-icon">🎟️</div>
+          No coupons yet
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Coupon Modal -->
+  <div class="modal-overlay" id="coupon-modal">
+    <div class="modal">
+      <h3>Create Coupon</h3>
+      <div class="form-group">
+        <label>Code</label>
+        <input type="text" id="input-code" placeholder="WELCOME100" style="text-transform:uppercase">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Coins</label>
+          <input type="number" id="input-coins" placeholder="100" min="1">
+        </div>
+        <div class="form-group">
+          <label>Usage Limit</label>
+          <input type="number" id="input-limit" placeholder="1000" min="1">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Expires At</label>
+        <input type="datetime-local" id="input-expire">
+      </div>
+      <div id="modal-error" style="color:#fca5a5;font-size:13px;margin-bottom:12px;display:none"></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="btn-cancel-modal">Cancel</button>
+        <button class="btn btn-primary" id="btn-create-coupon">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bulk Generate Modal -->
+  <div class="modal-overlay" id="bulk-modal">
+    <div class="modal">
+      <h3>Bulk Generate Coupons</h3>
+      <div class="form-group">
+        <label>Prefix</label>
+        <input type="text" id="bulk-prefix" placeholder="SUMMER" style="text-transform:uppercase" maxlength="12">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Count <span style="color:#52525b">(max 500)</span></label>
+          <input type="number" id="bulk-count" placeholder="50" min="1" max="500">
+        </div>
+        <div class="form-group">
+          <label>Coins each</label>
+          <input type="number" id="bulk-coins" placeholder="100" min="1">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Usage Limit each</label>
+          <input type="number" id="bulk-limit" placeholder="1" min="1">
+        </div>
+        <div class="form-group">
+          <label>Expires At</label>
+          <input type="datetime-local" id="bulk-expire">
+        </div>
+      </div>
+      <div id="bulk-error" style="color:#fca5a5;font-size:13px;margin-bottom:12px;display:none"></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="btn-cancel-bulk">Cancel</button>
+        <button class="btn btn-primary" id="btn-do-bulk">Generate</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bulk Result Modal -->
+  <div class="modal-overlay" id="bulk-result-modal">
+    <div class="modal" style="width:520px">
+      <h3>Generated Coupons <span id="bulk-result-count" style="color:#71717a;font-weight:400;font-size:14px"></span></h3>
+      <textarea id="bulk-result-codes" readonly style="
+        width:100%; height:200px; margin:16px 0;
+        background:#0f0f10; border:1px solid #3f3f46; border-radius:8px;
+        padding:12px; font-family:'SF Mono','Fira Code',monospace;
+        font-size:12px; color:#a1a1aa; resize:none; outline:none;
+        line-height:1.8;
+      "></textarea>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="btn-copy-codes">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy All
+        </button>
+        <button class="btn btn-primary" id="btn-close-result">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/dashboard/coins.js"></script>
+</body>
+</html>
