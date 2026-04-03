@@ -30,11 +30,19 @@
 
   // ── Stats ─────────────────────────────────────────────────────────────────
   async function loadStats() {
-    const data = await apiFetch('/stats');
+    const [data, themeData] = await Promise.all([
+      apiFetch('/stats'),
+      apiFetch('/theme-stats'),
+    ]);
     document.getElementById('stat-users').textContent = fmt(data.totalUsers ?? 0);
     document.getElementById('stat-coins').textContent = fmt(data.totalCoinsGranted ?? 0);
     document.getElementById('stat-txns').textContent = fmt(data.totalTransactions ?? 0);
     document.getElementById('stat-coupons').textContent = fmt(data.totalCoupons ?? 0);
+
+    const totalPurchases = (themeData.items || []).reduce((s, t) => s + t.totalPurchases, 0);
+    const totalCoins = (themeData.items || []).reduce((s, t) => s + t.totalCoinsSpent, 0);
+    document.getElementById('stat-theme-purchases').textContent = fmt(totalPurchases);
+    document.getElementById('stat-theme-coins').textContent = fmt(totalCoins);
   }
 
   // ── Users ─────────────────────────────────────────────────────────────────
@@ -131,6 +139,38 @@
           <td>
             <button class="btn btn-danger" style="padding:4px 10px;font-size:12px" onclick="deleteCoupon('${c.code}')">Delete</button>
           </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // ── Themes ────────────────────────────────────────────────────────────────
+  async function loadThemes() {
+    const data = await apiFetch('/theme-stats');
+    const tbody = document.getElementById('themes-tbody');
+    const empty = document.getElementById('themes-empty');
+
+    if (!data.items || data.items.length === 0) {
+      tbody.innerHTML = '';
+      empty.style.display = '';
+      return;
+    }
+
+    empty.style.display = 'none';
+    const max = data.items[0].totalPurchases || 1;
+    tbody.innerHTML = data.items.map(t => {
+      const pct = Math.round((t.totalPurchases / max) * 100);
+      return `
+        <tr>
+          <td><code style="color:#fafafa;font-size:13px">${t.themeId}</code></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
+              <span style="font-variant-numeric:tabular-nums">${fmt(t.totalPurchases)}</span>
+            </div>
+          </td>
+          <td style="color:#a1a1aa">${fmt(t.uniqueUsers)}</td>
+          <td><span class="coins-badge">🪙 ${fmt(t.totalCoinsSpent)}</span></td>
         </tr>
       `;
     }).join('');
@@ -304,6 +344,7 @@
     loadUsers(0);
     loadTransactions(0);
     loadCoupons();
+    loadThemes();
   }
 
   document.getElementById('btn-refresh').addEventListener('click', loadAll);

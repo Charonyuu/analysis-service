@@ -299,6 +299,16 @@
         <div class="label">Coupons</div>
         <div class="num" id="stat-coupons">—</div>
       </div>
+      <div class="stat-card">
+        <div class="icon">🎨</div>
+        <div class="label">Theme Purchases</div>
+        <div class="num" id="stat-theme-purchases">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="icon">🪙</div>
+        <div class="label">Coins from Themes</div>
+        <div class="num" id="stat-theme-coins">—</div>
+      </div>
     </div>
 
     <!-- Tabs -->
@@ -306,6 +316,7 @@
       <button class="tab-btn active" data-tab="users">Users</button>
       <button class="tab-btn" data-tab="transactions">Transactions</button>
       <button class="tab-btn" data-tab="coupons">Coupons</button>
+      <button class="tab-btn" data-tab="themes">Themes</button>
     </div>
 
     <!-- Users Tab -->
@@ -390,6 +401,30 @@
         <div class="empty-state" id="coupons-empty" style="display:none">
           <div class="empty-icon">🎟️</div>
           No coupons yet
+        </div>
+      </div>
+    </div>
+
+    <!-- Themes Tab -->
+    <div class="tab-panel" id="tab-themes">
+      <div class="table-card">
+        <div class="table-card-header">
+          <h3>Theme Purchase Stats</h3>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Theme ID</th>
+              <th>Purchases</th>
+              <th>Unique Users</th>
+              <th>Coins Spent</th>
+            </tr>
+          </thead>
+          <tbody id="themes-tbody"></tbody>
+        </table>
+        <div class="empty-state" id="themes-empty" style="display:none">
+          <div class="empty-icon">🎨</div>
+          No theme purchases yet
         </div>
       </div>
     </div>

@@ -16,7 +16,17 @@
     "isNew": false,
     "artistName": null,
     "artistURL": null,
-    "features": []
+    "features": [],
+    "colors": {
+      "background": "#F2F2F7",
+      "card": "#FFFFFF",
+      "textPrimary": "#000000",
+      "textSecondary": "#8E8E93",
+      "textTertiary": "#C7C7CC",
+      "accent": "#8B6914",
+      "buttonForeground": "#FFFFFF",
+      "useGlass": true
+    }
   },
   {
     "id": "diy",
@@ -35,7 +45,17 @@
     "isNew": false,
     "artistName": null,
     "artistURL": null,
-    "features": []
+    "features": [],
+    "colors": {
+      "background": "#F2F2F7",
+      "card": "#FFFFFF",
+      "textPrimary": "#000000",
+      "textSecondary": "#8E8E93",
+      "textTertiary": "#C7C7CC",
+      "accent": "#8B6914",
+      "buttonForeground": "#FFFFFF",
+      "useGlass": true
+    }
   },
   {
     "id": "lovePack",
@@ -68,7 +88,21 @@
       { "icon": "sparkles", "title": "愛心角落裝飾", "description": "粉色愛心漂浮在角落" },
       { "icon": "paintbrush.fill", "title": "16 款自然裝飾貼紙", "description": "愛心、星星、彩虹等" },
       { "icon": "square.grid.2x2.fill", "title": "支援全部 Widget 類型", "description": "照片、天氣、倒數日等" }
-    ]
+    ],
+    "colors": {
+      "background": "#FFF9F5",
+      "card": "#FFF1EB",
+      "textPrimary": "#4A2C2A",
+      "textSecondary": "#A0706C",
+      "textTertiary": "#C9A09C",
+      "accent": "#FBCFE8",
+      "buttonForeground": "#4A2C2A",
+      "useGlass": false,
+      "borderColors": ["#FBCFE899", "#C084FC66"],
+      "borderWidth": 1.5,
+      "cornerIcon": "heart.fill",
+      "cornerIconColors": ["#FB7185", "#F43F5EB3"]
+    }
   },
   {
     "id": "dogPack",
@@ -102,7 +136,17 @@
       { "icon": "clock.fill", "title": "時間行為系統", "description": "柴犬會隨時段變換姿勢" },
       { "icon": "paintbrush.fill", "title": "奶油暖色調", "description": "溫暖的奶油色系設計" },
       { "icon": "square.grid.2x2.fill", "title": "支援全部 Widget 類型", "description": "照片、天氣、倒數日等" }
-    ]
+    ],
+    "colors": {
+      "background": "#F7F5F2",
+      "card": "#F0EDE8",
+      "textPrimary": "#2C2C2C",
+      "textSecondary": "#8A8A8A",
+      "textTertiary": "#B5B5B5",
+      "accent": "#E8985A",
+      "buttonForeground": "#FFFFFF",
+      "useGlass": false
+    }
   },
   {
     "id": "catTheme",
@@ -135,7 +179,17 @@
       { "icon": "cat.fill", "title": "9 款貓咪貼紙", "description": "坐下、睡覺、撒嬌等療癒姿態" },
       { "icon": "clock.fill", "title": "時間行為系統", "description": "貓咪會隨時段變換姿勢" },
       { "icon": "paintbrush.fill", "title": "冷灰紫色調", "description": "優雅的灰紫色系設計" }
-    ]
+    ],
+    "colors": {
+      "background": "#F9FAFB",
+      "card": "#E5E7EB",
+      "textPrimary": "#374151",
+      "textSecondary": "#6B7280",
+      "textTertiary": "#9CA3AF",
+      "accent": "#C4B5FD",
+      "buttonForeground": "#374151",
+      "useGlass": false
+    }
   },
   {
     "id": "cuteFaces",
@@ -168,7 +222,17 @@
       { "icon": "paintbrush.fill", "title": "粉紫夢幻色調", "description": "柔和的粉紫色系" },
       { "icon": "star.fill", "title": "圓角可愛邊框", "description": "粉色點點邊框裝飾" },
       { "icon": "square.grid.2x2.fill", "title": "支援全部 Widget 類型", "description": "照片、天氣、倒數日等" }
-    ]
+    ],
+    "colors": {
+      "background": "#F6F3EF",
+      "card": "#FFFFFF",
+      "textPrimary": "#1C1C1E",
+      "textSecondary": "#8E8E93",
+      "textTertiary": "#8E8E93",
+      "accent": "#FBCFE8",
+      "buttonForeground": "#1C1C1E",
+      "useGlass": false
+    }
   },
   {
     "id": "animalPack",
@@ -208,7 +272,17 @@
       { "icon": "hare.fill", "title": "16 款動物貼紙", "description": "柴犬、貓咪、獅子、倉鼠、兔子" },
       { "icon": "paintbrush.fill", "title": "暖黃活潑色調", "description": "明亮的黃橘色系" },
       { "icon": "square.grid.2x2.fill", "title": "支援全部 Widget 類型", "description": "照片、天氣、倒數日等" }
-    ]
+    ],
+    "colors": {
+      "background": "#FFF8ED",
+      "card": "#FEF3C7",
+      "textPrimary": "#78350F",
+      "textSecondary": "#A16207",
+      "textTertiary": "#CA8A04",
+      "accent": "#F59E0B",
+      "buttonForeground": "#FFFFFF",
+      "useGlass": false
+    }
   },
   {
     "id": "ghostPack",
@@ -248,6 +322,16 @@
       { "icon": "ghost.fill", "title": "16 款幽靈貼紙", "description": "開心、害羞、睡覺等超療癒表情" },
       { "icon": "paintbrush.fill", "title": "夢幻紫色調", "description": "柔和的紫色系設計" },
       { "icon": "square.grid.2x2.fill", "title": "支援全部 Widget 類型", "description": "照片、天氣、倒數日等" }
-    ]
+    ],
+    "colors": {
+      "background": "#F5F3FF",
+      "card": "#EDE9FE",
+      "textPrimary": "#4C1D95",
+      "textSecondary": "#7C3AED",
+      "textTertiary": "#A78BFA",
+      "accent": "#8B5CF6",
+      "buttonForeground": "#FFFFFF",
+      "useGlass": false
+    }
   }
 ]

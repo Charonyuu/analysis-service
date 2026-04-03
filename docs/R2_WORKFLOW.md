@@ -25,13 +25,16 @@ charonyu-icons/
 
 ---
 
-## 加新主題包的流程
-1. 畫好素材，上傳到 R2 stickers/ 底下
-2. 編輯 themes.json — 加一筆新的 theme 物件
-3. 編輯 stickers.json — 加新貼圖
-4. 編輯 banners.json — 加新 banner（可選）
-5. 改 version.json → { "version": 2 }
-6. 上傳這四個 JSON → 用戶打開 App 自動看到
+## 加新主題包的流程（零 code 改動，零審查）
+
+1. 畫好素材 → 上傳圖片到 R2 `stickers/<新主題>/`
+2. 編輯 `docs/themes.json` → 加新 theme 物件（含 `colors` 欄位）
+3. 編輯 `docs/r2_config/stickers.json` → 加新貼圖
+4. 編輯 `docs/r2_config/banners.json` → 加新 banner（可選）
+5. 更新 `docs/version.json` → `{ "version": N+1 }`
+6. 同步並上傳 → `cp docs/themes.json docs/r2_config/themes.json && cp docs/version.json docs/r2_config/version.json`
+7. `cd icon-api && node upload_lumee_config.js`
+8. 用戶打開 App → 自動偵測版本變更，看到新主題 + 正確配色 ✨
 
 ### Step 1 — 準備素材，上傳圖片到 R2
 
@@ -46,31 +49,74 @@ charonyu-icons/
 cd icon-api && node upload_stickers_to_r2.js
 ```
 
-### Step 2 — 編輯 `docs/r2_config/stickers.json`
+### Step 2 — 編輯 `docs/themes.json`
+
+加入新主題包物件。**每個 theme 必須帶 `colors` 欄位**，App 會用這組顏色渲染 Widget：
+
+```json
+{
+  "id": "artist_yuki_pack",
+  "name": "Yuki 的夢幻世界",
+  "subtitle": "插畫家 Yuki 獨家合作",
+  "coinPrice": 50,
+  "supportedTypes": ["photo", "weather", "countdown", "daily", "mood", "todo"],
+  "coverIcon": "sparkles",
+  "coverGradient": ["#E0C3FC", "#8EC5FC"],
+  "entitlementKey": "artistYukiUnlocked",
+  "petType": "sticker",
+  "iconStickers": [
+    { "key": "yuki_bunny", "name": "兔兔", "url": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/artist_yuki/bunny.png" },
+    { "key": "yuki_bear",  "name": "小熊", "url": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/artist_yuki/bear.png" }
+  ],
+  "defaultStickerKey": "yuki_bunny",
+  "bundledStickerIDs": ["yuki_bunny", "yuki_bear"],
+  "sortOrder": 10,
+  "isNew": true,
+  "artistName": "Yuki (@yuki_art)",
+  "artistURL": "https://instagram.com/yuki_art",
+  "features": [
+    { "icon": "paintbrush.fill", "title": "夢幻水彩風",  "description": "柔和漸層配色" },
+    { "icon": "person.fill",     "title": "插畫家合作",  "description": "Yuki 獨家手繪角色" }
+  ],
+  "colors": {
+    "background":      "#F8F0FF",
+    "card":            "#F0E6FF",
+    "textPrimary":     "#2D1B69",
+    "textSecondary":   "#7C5CBF",
+    "textTertiary":    "#A78BFA",
+    "accent":          "#8B5CF6",
+    "buttonForeground":"#FFFFFF",
+    "useGlass":        false,
+    "borderColors":    ["#E0C3FC", "#8EC5FC"],
+    "borderWidth":     1.5,
+    "cornerIcon":      "sparkle",
+    "cornerIconColors":["#C084FC", "#818CF8"]
+  }
+}
+```
+
+### Step 3 — 編輯 `docs/r2_config/stickers.json`
 
 加入新貼圖，格式：
 ```json
 { "id": "<唯一ID>", "name": "顯示名稱", "category": "<主題>", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/<主題>/<檔名>.png" }
 ```
 
-### Step 3 — 編輯 `docs/r2_config/themes.json`
-
-加入新主題包物件（含 `bundledStickerIDs`、`coverGradient` 等）。
-
 ### Step 4 — 編輯 `docs/r2_config/banners.json`（可選）
 
 加入新 banner 物件，`linkedThemePackID` 指向 themes.json 的 `id`。
 
-### Step 5 — 更新 version.json
-
-```json
-{ "version": <目前版本 + 1> }
-```
-
-### Step 6 — 上傳 JSON 到 R2
+### Step 5 — Bump version + 同步 + 上傳
 
 ```bash
-cd icon-api && node upload_lumee_config.js
+# 1. 更新 docs/version.json → { "version": N+1 }
+
+# 2. 同步到 r2_config
+cp docs/themes.json docs/r2_config/themes.json
+cp docs/version.json docs/r2_config/version.json
+
+# 3. 上傳到 R2
+cd /path/to/icon-api && node upload_lumee_config.js
 ```
 
 App 下次打開會自動偵測版本變更並更新。
