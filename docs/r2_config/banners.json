@@ -1,0 +1,32 @@
+[
+  {
+    "id": "dog_pack",
+    "title": "柴犬日常",
+    "subtitle": "🐶 柴犬陪你過每一天",
+    "gradientColors": ["#F2D9A6", "#E6BF8C"],
+    "icon": "pawprint.fill",
+    "linkedThemePackID": "dogPack",
+    "imageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_config/banners/banner_dog_pack.png",
+    "sortOrder": 0
+  },
+  {
+    "id": "cute_faces",
+    "title": "萌萌動物",
+    "subtitle": "超萌表情貼・百搭風格",
+    "gradientColors": ["#FF69B4", "#9B59B6"],
+    "icon": "face.smiling.inverse",
+    "linkedThemePackID": "cuteFaces",
+    "imageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_config/banners/banner_cute_animals.png",
+    "sortOrder": 1
+  },
+  {
+    "id": "new_themes",
+    "title": "更多主題包即將推出",
+    "subtitle": "敬請期待全新風格",
+    "gradientColors": ["#D4A574", "#B8845C"],
+    "icon": "sparkles",
+    "linkedThemePackID": null,
+    "imageURL": null,
+    "sortOrder": 2
+  }
+]

@@ -4,6 +4,7 @@ const User = require('../models/User');
 const Transaction = require('../models/Transaction');
 const Coupon = require('../models/Coupon');
 const CouponUsage = require('../models/CouponUsage');
+const ThemePurchase = require('../models/ThemePurchase');
 
 // GET /api/iap/stats — overview numbers for dashboard
 router.get('/stats', async (req, res) => {
@@ -58,6 +59,36 @@ router.get('/transactions', async (req, res) => {
     ]);
 
     res.json({ items, total, page: p, pageSize: lim });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: 'internal error' });
+  }
+});
+
+// GET /api/iap/theme-stats — theme purchase stats grouped by themeId
+router.get('/theme-stats', async (req, res) => {
+  try {
+    const items = await ThemePurchase.aggregate([
+      {
+        $group: {
+          _id: '$themeId',
+          totalPurchases: { $sum: 1 },
+          totalCoinsSpent: { $sum: '$coinPrice' },
+          uniqueUsers: { $addToSet: '$userId' },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          themeId: '$_id',
+          totalPurchases: 1,
+          totalCoinsSpent: 1,
+          uniqueUsers: { $size: '$uniqueUsers' },
+        },
+      },
+      { $sort: { totalPurchases: -1 } },
+    ]);
+
+    res.json({ items });
   } catch (err) {
     res.status(500).json({ ok: false, error: 'internal error' });
   }

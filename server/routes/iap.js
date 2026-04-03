@@ -4,6 +4,7 @@ const User = require('../models/User');
 const Transaction = require('../models/Transaction');
 const Coupon = require('../models/Coupon');
 const CouponUsage = require('../models/CouponUsage');
+const ThemePurchase = require('../models/ThemePurchase');
 
 const PRODUCTS = {
   coins_small: 60,
@@ -92,6 +93,52 @@ router.post('/coupon/redeem', async (req, res) => {
     res.json({ success: true, coins: user.coins });
   } catch (err) {
     console.error('Coupon redeem error:', err);
+    res.status(500).json({ success: false, error: 'INTERNAL_ERROR' });
+  }
+});
+
+// POST /iap/theme-purchase — spend coins to unlock a theme
+router.post('/theme-purchase', async (req, res) => {
+  try {
+    const { userId, themeId, coinPrice } = req.body;
+
+    if (!userId || !themeId || coinPrice === undefined) {
+      return res.status(400).json({ success: false, error: 'MISSING_FIELDS' });
+    }
+
+    const price = parseInt(coinPrice);
+    if (isNaN(price) || price < 0) {
+      return res.status(400).json({ success: false, error: 'INVALID_PRICE' });
+    }
+
+    // Check already owned
+    const owned = await ThemePurchase.findOne({ userId, themeId });
+    if (owned) {
+      const user = await User.findById(userId);
+      return res.json({ success: true, alreadyOwned: true, coins: user ? user.coins : 0 });
+    }
+
+    // Check balance
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ success: false, error: 'USER_NOT_FOUND' });
+    if (user.coins < price) return res.status(400).json({ success: false, error: 'INSUFFICIENT_COINS' });
+
+    // Deduct coins and record purchase atomically
+    await ThemePurchase.create({ userId, themeId, coinPrice: price });
+    const updated = await User.findByIdAndUpdate(
+      userId,
+      { $inc: { coins: -price } },
+      { new: true }
+    );
+
+    res.json({ success: true, alreadyOwned: false, coins: updated.coins });
+  } catch (err) {
+    if (err.code === 11000) {
+      // Race condition: already purchased
+      const user = await User.findById(req.body.userId);
+      return res.json({ success: true, alreadyOwned: true, coins: user ? user.coins : 0 });
+    }
+    console.error('Theme purchase error:', err);
     res.status(500).json({ success: false, error: 'INTERNAL_ERROR' });
   }
 });
