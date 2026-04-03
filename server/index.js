@@ -48,8 +48,10 @@ app.use('/api', collectLimiter, collectRoutes);
 app.use('/api/stats', statsLimiter, authBearer, statsRoutes);
 
 // Feedback API (POST is public, GET/PATCH/DELETE require auth)
-app.post('/api/feedback', collectLimiter, feedbackRoutes);
-app.use('/api/feedback', authBearer, feedbackRoutes);
+app.use('/api/feedback', (req, res, next) => {
+  if (req.method === 'POST') return collectLimiter(req, res, next);
+  authBearer(req, res, next);
+}, feedbackRoutes);
 
 // Icons API (全部需要 auth)
 app.use('/api/icons', authBearer, iconsRoutes);
