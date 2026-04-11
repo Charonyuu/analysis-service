@@ -48,7 +48,9 @@
     },
     "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
     "artistDescription": "Lumee 官方設計團隊",
-    "createdAt": "2026-03-01"
+    "createdAt": "2026-03-01",
+    "name_en": "Basic",
+    "subtitle_en": "Free to start"
   },
   {
     "id": "diy",
@@ -87,7 +89,9 @@
     },
     "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
     "artistDescription": "Lumee 官方設計團隊",
-    "createdAt": "2026-03-01"
+    "createdAt": "2026-03-01",
+    "name_en": "DIY",
+    "subtitle_en": "Create your own cute Widget"
   },
   {
     "id": "premiumBlack",
@@ -125,12 +129,16 @@
       {
         "icon": "moon.fill",
         "title": "深色質感",
-        "description": "純黑背景搭配紅色點綴"
+        "description": "純黑背景搭配紅色點綴",
+        "title_en": "Dark Texture",
+        "description_en": "Pure black background with red accents"
       },
       {
         "icon": "textformat",
         "title": "高對比排版",
-        "description": "白色文字在深色背景上清晰易讀"
+        "description": "白色文字在深色背景上清晰易讀",
+        "title_en": "High Contrast",
+        "description_en": "White text clearly readable on dark background"
       }
     ],
     "packType": "theme",
@@ -156,7 +164,9 @@
     },
     "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
     "artistDescription": "Lumee 官方設計團隊",
-    "createdAt": "2026-04-11"
+    "createdAt": "2026-04-11",
+    "name_en": "Premium Black",
+    "subtitle_en": "Minimal dark with red accent"
   },
   {
     "id": "lovePack",
@@ -280,7 +290,23 @@
     },
     "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
     "artistDescription": "Lumee 官方設計團隊",
-    "createdAt": "2026-03-01"
+    "createdAt": "2026-03-01",
+    "backgroundImages": {
+      "small": [
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/lovePack_0.png",
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/lovePack_1.png",
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/lovePack_2.png",
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/lovePack_3.png"
+      ],
+      "medium": [
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/lovePack_0.png",
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/lovePack_1.png",
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/lovePack_2.png",
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/lovePack_3.png"
+      ]
+    },
+    "name_en": "Couple",
+    "subtitle_en": "Romantic cream white + pink border"
   },
   {
     "id": "dogPack",
@@ -382,7 +408,23 @@
     },
     "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
     "artistDescription": "Lumee 官方設計團隊",
-    "createdAt": "2026-03-01"
+    "createdAt": "2026-03-01",
+    "backgroundImages": {
+      "small": [
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/dogPack_0.png",
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/dogPack_1.png",
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/dogPack_2.png",
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/dogPack_3.png"
+      ],
+      "medium": [
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/dogPack_0.png",
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/dogPack_1.png",
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/dogPack_2.png",
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/dogPack_3.png"
+      ]
+    },
+    "name_en": "Shiba Daily",
+    "subtitle_en": "Shiba Inu by your side every day"
   },
   {
     "id": "catTheme",
@@ -484,7 +526,9 @@
     },
     "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
     "artistDescription": "Lumee 官方設計團隊",
-    "createdAt": "2026-03-01"
+    "createdAt": "2026-03-01",
+    "name_en": "Cat Daily",
+    "subtitle_en": "Healing cat moments"
   },
   {
     "id": "cuteFaces",
@@ -580,7 +624,9 @@
     },
     "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
     "artistDescription": "Lumee 官方設計團隊",
-    "createdAt": "2026-03-01"
+    "createdAt": "2026-03-01",
+    "name_en": "Cute Faces",
+    "subtitle_en": "Adorable animal expressions"
   },
   {
     "id": "animalPack",
@@ -724,7 +770,9 @@
     },
     "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
     "artistDescription": "Lumee 官方設計團隊",
-    "createdAt": "2026-03-01"
+    "createdAt": "2026-03-01",
+    "name_en": "Animal Park",
+    "subtitle_en": "Popular animal collection"
   },
   {
     "id": "ghostPack",
@@ -868,7 +916,9 @@
     },
     "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
     "artistDescription": "Lumee 官方設計團隊",
-    "createdAt": "2026-03-01"
+    "createdAt": "2026-03-01",
+    "name_en": "Soft Ghost",
+    "subtitle_en": "Cute ghosts, so healing"
   },
   {
     "id": "stickerPack_hamster",
@@ -995,22 +1045,30 @@
       {
         "icon": "face.smiling",
         "title": "16 款搞笑表情",
-        "description": "大笑、生氣、暈眩、流口水等"
+        "description": "大笑、生氣、暈眩、流口水等",
+        "title_en": "Hamster Stickers",
+        "description_en": "16 hilarious hamster expression stickers"
       },
       {
         "icon": "heart.fill",
         "title": "可愛倉鼠角色",
-        "description": "圓滾滾倉鼠臉超療癒"
+        "description": "圓滾滾倉鼠臉超療癒",
+        "title_en": "Funny Expressions",
+        "description_en": "Angry, shocked, sleeping... all emotions covered"
       },
       {
         "icon": "paintbrush.fill",
         "title": "DIY 模式可用",
-        "description": "購買後可在 DIY Widget 中使用"
+        "description": "購買後可在 DIY Widget 中使用",
+        "title_en": "DIY Ready",
+        "description_en": "Use freely in DIY mode"
       },
       {
         "icon": "square.grid.2x2.fill",
         "title": "支援照片 Widget",
-        "description": "貼在你的相片 Widget 上"
+        "description": "貼在你的相片 Widget 上",
+        "title_en": "Supports Photo Widget",
+        "description_en": "Put on your photo Widget"
       }
     ],
     "colors": {
@@ -1026,6 +1084,8 @@
     "stickerCategory": "寵物",
     "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
     "artistDescription": "Lumee 官方設計團隊",
-    "createdAt": "2026-03-01"
+    "createdAt": "2026-03-01",
+    "name_en": "Hamster Pack",
+    "subtitle_en": "16 funny hamster stickers"
   }
 ]
