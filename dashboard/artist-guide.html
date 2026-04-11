@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artist Guide - Dashboard</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+      background: #0f0f10;
+      color: #e4e4e7;
+      min-height: 100vh;
+      font-size: 14px;
+    }
+
+    /* --- Sidebar --- */
+    .sidebar {
+      position: fixed; top: 0; left: 0;
+      width: 240px; height: 100vh;
+      background: #18181b; border-right: 1px solid #27272a;
+      padding: 24px 16px;
+      display: flex; flex-direction: column;
+      z-index: 10; overflow-y: auto;
+    }
+    .sidebar .brand {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 28px; padding: 0 8px;
+    }
+    .sidebar .brand-icon {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 14px; color: #fff;
+    }
+    .sidebar .brand span { font-size: 15px; font-weight: 600; color: #fafafa; }
+    .sidebar nav { flex: 1; }
+    .nav-label {
+      font-size: 11px; font-weight: 600; color: #52525b;
+      text-transform: uppercase; letter-spacing: 0.8px;
+      padding: 0 12px; margin-bottom: 6px; margin-top: 20px;
+    }
+    .nav-label:first-child { margin-top: 0; }
+    .sidebar nav a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 8px;
+      color: #a1a1aa; text-decoration: none;
+      font-size: 14px; font-weight: 500;
+      transition: all .15s; margin-bottom: 2px;
+    }
+    .sidebar nav a:hover { background: #27272a; color: #fafafa; }
+    .sidebar nav a.active { background: rgba(99,102,241,0.12); color: #818cf8; }
+    .sidebar nav a svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .sidebar-footer { border-top: 1px solid #27272a; padding-top: 16px; }
+    .sidebar-footer a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 8px;
+      color: #71717a; text-decoration: none; font-size: 13px; transition: all .15s;
+    }
+    .sidebar-footer a:hover { color: #fca5a5; background: rgba(239,68,68,0.08); }
+    .sidebar-footer a svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+    /* --- Mobile header --- */
+    .mobile-header {
+      display: none;
+      position: sticky; top: 0; z-index: 10;
+      background: #18181b; border-bottom: 1px solid #27272a;
+      padding: 14px 16px;
+      align-items: center; justify-content: space-between;
+    }
+    .mobile-header .brand {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .mobile-header .brand-icon {
+      width: 28px; height: 28px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 12px; color: #fff;
+    }
+    .mobile-header .brand span { font-size: 14px; font-weight: 600; color: #fafafa; }
+    .mobile-header a {
+      color: #71717a; text-decoration: none; font-size: 12px;
+      padding: 6px 10px; border-radius: 6px; transition: all .15s;
+    }
+    .mobile-header a:hover { color: #fca5a5; background: rgba(239,68,68,0.08); }
+
+    /* --- Main --- */
+    .main { margin-left: 240px; padding: 32px 40px; min-height: 100vh; max-width: 1200px; }
+
+    /* --- Header --- */
+    .page-header { margin-bottom: 36px; }
+    .page-header h1 { font-size: 24px; font-weight: 700; color: #fafafa; }
+    .page-header .subtitle { font-size: 14px; color: #71717a; margin-top: 6px; }
+
+    /* --- Section --- */
+    .section { margin-bottom: 40px; }
+    .section-title {
+      font-size: 18px; font-weight: 600; color: #fafafa;
+      margin-bottom: 6px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-title .tag {
+      font-size: 11px; font-weight: 600;
+      padding: 2px 8px; border-radius: 6px;
+      background: rgba(99,102,241,0.15); color: #818cf8;
+    }
+    .section-desc {
+      font-size: 13px; color: #71717a; margin-bottom: 16px; line-height: 1.6;
+    }
+
+    /* --- Card --- */
+    .card {
+      background: #18181b; border: 1px solid #27272a;
+      border-radius: 12px; padding: 24px; margin-bottom: 16px;
+      transition: border-color .2s;
+    }
+    .card:hover { border-color: #3f3f46; }
+    .card-title {
+      font-size: 16px; font-weight: 600; color: #fafafa;
+      margin-bottom: 4px; display: flex; align-items: center; gap: 8px;
+    }
+    .card-title .optional-badge {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.3px;
+      padding: 2px 8px; border-radius: 10px;
+      background: rgba(251,191,36,0.12); color: #fbbf24;
+    }
+    .card-subtitle {
+      font-size: 13px; color: #71717a; margin-bottom: 16px;
+    }
+
+    /* --- Spec table --- */
+    .spec-table { width: 100%; margin-bottom: 16px; }
+    .spec-table td {
+      padding: 6px 0; font-size: 13px; vertical-align: top;
+    }
+    .spec-table td:first-child {
+      color: #71717a; width: 120px; white-space: nowrap; padding-right: 16px;
+    }
+    .spec-table td:last-child { color: #d4d4d8; }
+    .spec-table code {
+      background: #27272a; padding: 2px 6px; border-radius: 4px;
+      font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; color: #a78bfa;
+    }
+
+    /* --- Image grid --- */
+    .img-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 12px; margin-top: 12px;
+    }
+    .img-grid-item {
+      aspect-ratio: 1; border-radius: 10px;
+      background: #27272a; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform .2s, box-shadow .2s;
+      cursor: pointer;
+    }
+    .img-grid-item:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 0 2px #6366f1;
+    }
+    .img-grid-item img {
+      width: 80%; height: 80%; object-fit: contain;
+    }
+    .img-group-label {
+      font-size: 12px; font-weight: 600; color: #52525b;
+      margin-top: 12px; margin-bottom: 6px; text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* --- Color swatches --- */
+    .theme-color-row {
+      display: flex; align-items: center; gap: 16px;
+      padding: 14px 0; border-bottom: 1px solid #1e1e21;
+      flex-wrap: wrap;
+    }
+    .theme-color-row:last-child { border-bottom: none; }
+    .theme-name {
+      font-size: 14px; font-weight: 600; color: #e4e4e7;
+      width: 120px; flex-shrink: 0;
+    }
+    .swatches { display: flex; gap: 8px; flex-wrap: wrap; }
+    .swatch {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+    }
+    .swatch-circle {
+      width: 36px; height: 36px; border-radius: 8px;
+      border: 2px solid #3f3f46;
+      transition: transform .15s;
+    }
+    .swatch-circle:hover { transform: scale(1.15); }
+    .swatch-label {
+      font-size: 10px; color: #52525b; text-align: center; max-width: 50px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .swatch-hex {
+      font-size: 10px; color: #71717a;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    /* --- Color field list --- */
+    .color-field-list {
+      display: grid; grid-template-columns: 1fr 2fr;
+      gap: 0; margin-top: 16px;
+    }
+    .color-field-list dt {
+      padding: 8px 12px; font-size: 13px; font-weight: 600; color: #a78bfa;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      border-bottom: 1px solid #1e1e21;
+    }
+    .color-field-list dd {
+      padding: 8px 12px; font-size: 13px; color: #a1a1aa;
+      border-bottom: 1px solid #1e1e21;
+    }
+
+    /* --- Code block --- */
+    .code-block {
+      background: #1e1e21; border: 1px solid #27272a;
+      border-radius: 10px; padding: 20px;
+      overflow-x: auto; margin-top: 8px;
+    }
+    .code-block pre {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 12px; line-height: 1.7; color: #a1a1aa;
+      white-space: pre; margin: 0;
+    }
+    .code-block .key { color: #818cf8; }
+    .code-block .str { color: #4ade80; }
+    .code-block .num { color: #fbbf24; }
+    .code-block .bool { color: #f472b6; }
+
+    /* --- Checklist --- */
+    .checklist { list-style: none; }
+    .checklist li {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 10px 0; border-bottom: 1px solid #1e1e21;
+      font-size: 14px; color: #d4d4d8; line-height: 1.5;
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .check-box {
+      width: 18px; height: 18px; border-radius: 4px;
+      border: 2px solid #3f3f46; flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .check-optional {
+      font-size: 11px; font-weight: 600;
+      padding: 1px 6px; border-radius: 4px;
+      background: rgba(251,191,36,0.12); color: #fbbf24;
+      margin-left: 4px; white-space: nowrap;
+    }
+    .check-recommend {
+      font-size: 11px; font-weight: 600;
+      padding: 1px 6px; border-radius: 4px;
+      background: rgba(99,102,241,0.12); color: #818cf8;
+      margin-left: 4px; white-space: nowrap;
+    }
+
+    /* --- Tip badge --- */
+    .tip-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 16px; border-radius: 10px;
+      background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.2);
+      font-size: 13px; color: #a5b4fc; margin-top: 16px;
+    }
+
+    /* --- Flow steps --- */
+    .flow-steps { counter-reset: step; list-style: none; }
+    .flow-steps li {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 14px 0; border-bottom: 1px solid #1e1e21;
+      font-size: 14px; color: #d4d4d8; line-height: 1.5;
+    }
+    .flow-steps li:last-child { border-bottom: none; }
+    .step-num {
+      counter-increment: step;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(99,102,241,0.15); color: #818cf8;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; flex-shrink: 0;
+    }
+
+    /* --- Responsive --- */
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .mobile-header { display: flex; }
+      .main { margin-left: 0; padding: 16px; }
+      .page-header h1 { font-size: 20px; }
+      .card { padding: 16px; }
+      .img-grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; }
+      .theme-color-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .theme-name { width: auto; }
+      .color-field-list { grid-template-columns: 1fr; }
+      .color-field-list dt { border-bottom: none; padding-bottom: 2px; }
+      .color-field-list dd { padding-top: 0; }
+      .spec-table td:first-child { width: 100px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mobile header -->
+  <div class="mobile-header">
+    <div class="brand">
+      <div class="brand-icon">A</div>
+      <span>Analytics</span>
+    </div>
+    <a href="/dashboard/logout">Logout</a>
+  </div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">A</div>
+      <span>Analytics</span>
+    </div>
+    <nav>
+      <div class="nav-label">Overview</div>
+      <a href="/dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        All Sites
+      </a>
+      <div class="nav-label">Tools</div>
+      <a href="/dashboard/icons">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+        Icon Splitter
+      </a>
+      <a href="/dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Feedback
+      </a>
+      <a href="/dashboard/coins">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        Coins
+      </a>
+      <a href="/dashboard/artist-guide" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+        Artist Guide
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="/dashboard/logout">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Logout
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- A: Page Header -->
+    <div class="page-header">
+      <h1>插畫家素材指南</h1>
+      <div class="subtitle">合作插畫家素材交付規格與範例參考</div>
+    </div>
+
+    <!-- B: Theme Pack deliverables -->
+    <div class="section">
+      <div class="section-title">主題包（Theme Pack）交付項目</div>
+      <div class="section-desc">以下為一個完整主題包可能包含的素材類型，所有項目皆為選填，可依合作範圍彈性調整。</div>
+
+      <!-- B1: Icon Stickers -->
+      <div class="card">
+        <div class="card-title">
+          角色貼圖（Icon Stickers）
+          <span class="optional-badge">選填</span>
+        </div>
+        <div class="card-subtitle">Widget 右下角的裝飾角色</div>
+        <table class="spec-table">
+          <tr><td>建議尺寸</td><td>200x200 ~ 300x300 px</td></tr>
+          <tr><td>格式</td><td>透明背景 PNG</td></tr>
+          <tr><td>數量</td><td>建議 8-16 張一組</td></tr>
+          <tr><td>命名規則</td><td><code>{主題}_{動作}.png</code></td></tr>
+        </table>
+        <div class="img-group-label">柴犬</div>
+        <div class="img-grid">
+          <div class="img-grid-item"><img src="https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%9F%B4%E7%8A%AC/%E6%9F%B4%E7%8A%AC_%E5%9D%90%E4%B8%8B.png" alt="柴犬_坐下" loading="lazy"></div>
+          <div class="img-grid-item"><img src="https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%9F%B4%E7%8A%AC/%E6%9F%B4%E7%8A%AC_%E9%96%8B%E5%BF%83.png" alt="柴犬_開心" loading="lazy"></div>
+          <div class="img-grid-item"><img src="https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%9F%B4%E7%8A%AC/%E6%9F%B4%E7%8A%AC_%E7%9D%A1%E8%A6%BA.png" alt="柴犬_睡覺" loading="lazy"></div>
+        </div>
+        <div class="img-group-label">貓咪</div>
+        <div class="img-grid">
+          <div class="img-grid-item"><img src="https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E8%B2%93%E5%92%AA/%E8%B2%93%E5%92%AA_%E5%9D%90%E4%B8%8B.png" alt="貓咪_坐下" loading="lazy"></div>
+          <div class="img-grid-item"><img src="https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E8%B2%93%E5%92%AA/%E8%B2%93%E5%92%AA_%E9%96%8B%E5%BF%83.png" alt="貓咪_開心" loading="lazy"></div>
+          <div class="img-grid-item"><img src="https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E8%B2%93%E5%92%AA/%E8%B2%93%E5%92%AA_%E7%9D%A1%E8%A6%BA.png" alt="貓咪_睡覺" loading="lazy"></div>
+        </div>
+        <div class="img-group-label">幽靈</div>
+        <div class="img-grid">
+          <div class="img-grid-item"><img src="https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E9%96%8B%E5%BF%83.png" alt="幽靈_開心" loading="lazy"></div>
+          <div class="img-grid-item"><img src="https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E5%9D%90%E4%B8%8B.png" alt="幽靈_坐下" loading="lazy"></div>
+          <div class="img-grid-item"><img src="https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E7%9D%A1%E8%A6%BA.png" alt="幽靈_睡覺" loading="lazy"></div>
+        </div>
+        <div class="img-group-label">動物們</div>
+        <div class="img-grid">
+          <div class="img-grid-item"><img src="https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E6%9F%B4%E7%8A%AC_%E5%9D%90%E4%B8%8B.png" alt="動物_柴犬_坐下" loading="lazy"></div>
+          <div class="img-grid-item"><img src="https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E8%B2%93%E5%92%AA_%E5%9D%90%E4%B8%8B.png" alt="動物_貓咪_坐下" loading="lazy"></div>
+          <div class="img-grid-item"><img src="https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E5%85%94%E5%AD%90_%E5%9D%90%E4%B8%8B.png" alt="動物_兔子_坐下" loading="lazy"></div>
+        </div>
+      </div>
+
+      <!-- B2: Widget Background -->
+      <div class="card">
+        <div class="card-title">
+          背景圖（Widget Background）
+          <span class="optional-badge">選填</span>
+        </div>
+        <div class="card-subtitle">照片型 Widget 的裝飾邊框背景</div>
+        <table class="spec-table">
+          <tr><td>建議尺寸</td><td>450x450 px</td></tr>
+          <tr><td>格式</td><td>PNG</td></tr>
+          <tr><td>數量</td><td>建議 3-4 張</td></tr>
+          <tr><td>命名規則</td><td><code>{主題}_bg_{n}.png</code></td></tr>
+        </table>
+        <div style="padding: 24px; text-align: center; color: #52525b; font-size: 13px; background: #1e1e21; border-radius: 8px; margin-top: 8px;">
+          目前尚無上線的背景圖範例，背景圖為照片型 Widget 外層的裝飾邊框，通常帶有主題風格的花紋或圖案。
+        </div>
+      </div>
+
+      <!-- B3: DIY Sticker Pack -->
+      <div class="card">
+        <div class="card-title">
+          DIY 貼圖包（Sticker Pack）
+          <span class="optional-badge">選填</span>
+        </div>
+        <div class="card-subtitle">DIY 模式讓使用者自由拼貼的裝飾元素</div>
+        <table class="spec-table">
+          <tr><td>建議尺寸</td><td>200x300 px（不等，取決於素材形狀）</td></tr>
+          <tr><td>格式</td><td>透明背景 PNG</td></tr>
+          <tr><td>數量</td><td>一包通常 8-16 張</td></tr>
+          <tr><td>命名規則</td><td><code>{分類}_{名稱}.png</code></td></tr>
+        </table>
+        <div class="img-group-label">自然 / 裝飾貼圖範例</div>
+        <div class="img-grid">
+          <div class="img-grid-item"><img src="https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%84%9B%E5%BF%83.png" alt="愛心" loading="lazy"></div>
+          <div class="img-grid-item"><img src="https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%BD%A9%E8%99%B9.png" alt="彩虹" loading="lazy"></div>
+          <div class="img-grid-item"><img src="https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E8%8A%B1%E6%9C%B5.png" alt="花朵" loading="lazy"></div>
+          <div class="img-grid-item"><img src="https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%9C%88%E4%BA%AE.png" alt="月亮" loading="lazy"></div>
+          <div class="img-grid-item"><img src="https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%A4%AA%E9%99%BD.png" alt="太陽" loading="lazy"></div>
+          <div class="img-grid-item"><img src="https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E8%91%89%E5%AD%90.png" alt="葉子" loading="lazy"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C: Theme Colors -->
+    <div class="section">
+      <div class="section-title">主題色系配色（Theme Colors）</div>
+      <div class="section-desc">以下為現有主題的色系參考。每個主題包含背景色、卡片色、主要文字色、強調色等。</div>
+
+      <div class="card" style="overflow-x: auto;">
+        <!-- basic -->
+        <div class="theme-color-row">
+          <div class="theme-name">Basic</div>
+          <div class="swatches">
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #F2F2F7;"></div>
+              <div class="swatch-label">background</div>
+              <div class="swatch-hex">#F2F2F7</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #FFFFFF;"></div>
+              <div class="swatch-label">card</div>
+              <div class="swatch-hex">#FFFFFF</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #000000;"></div>
+              <div class="swatch-label">text</div>
+              <div class="swatch-hex">#000000</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #8B6914;"></div>
+              <div class="swatch-label">accent</div>
+              <div class="swatch-hex">#8B6914</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- dogPack -->
+        <div class="theme-color-row">
+          <div class="theme-name">Dog Pack</div>
+          <div class="swatches">
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #F7F5F2;"></div>
+              <div class="swatch-label">background</div>
+              <div class="swatch-hex">#F7F5F2</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #F0EDE8;"></div>
+              <div class="swatch-label">card</div>
+              <div class="swatch-hex">#F0EDE8</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #2C2C2C;"></div>
+              <div class="swatch-label">text</div>
+              <div class="swatch-hex">#2C2C2C</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #E8985A;"></div>
+              <div class="swatch-label">accent</div>
+              <div class="swatch-hex">#E8985A</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- catTheme -->
+        <div class="theme-color-row">
+          <div class="theme-name">Cat Theme</div>
+          <div class="swatches">
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #F9FAFB;"></div>
+              <div class="swatch-label">background</div>
+              <div class="swatch-hex">#F9FAFB</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #E5E7EB;"></div>
+              <div class="swatch-label">card</div>
+              <div class="swatch-hex">#E5E7EB</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #1F2937;"></div>
+              <div class="swatch-label">text</div>
+              <div class="swatch-hex">#1F2937</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #C4B5FD;"></div>
+              <div class="swatch-label">accent</div>
+              <div class="swatch-hex">#C4B5FD</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- cuteFaces -->
+        <div class="theme-color-row">
+          <div class="theme-name">Cute Faces</div>
+          <div class="swatches">
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #F6F3EF;"></div>
+              <div class="swatch-label">background</div>
+              <div class="swatch-hex">#F6F3EF</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #FFFFFF;"></div>
+              <div class="swatch-label">card</div>
+              <div class="swatch-hex">#FFFFFF</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #3E2F1C;"></div>
+              <div class="swatch-label">text</div>
+              <div class="swatch-hex">#3E2F1C</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #FBCFE8;"></div>
+              <div class="swatch-label">accent</div>
+              <div class="swatch-hex">#FBCFE8</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- animalPack -->
+        <div class="theme-color-row">
+          <div class="theme-name">Animal Pack</div>
+          <div class="swatches">
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #FFF8ED;"></div>
+              <div class="swatch-label">background</div>
+              <div class="swatch-hex">#FFF8ED</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #FEF3C7;"></div>
+              <div class="swatch-label">card</div>
+              <div class="swatch-hex">#FEF3C7</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #4A3728;"></div>
+              <div class="swatch-label">text</div>
+              <div class="swatch-hex">#4A3728</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #F59E0B;"></div>
+              <div class="swatch-label">accent</div>
+              <div class="swatch-hex">#F59E0B</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ghostPack -->
+        <div class="theme-color-row">
+          <div class="theme-name">Ghost Pack</div>
+          <div class="swatches">
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #F5F3FF;"></div>
+              <div class="swatch-label">background</div>
+              <div class="swatch-hex">#F5F3FF</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #EDE9FE;"></div>
+              <div class="swatch-label">card</div>
+              <div class="swatch-hex">#EDE9FE</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #1E1B4B;"></div>
+              <div class="swatch-label">text</div>
+              <div class="swatch-hex">#1E1B4B</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #8B5CF6;"></div>
+              <div class="swatch-label">accent</div>
+              <div class="swatch-hex">#8B5CF6</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- lovePack -->
+        <div class="theme-color-row">
+          <div class="theme-name">Love Pack</div>
+          <div class="swatches">
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #FFF9F5;"></div>
+              <div class="swatch-label">background</div>
+              <div class="swatch-hex">#FFF9F5</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #FFF1EB;"></div>
+              <div class="swatch-label">card</div>
+              <div class="swatch-hex">#FFF1EB</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #4A2C2A;"></div>
+              <div class="swatch-label">text</div>
+              <div class="swatch-hex">#4A2C2A</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-circle" style="background: #FBCFE8;"></div>
+              <div class="swatch-label">accent</div>
+              <div class="swatch-hex">#FBCFE8</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 16px;">
+        <div class="card-title">ThemeColors 欄位說明</div>
+        <div class="card-subtitle">新主題需提供以下色碼欄位：</div>
+        <dl class="color-field-list">
+          <dt>background</dt>
+          <dd>Widget 與頁面的整體背景色</dd>
+          <dt>card</dt>
+          <dd>卡片 / 內容區塊的背景色</dd>
+          <dt>textPrimary</dt>
+          <dd>主要文字顏色（標題、重要資訊）</dd>
+          <dt>textSecondary</dt>
+          <dd>次要文字顏色（副標題、說明文字）</dd>
+          <dt>textTertiary</dt>
+          <dd>第三層文字顏色（提示、placeholder）</dd>
+          <dt>accent</dt>
+          <dd>強調色（按鈕、連結、重點裝飾）</dd>
+          <dt>buttonForeground</dt>
+          <dd>按鈕上的文字顏色</dd>
+          <dt>useGlass</dt>
+          <dd>是否啟用毛玻璃效果（true / false）</dd>
+          <dt>borderColors</dt>
+          <dd>邊框漸層色陣列，例如 ["#E0C3FC", "#8EC5FC"]</dd>
+          <dt>borderWidth</dt>
+          <dd>邊框寬度（數字），例如 1.5</dd>
+          <dt>cornerIcon</dt>
+          <dd>角落裝飾 SF Symbol 名稱，例如 "sparkle"</dd>
+          <dt>cornerIconColors</dt>
+          <dd>角落圖示漸層色陣列</dd>
+        </dl>
+      </div>
+    </div>
+
+    <!-- D: themes.json Example -->
+    <div class="section">
+      <div class="section-title">themes.json 範例</div>
+      <div class="section-desc">以下為一個完整的主題設定範例，最終由管理員填入 R2 的 themes.json 檔案中。</div>
+
+      <div class="code-block"><pre>{
+  <span class="key">"id"</span>: <span class="str">"artist_yuki_pack"</span>,
+  <span class="key">"name"</span>: <span class="str">"Yuki 的夢幻世界"</span>,
+  <span class="key">"subtitle"</span>: <span class="str">"插畫家 Yuki 獨家合作"</span>,
+  <span class="key">"coinPrice"</span>: <span class="num">50</span>,
+  <span class="key">"supportedTypes"</span>: [<span class="str">"photo"</span>, <span class="str">"weather"</span>, <span class="str">"countdown"</span>, <span class="str">"daily"</span>, <span class="str">"mood"</span>, <span class="str">"todo"</span>],
+  <span class="key">"coverIcon"</span>: <span class="str">"sparkles"</span>,
+  <span class="key">"coverGradient"</span>: [<span class="str">"#E0C3FC"</span>, <span class="str">"#8EC5FC"</span>],
+  <span class="key">"entitlementKey"</span>: <span class="str">"artistYukiUnlocked"</span>,
+  <span class="key">"petType"</span>: <span class="str">"sticker"</span>,
+  <span class="key">"iconStickers"</span>: [
+    { <span class="key">"key"</span>: <span class="str">"yuki_bunny"</span>, <span class="key">"name"</span>: <span class="str">"兔兔"</span>, <span class="key">"url"</span>: <span class="str">"https://...stickers/artist_yuki/bunny.png"</span> },
+    { <span class="key">"key"</span>: <span class="str">"yuki_bear"</span>,  <span class="key">"name"</span>: <span class="str">"小熊"</span>, <span class="key">"url"</span>: <span class="str">"https://...stickers/artist_yuki/bear.png"</span> }
+  ],
+  <span class="key">"defaultStickerKey"</span>: <span class="str">"yuki_bunny"</span>,
+  <span class="key">"bundledStickerIDs"</span>: [<span class="str">"yuki_bunny"</span>, <span class="str">"yuki_bear"</span>],
+  <span class="key">"sortOrder"</span>: <span class="num">10</span>,
+  <span class="key">"isNew"</span>: <span class="bool">true</span>,
+  <span class="key">"artistName"</span>: <span class="str">"Yuki (@yuki_art)"</span>,
+  <span class="key">"artistURL"</span>: <span class="str">"https://instagram.com/yuki_art"</span>,
+  <span class="key">"features"</span>: [
+    { <span class="key">"icon"</span>: <span class="str">"paintbrush.fill"</span>, <span class="key">"title"</span>: <span class="str">"夢幻水彩風"</span>, <span class="key">"description"</span>: <span class="str">"柔和漸層配色"</span> },
+    { <span class="key">"icon"</span>: <span class="str">"person.fill"</span>, <span class="key">"title"</span>: <span class="str">"插畫家合作"</span>, <span class="key">"description"</span>: <span class="str">"Yuki 獨家手繪角色"</span> }
+  ],
+  <span class="key">"colors"</span>: {
+    <span class="key">"background"</span>:       <span class="str">"#F8F0FF"</span>,
+    <span class="key">"card"</span>:             <span class="str">"#F0E6FF"</span>,
+    <span class="key">"textPrimary"</span>:      <span class="str">"#2D1B69"</span>,
+    <span class="key">"textSecondary"</span>:    <span class="str">"#7C5CBF"</span>,
+    <span class="key">"textTertiary"</span>:     <span class="str">"#A78BFA"</span>,
+    <span class="key">"accent"</span>:           <span class="str">"#8B5CF6"</span>,
+    <span class="key">"buttonForeground"</span>: <span class="str">"#FFFFFF"</span>,
+    <span class="key">"useGlass"</span>:         <span class="bool">false</span>,
+    <span class="key">"borderColors"</span>:     [<span class="str">"#E0C3FC"</span>, <span class="str">"#8EC5FC"</span>],
+    <span class="key">"borderWidth"</span>:      <span class="num">1.5</span>,
+    <span class="key">"cornerIcon"</span>:       <span class="str">"sparkle"</span>,
+    <span class="key">"cornerIconColors"</span>: [<span class="str">"#C084FC"</span>, <span class="str">"#818CF8"</span>]
+  }
+}</pre></div>
+    </div>
+
+    <!-- E: Delivery Checklist -->
+    <div class="section">
+      <div class="section-title">交付清單（Delivery Checklist）</div>
+      <div class="section-desc">完整主題包需要的項目一覽：</div>
+
+      <div class="card">
+        <ul class="checklist">
+          <li>
+            <div class="check-box"></div>
+            <div>角色貼圖 8-16 張（透明 PNG，200-300px）<span class="check-optional">選填</span></div>
+          </li>
+          <li>
+            <div class="check-box"></div>
+            <div>背景圖 3-4 張（PNG，450x450px）<span class="check-optional">選填</span></div>
+          </li>
+          <li>
+            <div class="check-box"></div>
+            <div>DIY 貼圖 8-16 張（透明 PNG）<span class="check-optional">選填</span></div>
+          </li>
+          <li>
+            <div class="check-box"></div>
+            <div>主題配色（提供色碼 or 色彩參考圖）<span class="check-recommend">建議提供</span></div>
+          </li>
+          <li>
+            <div class="check-box"></div>
+            <div>主題名稱 + 一句話描述</div>
+          </li>
+          <li>
+            <div class="check-box"></div>
+            <div>插畫家署名 + 社群連結（IG / Twitter）</div>
+          </li>
+        </ul>
+        <div class="tip-badge">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          所有素材項目皆為選填，可依合作範圍調整
+        </div>
+      </div>
+    </div>
+
+    <!-- F: Upload Flow -->
+    <div class="section">
+      <div class="section-title">上傳流程說明</div>
+      <div class="section-desc">素材交付後的處理流程：</div>
+
+      <div class="card">
+        <ol class="flow-steps">
+          <li>
+            <div class="step-num">1</div>
+            <div>插畫家交付素材（透過雲端硬碟、Email 或其他方式）</div>
+          </li>
+          <li>
+            <div class="step-num">2</div>
+            <div>素材上傳到 R2 暫存區，進行格式檢查與尺寸調整</div>
+          </li>
+          <li>
+            <div class="step-num">3</div>
+            <div>管理員在 Admin Dashboard 預覽確認素材與配色效果</div>
+          </li>
+          <li>
+            <div class="step-num">4</div>
+            <div>確認無誤後推送到正式環境，更新 themes.json 設定檔</div>
+          </li>
+          <li>
+            <div class="step-num">5</div>
+            <div>使用者打開 App 自動看到新主題，可直接購買或套用</div>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

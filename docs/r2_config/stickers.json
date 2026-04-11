@@ -1,81 +1,848 @@
 [
-  { "id": "nat_閃耀1", "name": "閃耀1", "category": "nature", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E9%96%83%E8%80%801.png" },
-  { "id": "nat_閃耀2", "name": "閃耀2", "category": "nature", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E9%96%83%E8%80%802.png" },
-  { "id": "nat_閃耀3", "name": "閃耀3", "category": "nature", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E9%96%83%E8%80%803.png" },
-  { "id": "nat_閃耀4", "name": "閃耀4", "category": "nature", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E9%96%83%E8%80%804.png" },
-  { "id": "nat_愛心", "name": "愛心", "category": "nature", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E6%84%9B%E5%BF%83.png" },
-  { "id": "nat_雙愛心", "name": "雙愛心", "category": "nature", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E9%9B%99%E6%84%9B%E5%BF%83.png" },
-  { "id": "nat_多愛心", "name": "多愛心", "category": "nature", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E5%A4%9A%E6%84%9B%E5%BF%83.png" },
-  { "id": "nat_心碎", "name": "心碎", "category": "nature", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E5%BF%83%E7%A2%8E.png" },
-  { "id": "nat_雲朵1", "name": "雲朵1", "category": "nature", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E9%9B%B2%E6%9C%B51.png" },
-  { "id": "nat_雲朵2", "name": "雲朵2", "category": "nature", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E9%9B%B2%E6%9C%B52.png" },
-  { "id": "nat_彩虹", "name": "彩虹", "category": "nature", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E5%BD%A9%E8%99%B9.png" },
-  { "id": "nat_月亮", "name": "月亮", "category": "nature", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E6%9C%88%E4%BA%AE.png" },
-  { "id": "nat_太陽", "name": "太陽", "category": "nature", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E5%A4%AA%E9%99%BD.png" },
-  { "id": "nat_花朵", "name": "花朵", "category": "nature", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E8%8A%B1%E6%9C%B5.png" },
-  { "id": "nat_葉子", "name": "葉子", "category": "nature", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E8%91%89%E5%AD%90.png" },
-  { "id": "nat_泡泡", "name": "泡泡", "category": "nature", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E6%B3%A1%E6%B3%A1.png" },
-
-  { "id": "ghost_開心", "name": "幽靈 開心", "category": "ghosts", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E9%96%8B%E5%BF%83.png" },
-  { "id": "ghost_驚訝", "name": "幽靈 驚訝", "category": "ghosts", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E9%A9%9A%E8%A8%9D.png" },
-  { "id": "ghost_困惑", "name": "幽靈 困惑", "category": "ghosts", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E5%9B%B0%E6%83%91.png" },
-  { "id": "ghost_微笑", "name": "幽靈 微笑", "category": "ghosts", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E5%BE%AE%E7%AC%91.png" },
-  { "id": "ghost_裹毯", "name": "幽靈 裹毯", "category": "ghosts", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E8%A3%B9%E6%AF%AF.png" },
-  { "id": "ghost_無奈", "name": "幽靈 無奈", "category": "ghosts", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E7%84%A1%E5%A5%88.png" },
-  { "id": "ghost_睡覺", "name": "幽靈 睡覺", "category": "ghosts", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E7%9D%A1%E8%A6%BA.png" },
-  { "id": "ghost_閃亮", "name": "幽靈 閃亮", "category": "ghosts", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E9%96%83%E4%BA%AE.png" },
-  { "id": "ghost_抱枕", "name": "幽靈 抱枕", "category": "ghosts", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E6%8A%B1%E6%9E%95.png" },
-  { "id": "ghost_躲藏", "name": "幽靈 躲藏", "category": "ghosts", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E8%BA%B2%E8%97%8F.png" },
-  { "id": "ghost_害羞", "name": "幽靈 害羞", "category": "ghosts", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E5%AE%B3%E7%BE%9E.png" },
-  { "id": "ghost_跳舞", "name": "幽靈 跳舞", "category": "ghosts", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E8%B7%B3%E8%88%9E.png" },
-  { "id": "ghost_閃眼", "name": "幽靈 閃眼", "category": "ghosts", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E9%96%83%E7%9C%BC.png" },
-  { "id": "ghost_愛心眼", "name": "幽靈 愛心眼", "category": "ghosts", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E6%84%9B%E5%BF%83%E7%9C%BC.png" },
-  { "id": "ghost_攤手", "name": "幽靈 攤手", "category": "ghosts", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E6%94%A4%E6%89%8B.png" },
-  { "id": "ghost_安詳", "name": "幽靈 安詳", "category": "ghosts", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E5%AE%89%E8%A9%B3.png" },
-
-  { "id": "ani_柴犬_坐下", "name": "柴犬 坐下", "category": "animals", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E6%9F%B4%E7%8A%AC_%E5%9D%90%E4%B8%8B.png" },
-  { "id": "ani_柴犬_趴下", "name": "柴犬 趴下", "category": "animals", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E6%9F%B4%E7%8A%AC_%E8%B6%B4%E4%B8%8B.png" },
-  { "id": "ani_柴犬_開心", "name": "柴犬 開心", "category": "animals", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E6%9F%B4%E7%8A%AC_%E9%96%8B%E5%BF%83.png" },
-  { "id": "ani_柴犬_揮手", "name": "柴犬 揮手", "category": "animals", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E6%9F%B4%E7%8A%AC_%E6%8F%AE%E6%89%8B.png" },
-  { "id": "ani_貓咪_坐下", "name": "貓咪 坐下", "category": "animals", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E8%B2%93%E5%92%AA_%E5%9D%90%E4%B8%8B.png" },
-  { "id": "ani_貓咪_睡覺", "name": "貓咪 睡覺", "category": "animals", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E8%B2%93%E5%92%AA_%E7%9D%A1%E8%A6%BA.png" },
-  { "id": "ani_貓咪_伸懶腰", "name": "貓咪 伸懶腰", "category": "animals", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E8%B2%93%E5%92%AA_%E4%BC%B8%E6%87%B6%E8%85%B0.png" },
-  { "id": "ani_獅子_大笑", "name": "獅子 大笑", "category": "animals", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E7%8D%85%E5%AD%90_%E5%A4%A7%E7%AC%91.png" },
-  { "id": "ani_倉鼠_吃草", "name": "倉鼠 吃草", "category": "animals", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E5%80%89%E9%BC%A0_%E5%90%83%E8%8D%89.png" },
-  { "id": "ani_倉鼠_捲起", "name": "倉鼠 捲起", "category": "animals", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E5%80%89%E9%BC%A0_%E6%8D%B2%E8%B5%B7.png" },
-  { "id": "ani_倉鼠_站立", "name": "倉鼠 站立", "category": "animals", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E5%80%89%E9%BC%A0_%E7%AB%99%E7%AB%8B.png" },
-  { "id": "ani_倉鼠_開心", "name": "倉鼠 開心", "category": "animals", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E5%80%89%E9%BC%A0_%E9%96%8B%E5%BF%83.png" },
-  { "id": "ani_兔子_坐下", "name": "兔子 坐下", "category": "animals", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E5%85%94%E5%AD%90_%E5%9D%90%E4%B8%8B.png" },
-  { "id": "ani_兔子_跳躍", "name": "兔子 跳躍", "category": "animals", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E5%85%94%E5%AD%90_%E8%B7%B3%E8%BA%8D.png" },
-  { "id": "ani_兔子_抱抱", "name": "兔子 抱抱", "category": "animals", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E5%85%94%E5%AD%90_%E6%8A%B1%E6%8A%B1.png" },
-  { "id": "ani_兔子_睡覺", "name": "兔子 睡覺", "category": "animals", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E5%85%94%E5%AD%90_%E7%9D%A1%E8%A6%BA.png" },
-
-  { "id": "dog_坐下", "name": "柴犬 坐下", "category": "pets", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%9F%B4%E7%8A%AC/%E6%9F%B4%E7%8A%AC_%E5%9D%90%E4%B8%8B.png" },
-  { "id": "dog_奔跑", "name": "柴犬 奔跑", "category": "pets", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%9F%B4%E7%8A%AC/%E6%9F%B4%E7%8A%AC_%E5%A5%94%E8%B7%91.png" },
-  { "id": "dog_睡覺", "name": "柴犬 睡覺", "category": "pets", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%9F%B4%E7%8A%AC/%E6%9F%B4%E7%8A%AC_%E7%9D%A1%E8%A6%BA.png" },
-  { "id": "dog_玩球", "name": "柴犬 玩球", "category": "pets", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%9F%B4%E7%8A%AC/%E6%9F%B4%E7%8A%AC_%E7%8E%A9%E7%90%83.png" },
-  { "id": "dog_愛心", "name": "柴犬 愛心", "category": "pets", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%9F%B4%E7%8A%AC/%E6%9F%B4%E7%8A%AC_%E6%84%9B%E5%BF%83.png" },
-  { "id": "dog_叼葉", "name": "柴犬 叼葉", "category": "pets", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%9F%B4%E7%8A%AC/%E6%9F%B4%E7%8A%AC_%E5%8F%BC%E8%91%89.png" },
-  { "id": "dog_困惑", "name": "柴犬 困惑", "category": "pets", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%9F%B4%E7%8A%AC/%E6%9F%B4%E7%8A%AC_%E5%9B%B0%E6%83%91.png" },
-  { "id": "dog_快跑", "name": "柴犬 快跑", "category": "pets", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%9F%B4%E7%8A%AC/%E6%9F%B4%E7%8A%AC_%E5%BF%AB%E8%B7%91.png" },
-  { "id": "dog_抱球", "name": "柴犬 抱球", "category": "pets", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%9F%B4%E7%8A%AC/%E6%9F%B4%E7%8A%AC_%E6%8A%B1%E7%90%83.png" },
-
-  { "id": "cat_坐下", "name": "貓咪 坐下", "category": "pets", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E8%B2%93%E5%92%AA/%E8%B2%93%E5%92%AA_%E5%9D%90%E4%B8%8B.png" },
-  { "id": "cat_微笑", "name": "貓咪 微笑", "category": "pets", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E8%B2%93%E5%92%AA/%E8%B2%93%E5%92%AA_%E5%BE%AE%E7%AC%91.png" },
-  { "id": "cat_睡覺", "name": "貓咪 睡覺", "category": "pets", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E8%B2%93%E5%92%AA/%E8%B2%93%E5%92%AA_%E7%9D%A1%E8%A6%BA.png" },
-  { "id": "cat_伸懶腰", "name": "貓咪 伸懶腰", "category": "pets", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E8%B2%93%E5%92%AA/%E8%B2%93%E5%92%AA_%E4%BC%B8%E6%87%B6%E8%85%B0.png" },
-  { "id": "cat_撒嬌", "name": "貓咪 撒嬌", "category": "pets", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E8%B2%93%E5%92%AA/%E8%B2%93%E5%92%AA_%E6%92%92%E5%AC%8C.png" },
-  { "id": "cat_困惑", "name": "貓咪 困惑", "category": "pets", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E8%B2%93%E5%92%AA/%E8%B2%93%E5%92%AA_%E5%9B%B0%E6%83%91.png" },
-  { "id": "cat_玩毛線", "name": "貓咪 玩毛線", "category": "pets", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E8%B2%93%E5%92%AA/%E8%B2%93%E5%92%AA_%E7%8E%A9%E6%AF%9B%E7%B7%9A.png" },
-  { "id": "cat_愛心", "name": "貓咪 愛心", "category": "pets", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E8%B2%93%E5%92%AA/%E8%B2%93%E5%92%AA_%E6%84%9B%E5%BF%83.png" },
-  { "id": "cat_生氣", "name": "貓咪 生氣", "category": "pets", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E8%B2%93%E5%92%AA/%E8%B2%93%E5%92%AA_%E7%94%9F%E6%B0%A3.png" },
-
-  { "id": "hamster_cute_face", "name": "倉鼠", "category": "cuteFaces", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/cuteFaces/%E5%8F%AF%E6%84%9B%E5%80%89%E9%BC%A0%E8%87%89.png" },
-  { "id": "dog_cute_face", "name": "狗狗", "category": "cuteFaces", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/cuteFaces/%E5%8F%AF%E6%84%9B%E7%8B%97%E8%87%89.png" },
-  { "id": "dog_husky_face", "name": "哈士奇", "category": "cuteFaces", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/cuteFaces/%E5%93%88%E5%A3%AB%E5%A5%87%E8%87%89.png" },
-  { "id": "dog_shiba_face", "name": "柴犬", "category": "cuteFaces", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/cuteFaces/%E6%9F%B4%E7%8A%AC%E8%87%89.png" },
-  { "id": "dog_black_shiba", "name": "黑柴犬", "category": "cuteFaces", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/cuteFaces/%E9%BB%91%E6%9F%B4%E7%8A%AC%E8%87%89.png" },
-  { "id": "dog_poodle_face", "name": "貴賓狗", "category": "cuteFaces", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/cuteFaces/%E8%B2%B4%E8%B3%93%E7%8B%97%E8%87%89.png" },
-  { "id": "cat_cute_face", "name": "貓咪", "category": "cuteFaces", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/cuteFaces/%E5%8F%AF%E6%84%9B%E8%B2%93%E8%87%89.png" },
-  { "id": "pig_cute_face", "name": "小豬", "category": "cuteFaces", "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/cuteFaces/%E5%8F%AF%E6%84%9B%E8%B1%AC%E8%87%89.png" }
+  {
+    "id": "nat_閃耀1",
+    "name": "閃耀1",
+    "category": "nature",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E9%96%83%E8%80%801.png",
+    "isFree": true
+  },
+  {
+    "id": "nat_閃耀2",
+    "name": "閃耀2",
+    "category": "nature",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E9%96%83%E8%80%802.png",
+    "isFree": true
+  },
+  {
+    "id": "nat_閃耀3",
+    "name": "閃耀3",
+    "category": "nature",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E9%96%83%E8%80%803.png",
+    "isFree": true
+  },
+  {
+    "id": "nat_閃耀4",
+    "name": "閃耀4",
+    "category": "nature",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E9%96%83%E8%80%804.png",
+    "isFree": true
+  },
+  {
+    "id": "nat_愛心",
+    "name": "愛心",
+    "category": "nature",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E6%84%9B%E5%BF%83.png",
+    "isFree": true
+  },
+  {
+    "id": "nat_雙愛心",
+    "name": "雙愛心",
+    "category": "nature",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E9%9B%99%E6%84%9B%E5%BF%83.png",
+    "isFree": true
+  },
+  {
+    "id": "nat_多愛心",
+    "name": "多愛心",
+    "category": "nature",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E5%A4%9A%E6%84%9B%E5%BF%83.png",
+    "isFree": true
+  },
+  {
+    "id": "nat_心碎",
+    "name": "心碎",
+    "category": "nature",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E5%BF%83%E7%A2%8E.png",
+    "isFree": true
+  },
+  {
+    "id": "nat_雲朵1",
+    "name": "雲朵1",
+    "category": "nature",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E9%9B%B2%E6%9C%B51.png",
+    "isFree": true
+  },
+  {
+    "id": "nat_雲朵2",
+    "name": "雲朵2",
+    "category": "nature",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E9%9B%B2%E6%9C%B52.png",
+    "isFree": true
+  },
+  {
+    "id": "nat_彩虹",
+    "name": "彩虹",
+    "category": "nature",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E5%BD%A9%E8%99%B9.png",
+    "isFree": true
+  },
+  {
+    "id": "nat_月亮",
+    "name": "月亮",
+    "category": "nature",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E6%9C%88%E4%BA%AE.png",
+    "isFree": true
+  },
+  {
+    "id": "nat_太陽",
+    "name": "太陽",
+    "category": "nature",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E5%A4%AA%E9%99%BD.png",
+    "isFree": true
+  },
+  {
+    "id": "nat_花朵",
+    "name": "花朵",
+    "category": "nature",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E8%8A%B1%E6%9C%B5.png",
+    "isFree": true
+  },
+  {
+    "id": "nat_葉子",
+    "name": "葉子",
+    "category": "nature",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E8%91%89%E5%AD%90.png",
+    "isFree": true
+  },
+  {
+    "id": "nat_泡泡",
+    "name": "泡泡",
+    "category": "nature",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/nature/%E6%B3%A1%E6%B3%A1.png",
+    "isFree": true
+  },
+  {
+    "id": "ghost_開心",
+    "name": "幽靈 開心",
+    "category": "ghosts",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E9%96%8B%E5%BF%83.png"
+  },
+  {
+    "id": "ghost_驚訝",
+    "name": "幽靈 驚訝",
+    "category": "ghosts",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E9%A9%9A%E8%A8%9D.png"
+  },
+  {
+    "id": "ghost_困惑",
+    "name": "幽靈 困惑",
+    "category": "ghosts",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E5%9B%B0%E6%83%91.png"
+  },
+  {
+    "id": "ghost_微笑",
+    "name": "幽靈 微笑",
+    "category": "ghosts",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E5%BE%AE%E7%AC%91.png"
+  },
+  {
+    "id": "ghost_裹毯",
+    "name": "幽靈 裹毯",
+    "category": "ghosts",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E8%A3%B9%E6%AF%AF.png"
+  },
+  {
+    "id": "ghost_無奈",
+    "name": "幽靈 無奈",
+    "category": "ghosts",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E7%84%A1%E5%A5%88.png"
+  },
+  {
+    "id": "ghost_睡覺",
+    "name": "幽靈 睡覺",
+    "category": "ghosts",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E7%9D%A1%E8%A6%BA.png"
+  },
+  {
+    "id": "ghost_閃亮",
+    "name": "幽靈 閃亮",
+    "category": "ghosts",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E9%96%83%E4%BA%AE.png"
+  },
+  {
+    "id": "ghost_抱枕",
+    "name": "幽靈 抱枕",
+    "category": "ghosts",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E6%8A%B1%E6%9E%95.png"
+  },
+  {
+    "id": "ghost_躲藏",
+    "name": "幽靈 躲藏",
+    "category": "ghosts",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E8%BA%B2%E8%97%8F.png"
+  },
+  {
+    "id": "ghost_害羞",
+    "name": "幽靈 害羞",
+    "category": "ghosts",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E5%AE%B3%E7%BE%9E.png"
+  },
+  {
+    "id": "ghost_跳舞",
+    "name": "幽靈 跳舞",
+    "category": "ghosts",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E8%B7%B3%E8%88%9E.png"
+  },
+  {
+    "id": "ghost_閃眼",
+    "name": "幽靈 閃眼",
+    "category": "ghosts",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E9%96%83%E7%9C%BC.png"
+  },
+  {
+    "id": "ghost_愛心眼",
+    "name": "幽靈 愛心眼",
+    "category": "ghosts",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E6%84%9B%E5%BF%83%E7%9C%BC.png"
+  },
+  {
+    "id": "ghost_攤手",
+    "name": "幽靈 攤手",
+    "category": "ghosts",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E6%94%A4%E6%89%8B.png"
+  },
+  {
+    "id": "ghost_安詳",
+    "name": "幽靈 安詳",
+    "category": "ghosts",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%B9%BD%E9%9D%88/%E5%B9%BD%E9%9D%88_%E5%AE%89%E8%A9%B3.png"
+  },
+  {
+    "id": "ani_柴犬_坐下",
+    "name": "柴犬 坐下",
+    "category": "animals",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E6%9F%B4%E7%8A%AC_%E5%9D%90%E4%B8%8B.png"
+  },
+  {
+    "id": "ani_柴犬_趴下",
+    "name": "柴犬 趴下",
+    "category": "animals",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E6%9F%B4%E7%8A%AC_%E8%B6%B4%E4%B8%8B.png"
+  },
+  {
+    "id": "ani_柴犬_開心",
+    "name": "柴犬 開心",
+    "category": "animals",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E6%9F%B4%E7%8A%AC_%E9%96%8B%E5%BF%83.png"
+  },
+  {
+    "id": "ani_柴犬_揮手",
+    "name": "柴犬 揮手",
+    "category": "animals",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E6%9F%B4%E7%8A%AC_%E6%8F%AE%E6%89%8B.png"
+  },
+  {
+    "id": "ani_貓咪_坐下",
+    "name": "貓咪 坐下",
+    "category": "animals",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E8%B2%93%E5%92%AA_%E5%9D%90%E4%B8%8B.png"
+  },
+  {
+    "id": "ani_貓咪_睡覺",
+    "name": "貓咪 睡覺",
+    "category": "animals",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E8%B2%93%E5%92%AA_%E7%9D%A1%E8%A6%BA.png"
+  },
+  {
+    "id": "ani_貓咪_伸懶腰",
+    "name": "貓咪 伸懶腰",
+    "category": "animals",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E8%B2%93%E5%92%AA_%E4%BC%B8%E6%87%B6%E8%85%B0.png"
+  },
+  {
+    "id": "ani_獅子_大笑",
+    "name": "獅子 大笑",
+    "category": "animals",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E7%8D%85%E5%AD%90_%E5%A4%A7%E7%AC%91.png"
+  },
+  {
+    "id": "ani_倉鼠_吃草",
+    "name": "倉鼠 吃草",
+    "category": "animals",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E5%80%89%E9%BC%A0_%E5%90%83%E8%8D%89.png"
+  },
+  {
+    "id": "ani_倉鼠_捲起",
+    "name": "倉鼠 捲起",
+    "category": "animals",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E5%80%89%E9%BC%A0_%E6%8D%B2%E8%B5%B7.png"
+  },
+  {
+    "id": "ani_倉鼠_站立",
+    "name": "倉鼠 站立",
+    "category": "animals",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E5%80%89%E9%BC%A0_%E7%AB%99%E7%AB%8B.png"
+  },
+  {
+    "id": "ani_倉鼠_開心",
+    "name": "倉鼠 開心",
+    "category": "animals",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E5%80%89%E9%BC%A0_%E9%96%8B%E5%BF%83.png"
+  },
+  {
+    "id": "ani_兔子_坐下",
+    "name": "兔子 坐下",
+    "category": "animals",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E5%85%94%E5%AD%90_%E5%9D%90%E4%B8%8B.png"
+  },
+  {
+    "id": "ani_兔子_跳躍",
+    "name": "兔子 跳躍",
+    "category": "animals",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E5%85%94%E5%AD%90_%E8%B7%B3%E8%BA%8D.png"
+  },
+  {
+    "id": "ani_兔子_抱抱",
+    "name": "兔子 抱抱",
+    "category": "animals",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E5%85%94%E5%AD%90_%E6%8A%B1%E6%8A%B1.png"
+  },
+  {
+    "id": "ani_兔子_睡覺",
+    "name": "兔子 睡覺",
+    "category": "animals",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%8B%95%E7%89%A9%E5%80%91/%E5%85%94%E5%AD%90_%E7%9D%A1%E8%A6%BA.png"
+  },
+  {
+    "id": "dog_坐下",
+    "name": "柴犬 坐下",
+    "category": "pets",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%9F%B4%E7%8A%AC/%E6%9F%B4%E7%8A%AC_%E5%9D%90%E4%B8%8B.png"
+  },
+  {
+    "id": "dog_奔跑",
+    "name": "柴犬 奔跑",
+    "category": "pets",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%9F%B4%E7%8A%AC/%E6%9F%B4%E7%8A%AC_%E5%A5%94%E8%B7%91.png"
+  },
+  {
+    "id": "dog_睡覺",
+    "name": "柴犬 睡覺",
+    "category": "pets",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%9F%B4%E7%8A%AC/%E6%9F%B4%E7%8A%AC_%E7%9D%A1%E8%A6%BA.png"
+  },
+  {
+    "id": "dog_玩球",
+    "name": "柴犬 玩球",
+    "category": "pets",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%9F%B4%E7%8A%AC/%E6%9F%B4%E7%8A%AC_%E7%8E%A9%E7%90%83.png"
+  },
+  {
+    "id": "dog_愛心",
+    "name": "柴犬 愛心",
+    "category": "pets",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%9F%B4%E7%8A%AC/%E6%9F%B4%E7%8A%AC_%E6%84%9B%E5%BF%83.png"
+  },
+  {
+    "id": "dog_叼葉",
+    "name": "柴犬 叼葉",
+    "category": "pets",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%9F%B4%E7%8A%AC/%E6%9F%B4%E7%8A%AC_%E5%8F%BC%E8%91%89.png"
+  },
+  {
+    "id": "dog_困惑",
+    "name": "柴犬 困惑",
+    "category": "pets",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%9F%B4%E7%8A%AC/%E6%9F%B4%E7%8A%AC_%E5%9B%B0%E6%83%91.png"
+  },
+  {
+    "id": "dog_快跑",
+    "name": "柴犬 快跑",
+    "category": "pets",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%9F%B4%E7%8A%AC/%E6%9F%B4%E7%8A%AC_%E5%BF%AB%E8%B7%91.png"
+  },
+  {
+    "id": "dog_抱球",
+    "name": "柴犬 抱球",
+    "category": "pets",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%9F%B4%E7%8A%AC/%E6%9F%B4%E7%8A%AC_%E6%8A%B1%E7%90%83.png"
+  },
+  {
+    "id": "cat_坐下",
+    "name": "貓咪 坐下",
+    "category": "pets",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E8%B2%93%E5%92%AA/%E8%B2%93%E5%92%AA_%E5%9D%90%E4%B8%8B.png"
+  },
+  {
+    "id": "cat_微笑",
+    "name": "貓咪 微笑",
+    "category": "pets",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E8%B2%93%E5%92%AA/%E8%B2%93%E5%92%AA_%E5%BE%AE%E7%AC%91.png"
+  },
+  {
+    "id": "cat_睡覺",
+    "name": "貓咪 睡覺",
+    "category": "pets",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E8%B2%93%E5%92%AA/%E8%B2%93%E5%92%AA_%E7%9D%A1%E8%A6%BA.png"
+  },
+  {
+    "id": "cat_伸懶腰",
+    "name": "貓咪 伸懶腰",
+    "category": "pets",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E8%B2%93%E5%92%AA/%E8%B2%93%E5%92%AA_%E4%BC%B8%E6%87%B6%E8%85%B0.png"
+  },
+  {
+    "id": "cat_撒嬌",
+    "name": "貓咪 撒嬌",
+    "category": "pets",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E8%B2%93%E5%92%AA/%E8%B2%93%E5%92%AA_%E6%92%92%E5%AC%8C.png"
+  },
+  {
+    "id": "cat_困惑",
+    "name": "貓咪 困惑",
+    "category": "pets",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E8%B2%93%E5%92%AA/%E8%B2%93%E5%92%AA_%E5%9B%B0%E6%83%91.png"
+  },
+  {
+    "id": "cat_玩毛線",
+    "name": "貓咪 玩毛線",
+    "category": "pets",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E8%B2%93%E5%92%AA/%E8%B2%93%E5%92%AA_%E7%8E%A9%E6%AF%9B%E7%B7%9A.png"
+  },
+  {
+    "id": "cat_愛心",
+    "name": "貓咪 愛心",
+    "category": "pets",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E8%B2%93%E5%92%AA/%E8%B2%93%E5%92%AA_%E6%84%9B%E5%BF%83.png"
+  },
+  {
+    "id": "cat_生氣",
+    "name": "貓咪 生氣",
+    "category": "pets",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E8%B2%93%E5%92%AA/%E8%B2%93%E5%92%AA_%E7%94%9F%E6%B0%A3.png"
+  },
+  {
+    "id": "hamster_cute_face",
+    "name": "倉鼠",
+    "category": "cuteFaces",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/cuteFaces/%E5%8F%AF%E6%84%9B%E5%80%89%E9%BC%A0%E8%87%89.png"
+  },
+  {
+    "id": "dog_cute_face",
+    "name": "狗狗",
+    "category": "cuteFaces",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/cuteFaces/%E5%8F%AF%E6%84%9B%E7%8B%97%E8%87%89.png"
+  },
+  {
+    "id": "dog_husky_face",
+    "name": "哈士奇",
+    "category": "cuteFaces",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/cuteFaces/%E5%93%88%E5%A3%AB%E5%A5%87%E8%87%89.png"
+  },
+  {
+    "id": "dog_shiba_face",
+    "name": "柴犬",
+    "category": "cuteFaces",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/cuteFaces/%E6%9F%B4%E7%8A%AC%E8%87%89.png"
+  },
+  {
+    "id": "dog_black_shiba",
+    "name": "黑柴犬",
+    "category": "cuteFaces",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/cuteFaces/%E9%BB%91%E6%9F%B4%E7%8A%AC%E8%87%89.png"
+  },
+  {
+    "id": "dog_poodle_face",
+    "name": "貴賓狗",
+    "category": "cuteFaces",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/cuteFaces/%E8%B2%B4%E8%B3%93%E7%8B%97%E8%87%89.png"
+  },
+  {
+    "id": "cat_cute_face",
+    "name": "貓咪",
+    "category": "cuteFaces",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/cuteFaces/%E5%8F%AF%E6%84%9B%E8%B2%93%E8%87%89.png"
+  },
+  {
+    "id": "pig_cute_face",
+    "name": "小豬",
+    "category": "cuteFaces",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/cuteFaces/%E5%8F%AF%E6%84%9B%E8%B1%AC%E8%87%89.png"
+  },
+  {
+    "id": "couple_擁抱",
+    "name": "情侶 擁抱",
+    "category": "couple",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%83%85%E4%BE%B6/%E6%83%85%E4%BE%B6_%E6%93%81%E6%8A%B1.png"
+  },
+  {
+    "id": "couple_親臉",
+    "name": "情侶 親臉",
+    "category": "couple",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%83%85%E4%BE%B6/%E6%83%85%E4%BE%B6_%E8%A6%AA%E8%87%89.png"
+  },
+  {
+    "id": "couple_愛心",
+    "name": "情侶 愛心",
+    "category": "couple",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%83%85%E4%BE%B6/%E6%83%85%E4%BE%B6_%E6%84%9B%E5%BF%83.png"
+  },
+  {
+    "id": "couple_HAHA",
+    "name": "情侶 HAHA",
+    "category": "couple",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%83%85%E4%BE%B6/%E6%83%85%E4%BE%B6_HAHA.png"
+  },
+  {
+    "id": "couple_手機",
+    "name": "情侶 手機",
+    "category": "couple",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%83%85%E4%BE%B6/%E6%83%85%E4%BE%B6_%E6%89%8B%E6%A9%9F.png"
+  },
+  {
+    "id": "couple_睡覺",
+    "name": "情侶 睡覺",
+    "category": "couple",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%83%85%E4%BE%B6/%E6%83%85%E4%BE%B6_%E7%9D%A1%E8%A6%BA.png"
+  },
+  {
+    "id": "couple_鬥嘴",
+    "name": "情侶 鬥嘴",
+    "category": "couple",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%83%85%E4%BE%B6/%E6%83%85%E4%BE%B6_%E9%AC%A5%E5%98%B4.png"
+  },
+  {
+    "id": "couple_擊掌",
+    "name": "情侶 擊掌",
+    "category": "couple",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%83%85%E4%BE%B6/%E6%83%85%E4%BE%B6_%E6%93%8A%E6%8E%8C.png"
+  },
+  {
+    "id": "couple_抱緊",
+    "name": "情侶 抱緊",
+    "category": "couple",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%83%85%E4%BE%B6/%E6%83%85%E4%BE%B6_%E6%8A%B1%E7%B7%8A.png"
+  },
+  {
+    "id": "couple_安慰",
+    "name": "情侶 安慰",
+    "category": "couple",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%83%85%E4%BE%B6/%E6%83%85%E4%BE%B6_%E5%AE%89%E6%85%B0.png"
+  },
+  {
+    "id": "couple_共食",
+    "name": "情侶 共食",
+    "category": "couple",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%83%85%E4%BE%B6/%E6%83%85%E4%BE%B6_%E5%85%B1%E9%A3%9F.png"
+  },
+  {
+    "id": "hamster_大笑",
+    "name": "倉鼠 大笑",
+    "category": "hamsterFaces",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%80%89%E9%BC%A0/%E5%80%89%E9%BC%A0_%E5%A4%A7%E7%AC%91.png"
+  },
+  {
+    "id": "hamster_大哭",
+    "name": "倉鼠 大哭",
+    "category": "hamsterFaces",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%80%89%E9%BC%A0/%E5%80%89%E9%BC%A0_%E5%A4%A7%E5%93%AD.png"
+  },
+  {
+    "id": "hamster_生氣",
+    "name": "倉鼠 生氣",
+    "category": "hamsterFaces",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%80%89%E9%BC%A0/%E5%80%89%E9%BC%A0_%E7%94%9F%E6%B0%A3.png"
+  },
+  {
+    "id": "hamster_難過",
+    "name": "倉鼠 難過",
+    "category": "hamsterFaces",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%80%89%E9%BC%A0/%E5%80%89%E9%BC%A0_%E9%9B%A3%E9%81%8E.png"
+  },
+  {
+    "id": "hamster_睡覺",
+    "name": "倉鼠 睡覺",
+    "category": "hamsterFaces",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%80%89%E9%BC%A0/%E5%80%89%E9%BC%A0_%E7%9D%A1%E8%A6%BA.png"
+  },
+  {
+    "id": "hamster_無聊",
+    "name": "倉鼠 無聊",
+    "category": "hamsterFaces",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%80%89%E9%BC%A0/%E5%80%89%E9%BC%A0_%E7%84%A1%E8%81%8A.png"
+  },
+  {
+    "id": "hamster_吐舌",
+    "name": "倉鼠 吐舌",
+    "category": "hamsterFaces",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%80%89%E9%BC%A0/%E5%80%89%E9%BC%A0_%E5%90%90%E8%88%8C.png"
+  },
+  {
+    "id": "hamster_嚇到",
+    "name": "倉鼠 嚇到",
+    "category": "hamsterFaces",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%80%89%E9%BC%A0/%E5%80%89%E9%BC%A0_%E5%9A%87%E5%88%B0.png"
+  },
+  {
+    "id": "hamster_疑惑",
+    "name": "倉鼠 疑惑",
+    "category": "hamsterFaces",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%80%89%E9%BC%A0/%E5%80%89%E9%BC%A0_%E7%96%91%E6%83%91.png"
+  },
+  {
+    "id": "hamster_開心",
+    "name": "倉鼠 開心",
+    "category": "hamsterFaces",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%80%89%E9%BC%A0/%E5%80%89%E9%BC%A0_%E9%96%8B%E5%BF%83.png"
+  },
+  {
+    "id": "hamster_流口水",
+    "name": "倉鼠 流口水",
+    "category": "hamsterFaces",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%80%89%E9%BC%A0/%E5%80%89%E9%BC%A0_%E6%B5%81%E5%8F%A3%E6%B0%B4.png"
+  },
+  {
+    "id": "hamster_不爽",
+    "name": "倉鼠 不爽",
+    "category": "hamsterFaces",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%80%89%E9%BC%A0/%E5%80%89%E9%BC%A0_%E4%B8%8D%E7%88%BD.png"
+  },
+  {
+    "id": "hamster_哈哈",
+    "name": "倉鼠 哈哈",
+    "category": "hamsterFaces",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%80%89%E9%BC%A0/%E5%80%89%E9%BC%A0_%E5%93%88%E5%93%88.png"
+  },
+  {
+    "id": "hamster_冒汗",
+    "name": "倉鼠 冒汗",
+    "category": "hamsterFaces",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%80%89%E9%BC%A0/%E5%80%89%E9%BC%A0_%E5%86%92%E6%B1%97.png"
+  },
+  {
+    "id": "hamster_暈眩",
+    "name": "倉鼠 暈眩",
+    "category": "hamsterFaces",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%80%89%E9%BC%A0/%E5%80%89%E9%BC%A0_%E6%9A%88%E7%9C%A9.png"
+  },
+  {
+    "id": "hamster_驚訝",
+    "name": "倉鼠 驚訝",
+    "category": "hamsterFaces",
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E5%80%89%E9%BC%A0/%E5%80%89%E9%BC%A0_%E9%A9%9A%E8%A8%9D.png"
+  },
+  {
+    "id": "emoji_開心",
+    "name": "表情 開心",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/開心.png"
+  },
+  {
+    "id": "emoji_哭了",
+    "name": "表情 哭了",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/哭了.png"
+  },
+  {
+    "id": "emoji_生氣",
+    "name": "表情 生氣",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/生氣.png"
+  },
+  {
+    "id": "emoji_無奈",
+    "name": "表情 無奈",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/無奈.png"
+  },
+  {
+    "id": "emoji_睏了",
+    "name": "表情 睏了",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/睏了.png"
+  },
+  {
+    "id": "emoji_發呆",
+    "name": "表情 發呆",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/發呆.png"
+  },
+  {
+    "id": "emoji_傻笑",
+    "name": "表情 傻笑",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/傻笑.png"
+  },
+  {
+    "id": "emoji_驚訝",
+    "name": "表情 驚訝",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/驚訝.png"
+  },
+  {
+    "id": "emoji_讚",
+    "name": "表情 讚",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/讚.png"
+  },
+  {
+    "id": "emoji_OK",
+    "name": "表情 OK",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/OK.png"
+  },
+  {
+    "id": "emoji_謝謝",
+    "name": "表情 謝謝",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/謝謝.png"
+  },
+  {
+    "id": "emoji_對不起",
+    "name": "表情 對不起",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/對不起.png"
+  },
+  {
+    "id": "emoji_不要",
+    "name": "表情 不要",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/不要.png"
+  },
+  {
+    "id": "emoji_隨便",
+    "name": "表情 隨便",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/隨便.png"
+  },
+  {
+    "id": "emoji_加油",
+    "name": "表情 加油",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/加油.png"
+  },
+  {
+    "id": "emoji_哇賽",
+    "name": "表情 哇賽",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/哇賽.png"
+  },
+  {
+    "id": "emoji_蛤",
+    "name": "表情 蛤?",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/蛤.png"
+  },
+  {
+    "id": "emoji_累了",
+    "name": "表情 累了",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/累了.png"
+  },
+  {
+    "id": "emoji_不要2",
+    "name": "表情 不要",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/不要2.png"
+  },
+  {
+    "id": "emoji_好啦",
+    "name": "表情 好啦",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/好啦.png"
+  },
+  {
+    "id": "emoji_隨便2",
+    "name": "表情 隨便~",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/隨便2.png"
+  },
+  {
+    "id": "emoji_對不起2",
+    "name": "表情 對不起",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/對不起2.png"
+  },
+  {
+    "id": "emoji_再看看",
+    "name": "表情 再看看",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/再看看.png"
+  },
+  {
+    "id": "emoji_難說喔",
+    "name": "表情 難說喔",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/難說喔.png"
+  },
+  {
+    "id": "emoji_哈哈哈",
+    "name": "表情 哈哈哈",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/哈哈哈.png"
+  },
+  {
+    "id": "emoji_傻眼",
+    "name": "表情 傻眼",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/傻眼.png"
+  },
+  {
+    "id": "emoji_無言",
+    "name": "表情 無言...",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/無言.png"
+  },
+  {
+    "id": "emoji_真的假的",
+    "name": "表情 真的假的",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/真的假的.png"
+  },
+  {
+    "id": "emoji_超棒",
+    "name": "表情 超棒!",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/超棒.png"
+  },
+  {
+    "id": "emoji_哭啊",
+    "name": "表情 哭啊...",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/哭啊.png"
+  },
+  {
+    "id": "emoji_生氣2",
+    "name": "表情 生氣!",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/生氣2.png"
+  },
+  {
+    "id": "emoji_晚點再說",
+    "name": "表情 晚點再說",
+    "category": "emoji",
+    "isFree": true,
+    "remoteURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/emoji/晚點再說.png"
+  }
 ]

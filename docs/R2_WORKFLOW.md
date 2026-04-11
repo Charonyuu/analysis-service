@@ -1,5 +1,26 @@
 # R2 lumee_config 工作流程
 
+## ⚠️ 每次推 R2 前必做 — version.json
+
+```json
+{
+  "version": N,                    ← 每次推都 +1
+  "stickerCacheVersion": "vN"      ← 有新增/替換貼圖才改，純文字設定不用動
+}
+```
+
+| 改了什麼 | version | stickerCacheVersion |
+|----------|---------|---------------------|
+| 主題名稱 / 價格 / features 文字 | +1 | 不動 |
+| 新增主題包 / 貼圖包 | +1 | 不動（新圖片會自動下載） |
+| Banner 文字 / 連結 | +1 | 不動 |
+| 修改現有貼圖圖片（換圖） | +1 | 換新字串 |
+| 刪除 / 替換現有貼圖 URL | +1 | 換新字串 |
+| Banner 換新圖片 URL | +1 | 不動（banner 用 AsyncImage，不走 sticker cache） |
+
+---
+
+
 ## Bucket 結構
 
 ```

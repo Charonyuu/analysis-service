@@ -9,7 +9,8 @@
     "check:2": "node scripts/check-phase2.js",
     "check:3": "node scripts/check-phase3.js",
     "check:4": "node scripts/check-phase4.js",
-    "check:all": "npm run check:1 && npm run check:2 && npm run check:3 && npm run check:4"
+    "check:all": "npm run check:1 && npm run check:2 && npm run check:3 && npm run check:4",
+    "appstore": "node scripts/generate-appstore-screenshots.js"
   },
   "keywords": [],
   "author": "",
@@ -17,11 +18,13 @@
   "description": "",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1020.0",
+    "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "express-rate-limit": "^8.3.1",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.3.3",
     "multer": "^2.1.1",
     "node-cron": "^4.2.1",

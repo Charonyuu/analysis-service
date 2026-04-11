@@ -2,23 +2,35 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const connectDB = require('./config/db');
 const createCorsMiddleware = require('./middleware/cors');
 const { collectLimiter, statsLimiter } = require('./middleware/rateLimit');
-const authBearer = require('./middleware/auth');
+const { authBearer, dashboardAuth, requireRole } = require('./middleware/auth');
 const collectRoutes = require('./routes/collect');
 const statsRoutes = require('./routes/stats');
 const feedbackRoutes = require('./routes/feedback');
 const iconsRoutes = require('./routes/icons');
 const iapRoutes = require('./routes/iap');
 const iapAdminRoutes = require('./routes/iapAdmin');
+const trendingRoutes = require('./routes/trending');
+const assetsRoutes = require('./routes/assets');
+const adminRoutes = require('./routes/admin');
+const DashboardUser = require('./models/DashboardUser');
+const seedAdmin = require('./services/seedAdmin');
 require('./services/cleanupCron');
+require('./services/trendingCron');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const JWT_SECRET = () => process.env.JWT_SECRET || process.env.DASHBOARD_SECRET;
+
 // Connect to MongoDB
-connectDB();
+connectDB().then(() => {
+  seedAdmin();
+});
 
 // Core middleware
 app.use(express.json());
@@ -56,6 +68,15 @@ app.use('/api/feedback', (req, res, next) => {
 // Icons API (全部需要 auth)
 app.use('/api/icons', authBearer, iconsRoutes);
 
+// Assets API (auth required)
+app.use('/api/assets', authBearer, assetsRoutes);
+
+// Admin API (auth required, role check inside routes)
+app.use('/api/admin', authBearer, adminRoutes);
+
+// Trending topics API (public, rate-limited)
+app.use('/api/trending', trendingRoutes);
+
 // IAP public API — POST /iap/verify, GET /iap/user/:userId, POST /iap/coupon/redeem
 app.use('/iap', iapRoutes);
 
@@ -67,35 +88,61 @@ app.get('/dashboard/login', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'dashboard', 'login.html'));
 });
 
-app.post('/dashboard/login', (req, res) => {
-  const { password } = req.body;
-  if (password === process.env.DASHBOARD_SECRET) {
-    res.cookie('dashboard_token', process.env.DASHBOARD_SECRET, {
+app.post('/dashboard/login', async (req, res) => {
+  const { username, password } = req.body;
+  try {
+    const user = await DashboardUser.findOne({ username });
+    if (!user) return res.redirect('/dashboard/login?error=1');
+    const valid = await bcrypt.compare(password, user.passwordHash);
+    if (!valid) return res.redirect('/dashboard/login?error=1');
+    const token = jwt.sign(
+      { userId: user._id, username: user.username, role: user.role },
+      JWT_SECRET(),
+      { expiresIn: '7d' }
+    );
+    res.cookie('dashboard_jwt', token, {
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
-      sameSite: 'lax'
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: 'lax',
     });
-    return res.redirect('/dashboard');
+    // Redirect based on role
+    if (user.role === 'artist') {
+      return res.redirect('/dashboard/artist-dashboard');
+    }
+    res.redirect('/dashboard');
+  } catch (err) {
+    console.error('Login error:', err);
+    res.redirect('/dashboard/login?error=1');
   }
-  res.redirect('/dashboard/login?error=1');
 });
 
 app.get('/dashboard/logout', (req, res) => {
+  res.clearCookie('dashboard_jwt');
   res.clearCookie('dashboard_token');
   res.redirect('/dashboard/login?logout=1');
 });
 
-// Dashboard auth middleware
-function dashboardAuth(req, res, next) {
-  const token = req.cookies.dashboard_token;
-  if (token === process.env.DASHBOARD_SECRET) {
-    return next();
-  }
-  return res.redirect('/dashboard/login');
+// Dashboard /me API
+app.get('/dashboard/me', dashboardAuth, (req, res) => {
+  res.json({
+    username: req.user.username,
+    role: req.user.role,
+    userId: req.user.userId,
+  });
+});
+
+// Admin-only dashboard middleware: dashboardAuth + role check
+function dashboardAdminOnly(req, res, next) {
+  dashboardAuth(req, res, () => {
+    if (req.user.role !== 'admin') {
+      return res.redirect('/dashboard/artist-dashboard');
+    }
+    next();
+  });
 }
 
 // Dashboard static files (protected)
-app.get('/dashboard', dashboardAuth, (req, res) => {
+app.get('/dashboard', dashboardAdminOnly, (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'dashboard', 'index.html'));
 });
 
@@ -103,22 +150,45 @@ app.get('/dashboard/app.js', dashboardAuth, (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'dashboard', 'app.js'));
 });
 
-// Icon Splitter page
-app.get('/dashboard/icons', dashboardAuth, (req, res) => {
+// Icon Splitter page (admin only)
+app.get('/dashboard/icons', dashboardAdminOnly, (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'dashboard', 'icons.html'));
 });
 
-app.get('/dashboard/icons.js', dashboardAuth, (req, res) => {
+app.get('/dashboard/icons.js', dashboardAdminOnly, (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'dashboard', 'icons.js'));
 });
 
-// Coins dashboard page
-app.get('/dashboard/coins', dashboardAuth, (req, res) => {
+// Coins dashboard page (admin only)
+app.get('/dashboard/coins', dashboardAdminOnly, (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'dashboard', 'coins.html'));
 });
 
-app.get('/dashboard/coins.js', dashboardAuth, (req, res) => {
+app.get('/dashboard/coins.js', dashboardAdminOnly, (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'dashboard', 'coins.js'));
+});
+
+// Artist Guide page
+app.get('/dashboard/artist-guide', dashboardAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'dashboard', 'artist-guide.html'));
+});
+
+// Artist Dashboard page
+app.get('/dashboard/artist-dashboard', dashboardAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'dashboard', 'artist-dashboard.html'));
+});
+
+app.get('/dashboard/artist-dashboard.js', dashboardAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'dashboard', 'artist-dashboard.js'));
+});
+
+// R2 Assets page (admin only)
+app.get('/dashboard/r2-assets', dashboardAdminOnly, (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'dashboard', 'r2-assets.html'));
+});
+
+app.get('/dashboard/r2-assets.js', dashboardAdminOnly, (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'dashboard', 'r2-assets.js'));
 });
 
 // Start server

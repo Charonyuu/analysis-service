@@ -1,3 +1,13 @@
+// Role check
+fetch('/dashboard/me', { credentials: 'same-origin' })
+  .then(r => r.json())
+  .then(data => {
+    if (data.role === 'artist') {
+      window.location.href = '/dashboard/artist-dashboard';
+    }
+  })
+  .catch(() => {});
+
 const API = '';
 const SITE_COLORS = { travel: '#6366f1', icons: '#22c55e', pixel_frame: '#f59e0b', resume: '#0d9488' };
 const DEFAULT_COLORS = ['#ec4899', '#06b6d4', '#f97316'];
@@ -91,8 +101,8 @@ function switchSite(site) {
   });
 
   // Update title
-  document.getElementById('page-title').textContent = site === 'all' ? 'All Sites' : siteName(site);
-  document.querySelector('.page-header .subtitle').textContent = 'Page analytics overview';
+  document.getElementById('page-title').textContent = site === 'all' ? '所有站點' : siteName(site);
+  document.querySelector('.page-header .subtitle').textContent = '頁面流量分析總覽';
 
   // Update mobile select
   document.getElementById('mobile-site-filter').value = site;
@@ -124,56 +134,79 @@ async function loadOverview() {
         </h2>
         <div class="stats-grid">
           <div class="stat-card">
-            <div class="label">Today</div>
+            <div class="label">今日</div>
             <div class="num">${todayEnter}</div>
           </div>
           <div class="stat-card">
-            <div class="label">This Week</div>
+            <div class="label">本週</div>
             <div class="num">${weekEnter}</div>
           </div>
           <div class="stat-card">
-            <div class="label">Total</div>
+            <div class="label">總計</div>
             <div class="num">${totalEnter}</div>
           </div>
           <div class="stat-card">
-            <div class="label">Avg Duration</div>
+            <div class="label">平均停留</div>
             <div class="num">${fmtSec(avgDur)}</div>
             <div class="sub">total: ${fmtSec(totalDur)}</div>
           </div>
         </div>
       </div>`;
     }
-    container.innerHTML = html || '<div style="color:#52525b;padding:40px;text-align:center">No data yet</div>';
+    container.innerHTML = html || '<div style="color:#52525b;padding:40px;text-align:center">尚無資料</div>';
   } else {
-    // Single site: show per page
+    // Single site: compact table view
     const data = await apiFetch('/api/stats/overview?site=' + currentSite);
-    let html = '';
+    const pages = Object.entries(data.pages);
 
-    for (const [page, stats] of Object.entries(data.pages)) {
-      html += `<div class="page-stats-section">
-        <h2>${page}</h2>
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="label">Today</div>
-            <div class="num">${stats.todayEnter}</div>
-          </div>
-          <div class="stat-card">
-            <div class="label">This Week</div>
-            <div class="num">${stats.weekEnter}</div>
-          </div>
-          <div class="stat-card">
-            <div class="label">Total</div>
-            <div class="num">${stats.totalEnter}</div>
-          </div>
-          <div class="stat-card">
-            <div class="label">Avg Duration</div>
-            <div class="num">${fmtSec(stats.avgDurationSec)}</div>
-            <div class="sub">total: ${fmtSec(stats.totalDurationSec)}</div>
-          </div>
-        </div>
-      </div>`;
+    if (pages.length === 0) {
+      container.innerHTML = '<div style="color:#52525b;padding:40px;text-align:center">尚無資料</div>';
+      return;
     }
-    container.innerHTML = html || '<div style="color:#52525b;padding:40px;text-align:center">No data yet</div>';
+
+    // Summary row
+    const totalToday = pages.reduce((s, [, p]) => s + p.todayEnter, 0);
+    const totalWeek = pages.reduce((s, [, p]) => s + p.weekEnter, 0);
+    const totalAll = pages.reduce((s, [, p]) => s + p.totalEnter, 0);
+    const totalDur = pages.reduce((s, [, p]) => s + p.totalDurationSec, 0);
+    const avgDur = totalAll > 0 ? Math.round(totalDur / totalAll) : 0;
+
+    let html = `
+      <div class="stats-grid" style="margin-bottom:24px">
+        <div class="stat-card"><div class="label">今日</div><div class="num">${totalToday}</div></div>
+        <div class="stat-card"><div class="label">本週</div><div class="num">${totalWeek}</div></div>
+        <div class="stat-card"><div class="label">總計</div><div class="num">${totalAll}</div></div>
+        <div class="stat-card"><div class="label">平均停留</div><div class="num">${fmtSec(avgDur)}</div><div class="sub">total: ${fmtSec(totalDur)}</div></div>
+      </div>
+      <div class="chart-card">
+        <h3>各頁面明細</h3>
+        <table style="width:100%;border-collapse:collapse;font-size:14px">
+          <thead>
+            <tr style="border-bottom:1px solid #27272a;color:#71717a;font-size:12px;text-transform:uppercase;letter-spacing:0.5px">
+              <th style="text-align:left;padding:10px 12px">頁面</th>
+              <th style="text-align:right;padding:10px 12px">今日</th>
+              <th style="text-align:right;padding:10px 12px">本週</th>
+              <th style="text-align:right;padding:10px 12px">總計</th>
+              <th style="text-align:right;padding:10px 12px">平均停留</th>
+            </tr>
+          </thead>
+          <tbody>`;
+
+    // Sort by total descending
+    pages.sort((a, b) => b[1].totalEnter - a[1].totalEnter);
+    for (const [page, stats] of pages) {
+      html += `
+            <tr style="border-bottom:1px solid #1e1e21">
+              <td style="padding:10px 12px;color:#e4e4e7;font-weight:500">${page}</td>
+              <td style="text-align:right;padding:10px 12px;color:${stats.todayEnter > 0 ? '#4ade80' : '#52525b'};font-variant-numeric:tabular-nums">${stats.todayEnter}</td>
+              <td style="text-align:right;padding:10px 12px;color:#a1a1aa;font-variant-numeric:tabular-nums">${stats.weekEnter}</td>
+              <td style="text-align:right;padding:10px 12px;color:#fafafa;font-weight:600;font-variant-numeric:tabular-nums">${stats.totalEnter}</td>
+              <td style="text-align:right;padding:10px 12px;color:#71717a">${fmtSec(stats.avgDurationSec)}</td>
+            </tr>`;
+    }
+
+    html += `</tbody></table></div>`;
+    container.innerHTML = html;
   }
 }
 
@@ -288,7 +321,7 @@ function renderRecent() {
 
   const container = document.getElementById('recent-items');
   if (recentItems.length === 0) {
-    container.innerHTML = '<div style="color:#52525b;padding:20px;text-align:center">No recent activity</div>';
+    container.innerHTML = '<div style="color:#52525b;padding:20px;text-align:center">沒有最近活動</div>';
     document.getElementById('pagination').innerHTML = '';
     return;
   }
@@ -320,9 +353,9 @@ function renderRecent() {
     return;
   }
   pag.innerHTML = `
-    <button id="prev-page" ${recentPage === 0 ? 'disabled' : ''}>Prev</button>
+    <button id="prev-page" ${recentPage === 0 ? 'disabled' : ''}>上一頁</button>
     <span>${recentPage + 1} / ${totalPages}</span>
-    <button id="next-page" ${recentPage >= totalPages - 1 ? 'disabled' : ''}>Next</button>
+    <button id="next-page" ${recentPage >= totalPages - 1 ? 'disabled' : ''}>下一頁</button>
   `;
   document.getElementById('prev-page').addEventListener('click', () => { recentPage--; renderRecent(); });
   document.getElementById('next-page').addEventListener('click', () => { recentPage++; renderRecent(); });
@@ -349,21 +382,26 @@ function showView(view) {
   currentView = view;
   document.getElementById('view-analytics').classList.toggle('active', view === 'analytics');
   document.getElementById('view-feedback').classList.toggle('active', view === 'feedback');
+  document.getElementById('view-trending').classList.toggle('active', view === 'trending');
 
-  // Update header
-  if (view === 'feedback') {
-    document.getElementById('page-title').textContent = 'Feedback';
-    document.querySelector('.page-header .subtitle').textContent = 'User feedback from all apps';
-    document.querySelector('.header-actions').style.display = view === 'analytics' ? 'flex' : 'none';
-  }
+  // Deactivate all nav highlights
+  document.querySelectorAll('.nav-site').forEach(a => a.classList.remove('active'));
+  document.getElementById('nav-feedback').classList.remove('active');
+  document.getElementById('nav-trending').classList.remove('active');
 
-  // Deactivate site nav when on feedback
   if (view === 'feedback') {
-    document.querySelectorAll('.nav-site').forEach(a => a.classList.remove('active'));
+    document.getElementById('page-title').textContent = '回饋';
+    document.querySelector('.page-header .subtitle').textContent = '來自所有 App 的使用者回饋';
+    document.querySelector('.header-actions').style.display = 'none';
     document.getElementById('nav-feedback').classList.add('active');
     loadFeedback();
+  } else if (view === 'trending') {
+    document.getElementById('page-title').textContent = '熱門趨勢';
+    document.querySelector('.page-header .subtitle').textContent = '目前各平台的熱門話題';
+    document.querySelector('.header-actions').style.display = 'none';
+    document.getElementById('nav-trending').classList.add('active');
+    loadTrending();
   } else {
-    document.getElementById('nav-feedback').classList.remove('active');
     document.querySelector('.header-actions').style.display = 'flex';
     switchSite(currentSite);
   }
@@ -380,7 +418,7 @@ async function loadFeedback() {
   const container = document.getElementById('feedback-list');
 
   if (data.items.length === 0) {
-    container.innerHTML = '<div class="feedback-empty">No feedback yet</div>';
+    container.innerHTML = '<div class="feedback-empty">尚無回饋</div>';
     document.getElementById('feedback-pagination').innerHTML = '';
     return;
   }
@@ -400,8 +438,8 @@ async function loadFeedback() {
           <span>${time}</span>
         </div>
         <div class="feedback-actions">
-          ${!item.read ? `<button onclick="markRead('${item._id}')">Mark Read</button>` : ''}
-          <button class="btn-delete" onclick="deleteFeedback('${item._id}')">Delete</button>
+          ${!item.read ? `<button onclick="markRead('${item._id}')">標為已讀</button>` : ''}
+          <button class="btn-delete" onclick="deleteFeedback('${item._id}')">刪除</button>
         </div>
       </div>
       <div class="feedback-message">${escapeHtml(item.message)}</div>
@@ -413,9 +451,9 @@ async function loadFeedback() {
   const pag = document.getElementById('feedback-pagination');
   if (totalPages <= 1) { pag.innerHTML = ''; return; }
   pag.innerHTML = `
-    <button id="fb-prev" ${feedbackPage === 0 ? 'disabled' : ''}>Prev</button>
+    <button id="fb-prev" ${feedbackPage === 0 ? 'disabled' : ''}>上一頁</button>
     <span>${feedbackPage + 1} / ${totalPages}</span>
-    <button id="fb-next" ${feedbackPage >= totalPages - 1 ? 'disabled' : ''}>Next</button>
+    <button id="fb-next" ${feedbackPage >= totalPages - 1 ? 'disabled' : ''}>下一頁</button>
   `;
   document.getElementById('fb-prev').addEventListener('click', () => { feedbackPage--; loadFeedback(); });
   document.getElementById('fb-next').addEventListener('click', () => { feedbackPage++; loadFeedback(); });
@@ -446,7 +484,7 @@ async function markRead(id) {
 }
 
 async function deleteFeedback(id) {
-  if (!confirm('Delete this feedback?')) return;
+  if (!confirm('確定要刪除這則回饋？')) return;
   await fetch(API + '/api/feedback/' + id, { method: 'DELETE', credentials: 'same-origin' });
   loadFeedback();
 }
@@ -470,6 +508,45 @@ function buildFeedbackFilter() {
   });
 }
 
+// --- Trending ---
+async function loadTrending() {
+  const container = document.getElementById('trending-container');
+  const updatedEl = document.getElementById('trending-updated');
+  container.innerHTML = '<div style="color:#52525b;padding:40px;text-align:center">載入中...</div>';
+
+  try {
+    const data = await apiFetch('/api/trending');
+    if (!data.categories || data.categories.length === 0) {
+      container.innerHTML = '<div style="color:#52525b;padding:40px;text-align:center">目前沒有熱門話題資料</div>';
+      updatedEl.textContent = '';
+      return;
+    }
+
+    container.innerHTML = data.categories.map(cat => {
+      const items = (cat.items || []).map((item, i) => {
+        const rankClass = i < 3 ? ' top3' : '';
+        return `<div class="trending-item">
+          <span class="trending-rank${rankClass}">${i + 1}</span>
+          <span class="trending-title">${escapeHtml(item.title)}</span>
+          <span class="trending-source">${item.source || ''}</span>
+          ${item.score ? `<span class="trending-score">${item.score}</span>` : ''}
+        </div>`;
+      }).join('');
+
+      return `<div class="trending-category">
+        <h3>${cat.label || cat.id}</h3>
+        ${items || '<div style="color:#52525b;padding:12px">尚無資料</div>'}
+      </div>`;
+    }).join('');
+
+    if (data.updatedAt) {
+      updatedEl.textContent = '最後更新：' + new Date(data.updatedAt).toLocaleString();
+    }
+  } catch (err) {
+    container.innerHTML = `<div style="color:#fca5a5;padding:40px;text-align:center">載入失敗：${err.message}</div>`;
+  }
+}
+
 // --- Event listeners ---
 document.getElementById('time-range').addEventListener('change', loadAll);
 
@@ -479,6 +556,7 @@ document.getElementById('btn-refresh').addEventListener('click', async function 
   btn.disabled = true;
   try {
     if (currentView === 'analytics') await loadAll();
+    else if (currentView === 'trending') await loadTrending();
     else await loadFeedback();
   } finally {
     btn.classList.remove('loading');
@@ -489,6 +567,11 @@ document.getElementById('btn-refresh').addEventListener('click', async function 
 document.getElementById('nav-feedback').addEventListener('click', function (e) {
   e.preventDefault();
   showView('feedback');
+});
+
+document.getElementById('nav-trending').addEventListener('click', function (e) {
+  e.preventDefault();
+  showView('trending');
 });
 
 document.getElementById('feedback-site-filter').addEventListener('change', function () {

@@ -60,7 +60,7 @@ router.get('/user/:userId', async (req, res) => {
   }
 });
 
-// POST /coupon/redeem — redeem a coupon code
+// POST /coupon/redeem — redeem a coupon code for trial days
 router.post('/coupon/redeem', async (req, res) => {
   try {
     const { userId, code } = req.body;
@@ -80,17 +80,11 @@ router.post('/coupon/redeem', async (req, res) => {
     const alreadyUsed = await CouponUsage.findOne({ userId, code: upperCode });
     if (alreadyUsed) return res.status(400).json({ success: false, error: 'ALREADY_USED' });
 
-    // Grant coins atomically
+    // Record coupon usage
     await CouponUsage.create({ userId, code: upperCode });
     await Coupon.updateOne({ code: upperCode }, { $inc: { usedCount: 1 } });
 
-    const user = await User.findByIdAndUpdate(
-      userId,
-      { $inc: { coins: coupon.coins } },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
-    );
-
-    res.json({ success: true, coins: user.coins });
+    res.json({ success: true, trialDays: coupon.trialDays });
   } catch (err) {
     console.error('Coupon redeem error:', err);
     res.status(500).json({ success: false, error: 'INTERNAL_ERROR' });

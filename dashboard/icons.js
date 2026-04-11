@@ -1,3 +1,13 @@
+// Role check
+fetch('/dashboard/me', { credentials: 'same-origin' })
+  .then(r => r.json())
+  .then(data => {
+    if (data.role === 'artist') {
+      window.location.href = '/dashboard/artist-dashboard';
+    }
+  })
+  .catch(() => {});
+
 // ═══ State ═══
 let currentFile = null;
 let sessionId = null;

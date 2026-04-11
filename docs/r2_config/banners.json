@@ -20,6 +20,16 @@
     "sortOrder": 1
   },
   {
+    "id": "hamster_pack",
+    "title": "倉鼠表情包",
+    "subtitle": "😤 16 款搞笑表情・現已上線",
+    "gradientColors": ["#FBBF8A", "#F59E0B"],
+    "icon": "face.smiling.inverse",
+    "linkedThemePackID": "stickerPack_hamster",
+    "imageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_config/banners/banner_hamster_pack.png",
+    "sortOrder": 2
+  },
+  {
     "id": "new_themes",
     "title": "更多主題包即將推出",
     "subtitle": "敬請期待全新風格",
@@ -27,6 +37,6 @@
     "icon": "sparkles",
     "linkedThemePackID": null,
     "imageURL": null,
-    "sortOrder": 2
+    "sortOrder": 3
   }
 ]

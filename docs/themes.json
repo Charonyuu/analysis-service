@@ -12,39 +12,32 @@
       "mood",
       "todo",
       "steps",
-      "restTimer",
-      "exchangeRate",
-      "worldTime",
-      "horoscope",
-      "stock",
-      "trending"
+      "restTimer"
     ],
     "coverIcon": "square.grid.2x2.fill",
     "coverGradient": [
-      "#8E8E93",
-      "#636366"
+      "#D4A574",
+      "#B8845C"
     ],
     "entitlementKey": null,
     "petType": "none",
     "iconStickers": [],
     "defaultStickerKey": null,
     "bundledStickerIDs": [],
-    "sortOrder": 1,
+    "sortOrder": 0,
     "isNew": false,
-    "features": [],
-    "packType": "theme",
-    "isTesting": false,
     "artistName": "Lumee Team",
     "artistURL": null,
+    "features": [],
     "colors": {
-      "background": "#FFFFFF",
-      "card": "#F2F2F7",
-      "textPrimary": "#1C1C1E",
+      "background": "#F2F2F7",
+      "card": "#FFFFFF",
+      "textPrimary": "#000000",
       "textSecondary": "#8E8E93",
-      "textTertiary": "#AEAEB2",
+      "textTertiary": "#C7C7CC",
       "accent": "#8B6914",
       "buttonForeground": "#FFFFFF",
-      "useGlass": false
+      "useGlass": true
     },
     "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
     "artistDescription": "Lumee 官方設計團隊",
@@ -60,103 +53,32 @@
     ],
     "coverIcon": "puzzlepiece.fill",
     "coverGradient": [
-      "#FF9500",
-      "#FF1744"
+      "#FF8C00",
+      "#FF69B4"
     ],
     "entitlementKey": null,
     "petType": "none",
     "iconStickers": [],
     "defaultStickerKey": null,
     "bundledStickerIDs": [],
-    "sortOrder": 2,
+    "sortOrder": 1,
     "isNew": false,
-    "features": [],
-    "packType": "theme",
-    "isTesting": false,
     "artistName": "Lumee Team",
     "artistURL": null,
+    "features": [],
     "colors": {
-      "background": "#FFFFFF",
-      "card": "#F2F2F7",
-      "textPrimary": "#1C1C1E",
+      "background": "#F2F2F7",
+      "card": "#FFFFFF",
+      "textPrimary": "#000000",
       "textSecondary": "#8E8E93",
-      "textTertiary": "#AEAEB2",
+      "textTertiary": "#C7C7CC",
       "accent": "#8B6914",
       "buttonForeground": "#FFFFFF",
-      "useGlass": false
+      "useGlass": true
     },
     "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
     "artistDescription": "Lumee 官方設計團隊",
     "createdAt": "2026-03-01"
-  },
-  {
-    "id": "premiumBlack",
-    "name": "質感黑",
-    "subtitle": "極簡深色・紅色點綴",
-    "coinPrice": 30,
-    "supportedTypes": [
-      "photo",
-      "weather",
-      "countdown",
-      "daily",
-      "mood",
-      "todo",
-      "steps",
-      "restTimer",
-      "exchangeRate",
-      "worldTime",
-      "horoscope",
-      "stock",
-      "trending"
-    ],
-    "coverIcon": "moon.fill",
-    "coverGradient": [
-      "#2C2C2E",
-      "#1C1C1E"
-    ],
-    "entitlementKey": "premiumBlackUnlocked",
-    "petType": "sticker",
-    "iconStickers": [],
-    "defaultStickerKey": null,
-    "bundledStickerIDs": [],
-    "sortOrder": 3,
-    "isNew": true,
-    "features": [
-      {
-        "icon": "moon.fill",
-        "title": "深色質感",
-        "description": "純黑背景搭配紅色點綴"
-      },
-      {
-        "icon": "textformat",
-        "title": "高對比排版",
-        "description": "白色文字在深色背景上清晰易讀"
-      }
-    ],
-    "packType": "theme",
-    "isTesting": false,
-    "artistName": "Lumee Team",
-    "artistURL": null,
-    "colors": {
-      "background": "#1C1C1E",
-      "card": "#2C2C2E",
-      "textPrimary": "#FFFFFF",
-      "textSecondary": "#A0A0A5",
-      "textTertiary": "#6C6C70",
-      "accent": "#FF3B30",
-      "buttonForeground": "#FFFFFF",
-      "useGlass": false,
-      "borderColors": [
-        "#3A3A3C",
-        "#2C2C2E"
-      ],
-      "borderWidth": 0.5,
-      "cornerIcon": null,
-      "cornerIconColors": []
-    },
-    "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
-    "artistDescription": "Lumee 官方設計團隊",
-    "createdAt": "2026-04-11"
   },
   {
     "id": "lovePack",
@@ -237,7 +159,7 @@
         "url": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/stickers/%E6%83%85%E4%BE%B6/%E6%83%85%E4%BE%B6_%E5%85%B1%E9%A3%9F.png"
       }
     ],
-    "defaultStickerKey": "nat_愛心",
+    "defaultStickerKey": "couple_擁抱",
     "bundledStickerIDs": [
       "couple_擁抱",
       "couple_親臉",
@@ -251,13 +173,32 @@
       "couple_安慰",
       "couple_共食"
     ],
-    "sortOrder": 4,
+    "sortOrder": 2,
     "isNew": false,
-    "features": [],
-    "packType": "theme",
-    "isTesting": false,
     "artistName": "Lumee Team",
     "artistURL": null,
+    "features": [
+      {
+        "icon": "heart.fill",
+        "title": "浪漫粉色邊框",
+        "description": "奶油白底 + 粉色漸層邊框"
+      },
+      {
+        "icon": "sparkles",
+        "title": "愛心角落裝飾",
+        "description": "粉色愛心漂浮在角落"
+      },
+      {
+        "icon": "figure.2.arms.open",
+        "title": "11 款情侶貼紙",
+        "description": "擁抱、親臉、愛心、擊掌等"
+      },
+      {
+        "icon": "square.grid.2x2.fill",
+        "title": "支援全部 Widget 類型",
+        "description": "照片、天氣、倒數日等"
+      }
+    ],
     "colors": {
       "background": "#FFF9F5",
       "card": "#FFF1EB",
@@ -278,9 +219,24 @@
         "#F43F5EB3"
       ]
     },
+    "stickerCategory": "情侶",
     "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
     "artistDescription": "Lumee 官方設計團隊",
-    "createdAt": "2026-03-01"
+    "createdAt": "2026-03-01",
+    "backgroundImages": {
+      "small": [
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/lovePack_0.png",
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/lovePack_1.png",
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/lovePack_2.png",
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/lovePack_3.png"
+      ],
+      "medium": [
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/lovePack_0.png",
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/lovePack_1.png",
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/lovePack_2.png",
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/lovePack_3.png"
+      ]
+    }
   },
   {
     "id": "dogPack",
@@ -363,13 +319,32 @@
       "dog_快跑",
       "dog_抱球"
     ],
-    "sortOrder": 5,
+    "sortOrder": 3,
     "isNew": false,
-    "features": [],
-    "packType": "theme",
-    "isTesting": false,
     "artistName": "Lumee Team",
     "artistURL": null,
+    "features": [
+      {
+        "icon": "pawprint.fill",
+        "title": "9 款柴犬貼紙",
+        "description": "坐下、奔跑、睡覺等可愛姿態"
+      },
+      {
+        "icon": "clock.fill",
+        "title": "時間行為系統",
+        "description": "柴犬會隨時段變換姿勢"
+      },
+      {
+        "icon": "paintbrush.fill",
+        "title": "奶油暖色調",
+        "description": "溫暖的奶油色系設計"
+      },
+      {
+        "icon": "square.grid.2x2.fill",
+        "title": "支援全部 Widget 類型",
+        "description": "照片、天氣、倒數日等"
+      }
+    ],
     "colors": {
       "background": "#F7F5F2",
       "card": "#F0EDE8",
@@ -380,9 +355,24 @@
       "buttonForeground": "#FFFFFF",
       "useGlass": false
     },
+    "stickerCategory": "寵物",
     "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
     "artistDescription": "Lumee 官方設計團隊",
-    "createdAt": "2026-03-01"
+    "createdAt": "2026-03-01",
+    "backgroundImages": {
+      "small": [
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/dogPack_0.png",
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/dogPack_1.png",
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/dogPack_2.png",
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/dogPack_3.png"
+      ],
+      "medium": [
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/dogPack_0.png",
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/dogPack_1.png",
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/dogPack_2.png",
+        "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_backgrounds/dogPack_3.png"
+      ]
+    }
   },
   {
     "id": "catTheme",
@@ -465,13 +455,27 @@
       "cat_愛心",
       "cat_生氣"
     ],
-    "sortOrder": 6,
+    "sortOrder": 4,
     "isNew": false,
-    "features": [],
-    "packType": "theme",
-    "isTesting": false,
     "artistName": "Lumee Team",
     "artistURL": null,
+    "features": [
+      {
+        "icon": "cat.fill",
+        "title": "9 款貓咪貼紙",
+        "description": "坐下、睡覺、撒嬌等療癒姿態"
+      },
+      {
+        "icon": "clock.fill",
+        "title": "時間行為系統",
+        "description": "貓咪會隨時段變換姿勢"
+      },
+      {
+        "icon": "paintbrush.fill",
+        "title": "冷灰紫色調",
+        "description": "優雅的灰紫色系設計"
+      }
+    ],
     "colors": {
       "background": "#F9FAFB",
       "card": "#E5E7EB",
@@ -482,6 +486,7 @@
       "buttonForeground": "#374151",
       "useGlass": false
     },
+    "stickerCategory": "寵物",
     "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
     "artistDescription": "Lumee 官方設計團隊",
     "createdAt": "2026-03-01"
@@ -561,13 +566,32 @@
       "cuteface_cat_cute_face",
       "cuteface_pig_cute_face"
     ],
-    "sortOrder": 7,
+    "sortOrder": 5,
     "isNew": false,
-    "features": [],
-    "packType": "theme",
-    "isTesting": false,
     "artistName": "Lumee Team",
     "artistURL": null,
+    "features": [
+      {
+        "icon": "face.smiling.inverse",
+        "title": "8 款可愛動物臉",
+        "description": "倉鼠、柴犬、哈士奇、貓咪等"
+      },
+      {
+        "icon": "paintbrush.fill",
+        "title": "粉紫夢幻色調",
+        "description": "柔和的粉紫色系"
+      },
+      {
+        "icon": "star.fill",
+        "title": "圓角可愛邊框",
+        "description": "粉色點點邊框裝飾"
+      },
+      {
+        "icon": "square.grid.2x2.fill",
+        "title": "支援全部 Widget 類型",
+        "description": "照片、天氣、倒數日等"
+      }
+    ],
     "colors": {
       "background": "#F6F3EF",
       "card": "#FFFFFF",
@@ -578,6 +602,7 @@
       "buttonForeground": "#1C1C1E",
       "useGlass": false
     },
+    "stickerCategory": "動物",
     "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
     "artistDescription": "Lumee 官方設計團隊",
     "createdAt": "2026-03-01"
@@ -705,13 +730,27 @@
       "ani_兔子_抱抱",
       "ani_兔子_睡覺"
     ],
-    "sortOrder": 8,
+    "sortOrder": 6,
     "isNew": false,
-    "features": [],
-    "packType": "theme",
-    "isTesting": false,
     "artistName": "Lumee Team",
     "artistURL": null,
+    "features": [
+      {
+        "icon": "hare.fill",
+        "title": "16 款動物貼紙",
+        "description": "柴犬、貓咪、獅子、倉鼠、兔子"
+      },
+      {
+        "icon": "paintbrush.fill",
+        "title": "暖黃活潑色調",
+        "description": "明亮的黃橘色系"
+      },
+      {
+        "icon": "square.grid.2x2.fill",
+        "title": "支援全部 Widget 類型",
+        "description": "照片、天氣、倒數日等"
+      }
+    ],
     "colors": {
       "background": "#FFF8ED",
       "card": "#FEF3C7",
@@ -722,6 +761,7 @@
       "buttonForeground": "#FFFFFF",
       "useGlass": false
     },
+    "stickerCategory": "動物",
     "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
     "artistDescription": "Lumee 官方設計團隊",
     "createdAt": "2026-03-01"
@@ -849,13 +889,27 @@
       "ghost_攤手",
       "ghost_安詳"
     ],
-    "sortOrder": 9,
+    "sortOrder": 7,
     "isNew": false,
-    "features": [],
-    "packType": "theme",
-    "isTesting": false,
     "artistName": "Lumee Team",
     "artistURL": null,
+    "features": [
+      {
+        "icon": "ghost.fill",
+        "title": "16 款幽靈貼紙",
+        "description": "開心、害羞、睡覺等超療癒表情"
+      },
+      {
+        "icon": "paintbrush.fill",
+        "title": "夢幻紫色調",
+        "description": "柔和的紫色系設計"
+      },
+      {
+        "icon": "square.grid.2x2.fill",
+        "title": "支援全部 Widget 類型",
+        "description": "照片、天氣、倒數日等"
+      }
+    ],
     "colors": {
       "background": "#F5F3FF",
       "card": "#EDE9FE",
@@ -866,6 +920,7 @@
       "buttonForeground": "#FFFFFF",
       "useGlass": false
     },
+    "stickerCategory": "小幽靈",
     "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
     "artistDescription": "Lumee 官方設計團隊",
     "createdAt": "2026-03-01"
