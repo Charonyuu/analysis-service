@@ -29,6 +29,16 @@ function iapAuth(req, res, next) {
   next();
 }
 
+// DEBUG: 確認 IAP_SECRET 環境變數（確認後刪除）
+router.get('/debug-secret', (req, res) => {
+  const secret = process.env.IAP_SECRET;
+  res.json({
+    loaded: !!secret,
+    length: secret ? secret.length : 0,
+    preview: secret ? secret.slice(0, 4) + '***' + secret.slice(-4) : null,
+  });
+});
+
 // 所有 IAP 路由都需要驗證
 router.use(iapAuth);
 
