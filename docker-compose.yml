@@ -3,12 +3,6 @@ services:
     build: .
     ports:
       - "${PORT:-3099}:${PORT:-3099}"
-    environment:
-      - PORT=${PORT:-3099}
-      - MONGODB_URI=${MONGODB_URI}
-      - DASHBOARD_SECRET=${DASHBOARD_SECRET:-charonyu1219}
-      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:3001,http://localhost:3002,https://charonyu.vercel.app}
-      - ALLOWED_ORIGIN_PATTERNS=${ALLOWED_ORIGIN_PATTERNS:-https://*.app.charonyu.cc}
-      - VALID_SITES=${VALID_SITES:-travel,icons,resume}
-      - NODE_ENV=${NODE_ENV:-production}
+    env_file:
+      - .env
     restart: unless-stopped
