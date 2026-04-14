@@ -172,12 +172,13 @@ async function fetchPTTHot() {
     };
 
     // 爬多個熱門看板的最新文章
-    const boards = ['Gossiping', 'HatePolitics', 'Stock', 'LoL', 'NBA'];
+    const boards = ['Gossiping', 'Stock', 'NBA', 'LoL', 'Baseball', 'movie'];
     const allItems = [];
 
     const boardResults = await Promise.all(
       boards.map(async (board) => {
         try {
+          // 爬最新頁
           const res = await fetchWithTimeout(
             `https://www.ptt.cc/bbs/${board}/index.html`,
             { headers },
@@ -185,7 +186,26 @@ async function fetchPTTHot() {
           );
           if (!res.ok) return [];
           const html = await res.text();
-          return parsePTTBoard(html, board);
+          const items = parsePTTBoard(html, board);
+
+          // 如果最新頁不夠，爬前一頁
+          if (items.length < 3) {
+            const prevMatch = html.match(/href="\/bbs\/[^/]+\/index(\d+)\.html">&lsaquo;/);
+            if (prevMatch) {
+              try {
+                const prevRes = await fetchWithTimeout(
+                  `https://www.ptt.cc/bbs/${board}/index${prevMatch[1]}.html`,
+                  { headers },
+                  8000
+                );
+                if (prevRes.ok) {
+                  const prevHtml = await prevRes.text();
+                  items.push(...parsePTTBoard(prevHtml, board));
+                }
+              } catch { /* ignore */ }
+            }
+          }
+          return items;
         } catch {
           return [];
         }
@@ -273,7 +293,7 @@ function parsePTTBoard(html, board) {
     else pushCount = parseInt(pushText, 10) || 0;
 
     // Only include articles with decent engagement
-    if (pushCount < 10) continue;
+    if (pushCount < 5) continue;
 
     items.push({
       title: title,
