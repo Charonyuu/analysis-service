@@ -15,6 +15,7 @@ const iconsRoutes = require('./routes/icons');
 const iapRoutes = require('./routes/iap');
 const iapAdminRoutes = require('./routes/iapAdmin');
 const trendingRoutes = require('./routes/trending');
+const coupleRoutes = require('./routes/couple');
 const assetsRoutes = require('./routes/assets');
 const adminRoutes = require('./routes/admin');
 const DashboardUser = require('./models/DashboardUser');
@@ -76,6 +77,9 @@ app.use('/api/admin', authBearer, adminRoutes);
 
 // Trending topics API (public, rate-limited)
 app.use('/api/trending', trendingRoutes);
+
+// Couple API (rate-limited, secret check via header)
+app.use('/api/couple', coupleRoutes);
 
 // IAP public API — POST /iap/verify, GET /iap/user/:userId, POST /iap/coupon/redeem
 app.use('/iap', iapRoutes);

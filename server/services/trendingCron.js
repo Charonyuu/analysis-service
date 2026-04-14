@@ -4,18 +4,20 @@ const {
   fetchGoogleTrends,
   fetchGoogleNews,
   fetchRedditPopular,
-  fetchHackerNews
+  fetchHackerNews,
+  fetchPTTHot
 } = require('./trendingSources');
 
 async function runTrendingFetch() {
   try {
     console.log('[trending] Starting fetch...');
 
-    const [twTrends, news, reddit, hn] = await Promise.all([
+    const [twTrends, news, reddit, hn, ptt] = await Promise.all([
       fetchGoogleTrends(),
       fetchGoogleNews(),
       fetchRedditPopular(),
-      fetchHackerNews()
+      fetchHackerNews(),
+      fetchPTTHot()
     ]);
 
     const categories = [
@@ -30,6 +32,12 @@ async function runTrendingFetch() {
         label: '📰 新聞頭條',
         labelEn: '📰 Top News',
         items: news
+      },
+      {
+        id: 'ptt',
+        label: '📋 PTT 熱門',
+        labelEn: '📋 PTT Hot',
+        items: ptt
       },
       {
         id: 'reddit',

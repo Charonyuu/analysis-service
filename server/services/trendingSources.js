@@ -90,9 +90,9 @@ async function fetchGoogleNews() {
 
 async function fetchRedditPopular() {
   try {
-    const res = await fetchWithTimeout('https://www.reddit.com/r/popular.json', {
+    const res = await fetchWithTimeout('https://old.reddit.com/r/popular/.json', {
       headers: {
-        'User-Agent': 'Lumee-TrendingBot/1.0 (analytics-service)'
+        'User-Agent': 'Mozilla/5.0 (compatible; Lumee/1.0; +https://charonyu.cc)'
       }
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -151,9 +151,98 @@ async function fetchHackerNews() {
   }
 }
 
+// ---------------------------------------------------------------------------
+// PTT 熱門文章（爬 PTT Web 版各大看板最新推爆文章）
+// ---------------------------------------------------------------------------
+
+async function fetchPTTHot() {
+  try {
+    // PTT 需要 over18 cookie 才能看八卦版等看板
+    const headers = {
+      'User-Agent': 'Mozilla/5.0 (compatible; Lumee-TrendingBot/1.0)',
+      'Cookie': 'over18=1'
+    };
+
+    // 爬多個熱門看板的最新文章
+    const boards = ['Gossiping', 'HatePolitics', 'Stock', 'LoL', 'NBA'];
+    const allItems = [];
+
+    const boardResults = await Promise.all(
+      boards.map(async (board) => {
+        try {
+          const res = await fetchWithTimeout(
+            `https://www.ptt.cc/bbs/${board}/index.html`,
+            { headers },
+            8000
+          );
+          if (!res.ok) return [];
+          const html = await res.text();
+          return parsePTTBoard(html, board);
+        } catch {
+          return [];
+        }
+      })
+    );
+
+    for (const items of boardResults) {
+      allItems.push(...items);
+    }
+
+    // 按推文數排序，取前 10
+    allItems.sort((a, b) => b.score - a.score);
+    return allItems.slice(0, 10);
+  } catch (err) {
+    console.error('[trending] fetchPTTHot error:', err.message);
+    return [];
+  }
+}
+
+/**
+ * Parse PTT board HTML to extract articles with push counts.
+ * PTT HTML structure: each article is in a <div class="r-ent"> block.
+ */
+function parsePTTBoard(html, board) {
+  const items = [];
+  // Match each r-ent block
+  const entryRegex = /<div class="r-ent">([\s\S]*?)<\/div>\s*<\/div>/gi;
+  // Simpler: match nrec + title + href together
+  const rowRegex = /<div class="nrec"><span[^>]*>([^<]*)<\/span><\/div>[\s\S]*?<div class="title">\s*<a href="([^"]*)"[^>]*>([^<]*)<\/a>/gi;
+
+  let match;
+  while ((match = rowRegex.exec(html)) !== null) {
+    const pushText = match[1].trim();
+    const href = match[2].trim();
+    const title = match[3].trim();
+
+    // Skip announcements and reposts
+    if (title.startsWith('[公告]') || title.startsWith('Fw:')) continue;
+
+    // Parse push count: "爆" = 100, "XX" = -100, number = number
+    let pushCount = 0;
+    if (pushText === '爆') pushCount = 100;
+    else if (pushText === 'XX') pushCount = -10;
+    else if (pushText === 'X1') pushCount = -1;
+    else pushCount = parseInt(pushText, 10) || 0;
+
+    // Only include articles with decent engagement
+    if (pushCount < 10) continue;
+
+    items.push({
+      title: title,
+      titleEn: title, // PTT titles are mostly Chinese, keep as-is
+      source: 'ptt',
+      url: `https://www.ptt.cc${href}`,
+      score: pushCount
+    });
+  }
+
+  return items;
+}
+
 module.exports = {
   fetchGoogleTrends,
   fetchGoogleNews,
   fetchRedditPopular,
-  fetchHackerNews
+  fetchHackerNews,
+  fetchPTTHot
 };
