@@ -42,6 +42,72 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET /api/trending/refresh — 手動觸發一次 fetch，回傳完整結果
+router.get('/refresh', async (req, res) => {
+  try {
+    const {
+      fetchGoogleTrends,
+      fetchGoogleNews,
+      fetchRedditPopular,
+      fetchHackerNews,
+      fetchPTTHot
+    } = require('../services/trendingSources');
+
+    const results = {};
+    const errors = {};
+
+    const sources = [
+      { key: 'tw_trends', fn: fetchGoogleTrends },
+      { key: 'news', fn: fetchGoogleNews },
+      { key: 'ptt', fn: fetchPTTHot },
+      { key: 'reddit', fn: fetchRedditPopular },
+      { key: 'hackernews', fn: fetchHackerNews }
+    ];
+
+    await Promise.all(
+      sources.map(async ({ key, fn }) => {
+        try {
+          const items = await fn();
+          results[key] = { count: items.length, items };
+        } catch (err) {
+          errors[key] = err.message;
+          results[key] = { count: 0, items: [] };
+        }
+      })
+    );
+
+    // Save to DB
+    const TrendingSnapshot = require('../models/TrendingSnapshot');
+    const categories = [
+      { id: 'tw_trends', label: '🔥 台灣熱搜', labelEn: '🔥 TW Trending', items: results.tw_trends.items },
+      { id: 'news', label: '📰 新聞頭條', labelEn: '📰 Top News', items: results.news.items },
+      { id: 'ptt', label: '📋 PTT 熱門', labelEn: '📋 PTT Hot', items: results.ptt.items },
+      { id: 'reddit', label: '💬 Reddit 熱門', labelEn: '💬 Reddit Popular', items: results.reddit.items },
+      { id: 'hackernews', label: '💻 Hacker News', labelEn: '💻 Hacker News', items: results.hackernews.items }
+    ];
+
+    await TrendingSnapshot.create({ fetchedAt: new Date(), categories });
+
+    const summary = {};
+    for (const key in results) {
+      summary[key] = {
+        count: results[key].count,
+        firstTitle: results[key].items[0]?.title || '(empty)',
+        excerpt: results[key].items[0]?.excerpt || undefined
+      };
+    }
+
+    res.json({
+      ok: true,
+      summary,
+      errors: Object.keys(errors).length > 0 ? errors : undefined,
+      savedAt: new Date().toISOString()
+    });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
 // GET /api/trending/ptt-article?url=https://www.ptt.cc/bbs/Stock/M.xxx.html
 router.get('/ptt-article', async (req, res) => {
   try {

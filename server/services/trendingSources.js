@@ -90,14 +90,22 @@ async function fetchGoogleNews() {
 
 async function fetchRedditPopular() {
   try {
-    const res = await fetchWithTimeout('https://old.reddit.com/r/popular/.json', {
+    const redditUrl = 'https://old.reddit.com/r/popular/.json';
+    console.log(`[trending] Reddit: fetching ${redditUrl}`);
+    const res = await fetchWithTimeout(redditUrl, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (compatible; Lumee/1.0; +https://charonyu.cc)'
       }
     });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    console.log(`[trending] Reddit: HTTP ${res.status}, headers:`, Object.fromEntries(res.headers.entries()));
+    if (!res.ok) {
+      const body = await res.text();
+      console.error(`[trending] Reddit: error body (first 500):`, body.substring(0, 500));
+      throw new Error(`HTTP ${res.status}`);
+    }
     const json = await res.json();
     const posts = (json.data?.children || []).slice(0, 10);
+    console.log(`[trending] Reddit: got ${posts.length} posts`);
     return posts.map((child) => {
       const d = child.data;
       return {
@@ -190,11 +198,51 @@ async function fetchPTTHot() {
 
     // 按推文數排序，取前 10
     allItems.sort((a, b) => b.score - a.score);
-    return allItems.slice(0, 10);
+    const top10 = allItems.slice(0, 10);
+
+    // 爬每篇文章的摘要（前 100 字）
+    await Promise.all(
+      top10.map(async (item) => {
+        try {
+          const res = await fetchWithTimeout(item.url, { headers }, 5000);
+          if (!res.ok) return;
+          const html = await res.text();
+          item.excerpt = extractPTTExcerpt(html);
+        } catch {
+          // 摘要失敗不影響整體
+        }
+      })
+    );
+
+    return top10;
   } catch (err) {
     console.error('[trending] fetchPTTHot error:', err.message);
     return [];
   }
+}
+
+/**
+ * Extract first ~100 chars of PTT article content as excerpt.
+ */
+function extractPTTExcerpt(html) {
+  const startIdx = html.indexOf('<div id="main-content"');
+  if (startIdx === -1) return '';
+  // 取 main-content 到第一個 push 之間的內容
+  const pushIdx = html.indexOf('<div class="push">', startIdx);
+  let text = pushIdx > -1
+    ? html.substring(startIdx, pushIdx)
+    : html.substring(startIdx);
+  // Remove metalines
+  text = text.replace(/<div class="article-metaline[^"]*">[\s\S]*?<\/div>/g, '');
+  // Strip HTML tags
+  text = text.replace(/<[^>]+>/g, '');
+  // Decode entities
+  text = text.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"');
+  text = text.replace(/\s+/g, ' ').trim();
+  // Remove URLs from excerpt
+  text = text.replace(/https?:\/\/\S+/g, '').replace(/\s+/g, ' ').trim();
+  // 取前 100 字
+  return text.length > 100 ? text.substring(0, 100) + '…' : text;
 }
 
 /**
