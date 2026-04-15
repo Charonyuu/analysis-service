@@ -62,30 +62,36 @@
     .sidebar-footer a:hover { color: #fca5a5; background: rgba(239,68,68,0.08); }
     .sidebar-footer a svg { width: 18px; height: 18px; flex-shrink: 0; }
 
-    /* --- Mobile header --- */
-    .mobile-header {
+    /* --- Mobile nav bar --- */
+    .mobile-nav-bar {
       display: none;
-      position: sticky; top: 0; z-index: 10;
+      position: sticky; top: 0; z-index: 20;
       background: #18181b; border-bottom: 1px solid #27272a;
-      padding: 14px 16px;
-      align-items: center; justify-content: space-between;
+      padding: 12px 16px;
+      align-items: center; gap: 12px;
     }
-    .mobile-header .brand {
-      display: flex; align-items: center; gap: 8px;
+    .hamburger-btn {
+      background: none; border: none; cursor: pointer; padding: 4px;
+      color: #a1a1aa; display: flex; align-items: center; justify-content: center;
     }
-    .mobile-header .brand-icon {
+    .hamburger-btn:hover { color: #fafafa; }
+    .hamburger-btn svg { width: 22px; height: 22px; }
+    .mobile-nav-bar .brand {
+      display: flex; align-items: center; gap: 8px; flex: 1;
+    }
+    .mobile-nav-bar .brand-icon {
       width: 28px; height: 28px;
       background: linear-gradient(135deg, #6366f1, #8b5cf6);
       border-radius: 6px;
       display: flex; align-items: center; justify-content: center;
       font-weight: 700; font-size: 12px; color: #fff;
     }
-    .mobile-header .brand span { font-size: 14px; font-weight: 600; color: #fafafa; }
-    .mobile-header a {
-      color: #71717a; text-decoration: none; font-size: 12px;
-      padding: 6px 10px; border-radius: 6px; transition: all .15s;
+    .mobile-nav-bar .brand span { font-size: 14px; font-weight: 600; color: #fafafa; }
+    .sidebar-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      z-index: 25;
     }
-    .mobile-header a:hover { color: #fca5a5; background: rgba(239,68,68,0.08); }
+    .sidebar-overlay.open { display: block; }
 
     /* --- Main --- */
     .main { margin-left: 240px; padding: 32px 40px; min-height: 100vh; max-width: 1200px; }
@@ -283,8 +289,13 @@
 
     /* --- Responsive --- */
     @media (max-width: 768px) {
-      .sidebar { display: none; }
-      .mobile-header { display: flex; }
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        z-index: 30;
+      }
+      .sidebar.open { transform: translateX(0); }
+      .mobile-nav-bar { display: flex; }
       .main { margin-left: 0; padding: 16px; }
       .page-header h1 { font-size: 20px; }
       .card { padding: 16px; }
@@ -300,14 +311,17 @@
 </head>
 <body>
 
-  <!-- Mobile header -->
-  <div class="mobile-header">
+  <!-- Mobile nav bar -->
+  <div class="mobile-nav-bar">
+    <button class="hamburger-btn" onclick="toggleSidebar()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
     <div class="brand">
       <div class="brand-icon">A</div>
       <span>Analytics</span>
     </div>
-    <a href="/dashboard/logout">Logout</a>
   </div>
+  <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
   <!-- Sidebar -->
   <aside class="sidebar">
@@ -789,5 +803,11 @@
 
   </div>
 
+  <script>
+    function toggleSidebar() {
+      document.querySelector('.sidebar').classList.toggle('open');
+      document.querySelector('.sidebar-overlay').classList.toggle('open');
+    }
+  </script>
 </body>
 </html>

@@ -52,8 +52,6 @@ function getDateRange(days) {
 // --- Sidebar ---
 function buildSidebar() {
   const container = document.getElementById('nav-sites');
-  const mobileSelect = document.getElementById('mobile-site-filter');
-
   container.innerHTML = allSites.map(site => {
     const color = siteColor(site, allSites.indexOf(site));
     return `<a href="#" class="nav-site" data-site="${site}">
@@ -62,25 +60,15 @@ function buildSidebar() {
     </a>`;
   }).join('');
 
-  // Mobile select
-  while (mobileSelect.options.length > 1) mobileSelect.remove(1);
-  allSites.forEach(site => {
-    const opt = document.createElement('option');
-    opt.value = site;
-    opt.textContent = siteName(site);
-    mobileSelect.appendChild(opt);
-  });
-
   // Bind clicks
   document.querySelectorAll('.nav-site').forEach(a => {
     a.addEventListener('click', function (e) {
       e.preventDefault();
       switchSite(this.getAttribute('data-site'));
+      // Close sidebar on mobile after navigation
+      document.querySelector('.sidebar').classList.remove('open');
+      document.querySelector('.sidebar-overlay').classList.remove('open');
     });
-  });
-
-  mobileSelect.addEventListener('change', function () {
-    switchSite(this.value);
   });
 }
 
@@ -104,8 +92,6 @@ function switchSite(site) {
   document.getElementById('page-title').textContent = site === 'all' ? '所有站點' : siteName(site);
   document.querySelector('.page-header .subtitle').textContent = '頁面流量分析總覽';
 
-  // Update mobile select
-  document.getElementById('mobile-site-filter').value = site;
 
   loadAll();
 }

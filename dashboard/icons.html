@@ -225,9 +225,46 @@
       font-size: 12px; color: #52525b; margin-top: 8px;
     }
 
+    /* --- Mobile nav bar --- */
+    .mobile-nav-bar {
+      display: none;
+      position: sticky; top: 0; z-index: 20;
+      background: #18181b; border-bottom: 1px solid #27272a;
+      padding: 12px 16px;
+      align-items: center; gap: 12px;
+    }
+    .hamburger-btn {
+      background: none; border: none; cursor: pointer; padding: 4px;
+      color: #a1a1aa; display: flex; align-items: center; justify-content: center;
+    }
+    .hamburger-btn:hover { color: #fafafa; }
+    .hamburger-btn svg { width: 22px; height: 22px; }
+    .mobile-nav-bar .brand {
+      display: flex; align-items: center; gap: 8px; flex: 1;
+    }
+    .mobile-nav-bar .brand-icon {
+      width: 28px; height: 28px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 12px; color: #fff;
+    }
+    .mobile-nav-bar .brand span { font-size: 14px; font-weight: 600; color: #fafafa; }
+    .sidebar-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      z-index: 25;
+    }
+    .sidebar-overlay.open { display: block; }
+
     /* --- Responsive --- */
     @media (max-width: 768px) {
-      .sidebar { display: none; }
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        z-index: 30;
+      }
+      .sidebar.open { transform: translateX(0); }
+      .mobile-nav-bar { display: flex; }
       .main { margin-left: 0; padding: 16px; }
       .upload-zone { padding: 32px 16px; }
       .icon-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
@@ -235,6 +272,18 @@
   </style>
 </head>
 <body>
+  <!-- Mobile nav bar -->
+  <div class="mobile-nav-bar">
+    <button class="hamburger-btn" onclick="toggleSidebar()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="brand">
+      <div class="brand-icon">A</div>
+      <span>Analytics</span>
+    </div>
+  </div>
+  <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
   <aside class="sidebar">
     <div class="brand">
       <div class="brand-icon">A</div>
@@ -347,6 +396,12 @@
     </div>
   </div>
 
+  <script>
+    function toggleSidebar() {
+      document.querySelector('.sidebar').classList.toggle('open');
+      document.querySelector('.sidebar-overlay').classList.toggle('open');
+    }
+  </script>
   <script src="/dashboard/icons.js"></script>
 </body>
 </html>
