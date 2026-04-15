@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Coins Dashboard</title>
+  <title>Lumee App Dashboard</title>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -157,7 +157,6 @@
     }
     .product-small { background: rgba(99,102,241,0.15); color: #818cf8; }
     .product-big { background: rgba(139,92,246,0.15); color: #a78bfa; }
-    .product-coupon { background: rgba(34,197,94,0.15); color: #4ade80; }
 
     /* Coupon status */
     .status-badge {
@@ -302,7 +301,7 @@
       </a>
       <a href="/dashboard/coins" class="active">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-        Coins
+        Lumee App
       </a>
       <a href="/dashboard/r2-assets">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
@@ -325,8 +324,8 @@
   <div class="main">
     <div class="page-header">
       <div>
-        <h1>Coins System</h1>
-        <div class="subtitle">IAP purchases, coin balances, and coupon management</div>
+        <h1>Lumee App System</h1>
+        <div class="subtitle">IAP purchases and user balances</div>
       </div>
       <button class="btn btn-secondary" id="btn-refresh">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
@@ -352,11 +351,6 @@
         <div class="num" id="stat-txns">—</div>
       </div>
       <div class="stat-card">
-        <div class="icon">🎟️</div>
-        <div class="label">Coupons</div>
-        <div class="num" id="stat-coupons">—</div>
-      </div>
-      <div class="stat-card">
         <div class="icon">🎨</div>
         <div class="label">Theme Purchases</div>
         <div class="num" id="stat-theme-purchases">—</div>
@@ -372,7 +366,6 @@
     <div class="tabs">
       <button class="tab-btn active" data-tab="users">Users</button>
       <button class="tab-btn" data-tab="transactions">Transactions</button>
-      <button class="tab-btn" data-tab="coupons">Coupons</button>
       <button class="tab-btn" data-tab="themes">Themes</button>
     </div>
 
@@ -426,42 +419,6 @@
       </div>
     </div>
 
-    <!-- Coupons Tab -->
-    <div class="tab-panel" id="tab-coupons">
-      <div class="table-card">
-        <div class="table-card-header">
-          <h3>Coupons</h3>
-          <div style="display:flex;gap:8px">
-            <button class="btn btn-secondary" id="btn-bulk-coupon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
-              Bulk Generate
-            </button>
-            <button class="btn btn-primary" id="btn-new-coupon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              New Coupon
-            </button>
-          </div>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Code</th>
-              <th>Coins</th>
-              <th>Usage</th>
-              <th>Expires</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="coupons-tbody"></tbody>
-        </table>
-        <div class="empty-state" id="coupons-empty" style="display:none">
-          <div class="empty-icon">🎟️</div>
-          No coupons yet
-        </div>
-      </div>
-    </div>
-
     <!-- Themes Tab -->
     <div class="tab-panel" id="tab-themes">
       <div class="table-card">
@@ -483,93 +440,6 @@
           <div class="empty-icon">🎨</div>
           No theme purchases yet
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Create Coupon Modal -->
-  <div class="modal-overlay" id="coupon-modal">
-    <div class="modal">
-      <h3>Create Coupon</h3>
-      <div class="form-group">
-        <label>Code</label>
-        <input type="text" id="input-code" placeholder="WELCOME100" style="text-transform:uppercase">
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Coins</label>
-          <input type="number" id="input-coins" placeholder="100" min="1">
-        </div>
-        <div class="form-group">
-          <label>Usage Limit</label>
-          <input type="number" id="input-limit" placeholder="1000" min="1">
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Expires At</label>
-        <input type="datetime-local" id="input-expire">
-      </div>
-      <div id="modal-error" style="color:#fca5a5;font-size:13px;margin-bottom:12px;display:none"></div>
-      <div class="modal-actions">
-        <button class="btn btn-secondary" id="btn-cancel-modal">Cancel</button>
-        <button class="btn btn-primary" id="btn-create-coupon">Create</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Bulk Generate Modal -->
-  <div class="modal-overlay" id="bulk-modal">
-    <div class="modal">
-      <h3>Bulk Generate Coupons</h3>
-      <div class="form-group">
-        <label>Prefix</label>
-        <input type="text" id="bulk-prefix" placeholder="SUMMER" style="text-transform:uppercase" maxlength="12">
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Count <span style="color:#52525b">(max 500)</span></label>
-          <input type="number" id="bulk-count" placeholder="50" min="1" max="500">
-        </div>
-        <div class="form-group">
-          <label>Coins each</label>
-          <input type="number" id="bulk-coins" placeholder="100" min="1">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Usage Limit each</label>
-          <input type="number" id="bulk-limit" placeholder="1" min="1">
-        </div>
-        <div class="form-group">
-          <label>Expires At</label>
-          <input type="datetime-local" id="bulk-expire">
-        </div>
-      </div>
-      <div id="bulk-error" style="color:#fca5a5;font-size:13px;margin-bottom:12px;display:none"></div>
-      <div class="modal-actions">
-        <button class="btn btn-secondary" id="btn-cancel-bulk">Cancel</button>
-        <button class="btn btn-primary" id="btn-do-bulk">Generate</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Bulk Result Modal -->
-  <div class="modal-overlay" id="bulk-result-modal">
-    <div class="modal" style="width:520px">
-      <h3>Generated Coupons <span id="bulk-result-count" style="color:#71717a;font-weight:400;font-size:14px"></span></h3>
-      <textarea id="bulk-result-codes" readonly style="
-        width:100%; height:200px; margin:16px 0;
-        background:#0f0f10; border:1px solid #3f3f46; border-radius:8px;
-        padding:12px; font-family:'SF Mono','Fira Code',monospace;
-        font-size:12px; color:#a1a1aa; resize:none; outline:none;
-        line-height:1.8;
-      "></textarea>
-      <div class="modal-actions">
-        <button class="btn btn-secondary" id="btn-copy-codes">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          Copy All
-        </button>
-        <button class="btn btn-primary" id="btn-close-result">Done</button>
       </div>
     </div>
   </div>

@@ -77,10 +77,12 @@ function switchSite(site) {
   currentView = 'analytics';
   recentPage = 0;
 
-  // Switch view
+  // Switch view back to analytics
   document.getElementById('view-analytics').classList.add('active');
   document.getElementById('view-feedback').classList.remove('active');
+  document.getElementById('view-trending').classList.remove('active');
   document.getElementById('nav-feedback').classList.remove('active');
+  document.getElementById('nav-trending').classList.remove('active');
   document.querySelector('.header-actions').style.display = 'flex';
 
   // Update active state
@@ -564,8 +566,5 @@ document.getElementById('feedback-site-filter').addEventListener('change', funct
   feedbackPage = 0;
   loadFeedback();
 });
-
-// Override switchSite to also switch view back
-const _origSwitchSite = switchSite;
 
 init();
