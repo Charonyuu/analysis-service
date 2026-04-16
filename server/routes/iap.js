@@ -33,6 +33,26 @@ function iapAuth(req, res, next) {
 router.use(iapAuth);
 
 // POST /iap/verify — iOS StoreKit purchase verification
+// POST /iap/register — 用戶首次啟動時註冊（upsert，不影響既有用戶）
+router.post('/register', async (req, res) => {
+  try {
+    const { userId } = req.body;
+    if (!userId) return res.status(400).json({ success: false, error: 'MISSING_USER_ID' });
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $setOnInsert: { coins: 0 } },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
+
+    res.json({ success: true, userId: user._id, coins: user.coins, isNew: user.coins === 0 });
+  } catch (err) {
+    console.error('Register error:', err);
+    res.status(500).json({ success: false, error: 'INTERNAL_ERROR' });
+  }
+});
+
+// POST /iap/verify — verify IAP transaction and grant coins
 router.post('/verify', async (req, res) => {
   try {
     const { userId, transactionId, productId } = req.body;

@@ -34,8 +34,6 @@
     "features": [],
     "packType": "theme",
     "isTesting": false,
-    "artistName": "Lumee Team",
-    "artistURL": null,
     "colors": {
       "background": "#FFFFFF",
       "card": "#F2F2F7",
@@ -46,11 +44,10 @@
       "buttonForeground": "#FFFFFF",
       "useGlass": false
     },
-    "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
-    "artistDescription": "Lumee 官方設計團隊",
     "createdAt": "2026-03-01",
     "name_en": "Basic",
-    "subtitle_en": "Free to start"
+    "subtitle_en": "Free to start",
+    "artistID": "lumee_team"
   },
   {
     "id": "diy",
@@ -75,8 +72,6 @@
     "features": [],
     "packType": "theme",
     "isTesting": false,
-    "artistName": "Lumee Team",
-    "artistURL": null,
     "colors": {
       "background": "#FFFFFF",
       "card": "#F2F2F7",
@@ -87,11 +82,10 @@
       "buttonForeground": "#FFFFFF",
       "useGlass": false
     },
-    "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
-    "artistDescription": "Lumee 官方設計團隊",
     "createdAt": "2026-03-01",
     "name_en": "DIY",
-    "subtitle_en": "Create your own cute Widget"
+    "subtitle_en": "Create your own cute Widget",
+    "artistID": "lumee_team"
   },
   {
     "id": "premiumBlack",
@@ -143,8 +137,6 @@
     ],
     "packType": "theme",
     "isTesting": false,
-    "artistName": "Lumee Team",
-    "artistURL": null,
     "colors": {
       "background": "#1C1C1E",
       "card": "#2C2C2E",
@@ -162,11 +154,10 @@
       "cornerIcon": null,
       "cornerIconColors": []
     },
-    "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
-    "artistDescription": "Lumee 官方設計團隊",
     "createdAt": "2026-04-11",
     "name_en": "Premium Black",
-    "subtitle_en": "Minimal dark with red accent"
+    "subtitle_en": "Minimal dark with red accent",
+    "artistID": "lumee_team"
   },
   {
     "id": "lovePack",
@@ -266,8 +257,6 @@
     "features": [],
     "packType": "theme",
     "isTesting": false,
-    "artistName": "Lumee Team",
-    "artistURL": null,
     "colors": {
       "background": "#FFF9F5",
       "card": "#FFF1EB",
@@ -288,8 +277,6 @@
         "#F43F5EB3"
       ]
     },
-    "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
-    "artistDescription": "Lumee 官方設計團隊",
     "createdAt": "2026-03-01",
     "backgroundImages": {
       "small": [
@@ -306,7 +293,8 @@
       ]
     },
     "name_en": "Couple",
-    "subtitle_en": "Romantic cream white + pink border"
+    "subtitle_en": "Romantic cream white + pink border",
+    "artistID": "lumee_team"
   },
   {
     "id": "dogPack",
@@ -394,8 +382,6 @@
     "features": [],
     "packType": "theme",
     "isTesting": false,
-    "artistName": "Lumee Team",
-    "artistURL": null,
     "colors": {
       "background": "#F7F5F2",
       "card": "#F0EDE8",
@@ -406,8 +392,6 @@
       "buttonForeground": "#FFFFFF",
       "useGlass": false
     },
-    "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
-    "artistDescription": "Lumee 官方設計團隊",
     "createdAt": "2026-03-01",
     "backgroundImages": {
       "small": [
@@ -424,7 +408,8 @@
       ]
     },
     "name_en": "Shiba Daily",
-    "subtitle_en": "Shiba Inu by your side every day"
+    "subtitle_en": "Shiba Inu by your side every day",
+    "artistID": "lumee_team"
   },
   {
     "id": "catTheme",
@@ -512,8 +497,6 @@
     "features": [],
     "packType": "theme",
     "isTesting": false,
-    "artistName": "Lumee Team",
-    "artistURL": null,
     "colors": {
       "background": "#F9FAFB",
       "card": "#E5E7EB",
@@ -524,11 +507,10 @@
       "buttonForeground": "#374151",
       "useGlass": false
     },
-    "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
-    "artistDescription": "Lumee 官方設計團隊",
     "createdAt": "2026-03-01",
     "name_en": "Cat Daily",
-    "subtitle_en": "Healing cat moments"
+    "subtitle_en": "Healing cat moments",
+    "artistID": "lumee_team"
   },
   {
     "id": "cuteFaces",
@@ -610,8 +592,6 @@
     "features": [],
     "packType": "theme",
     "isTesting": false,
-    "artistName": "Lumee Team",
-    "artistURL": null,
     "colors": {
       "background": "#F6F3EF",
       "card": "#FFFFFF",
@@ -622,11 +602,10 @@
       "buttonForeground": "#1C1C1E",
       "useGlass": false
     },
-    "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
-    "artistDescription": "Lumee 官方設計團隊",
     "createdAt": "2026-03-01",
     "name_en": "Cute Faces",
-    "subtitle_en": "Adorable animal expressions"
+    "subtitle_en": "Adorable animal expressions",
+    "artistID": "lumee_team"
   },
   {
     "id": "animalPack",
@@ -756,8 +735,6 @@
     "features": [],
     "packType": "theme",
     "isTesting": false,
-    "artistName": "Lumee Team",
-    "artistURL": null,
     "colors": {
       "background": "#FFF8ED",
       "card": "#FEF3C7",
@@ -768,11 +745,10 @@
       "buttonForeground": "#FFFFFF",
       "useGlass": false
     },
-    "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
-    "artistDescription": "Lumee 官方設計團隊",
     "createdAt": "2026-03-01",
     "name_en": "Animal Park",
-    "subtitle_en": "Popular animal collection"
+    "subtitle_en": "Popular animal collection",
+    "artistID": "lumee_team"
   },
   {
     "id": "ghostPack",
@@ -902,8 +878,6 @@
     "features": [],
     "packType": "theme",
     "isTesting": false,
-    "artistName": "Lumee Team",
-    "artistURL": null,
     "colors": {
       "background": "#F5F3FF",
       "card": "#EDE9FE",
@@ -914,11 +888,10 @@
       "buttonForeground": "#FFFFFF",
       "useGlass": false
     },
-    "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
-    "artistDescription": "Lumee 官方設計團隊",
     "createdAt": "2026-03-01",
     "name_en": "Soft Ghost",
-    "subtitle_en": "Cute ghosts, so healing"
+    "subtitle_en": "Cute ghosts, so healing",
+    "artistID": "lumee_team"
   },
   {
     "id": "stickerPack_hamster",
@@ -1039,8 +1012,6 @@
     ],
     "sortOrder": 10,
     "isNew": true,
-    "artistName": "Lumee Team",
-    "artistURL": null,
     "features": [
       {
         "icon": "face.smiling",
@@ -1082,10 +1053,80 @@
       "useGlass": false
     },
     "stickerCategory": "寵物",
-    "artistImageURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
-    "artistDescription": "Lumee 官方設計團隊",
     "createdAt": "2026-03-01",
     "name_en": "Hamster Pack",
-    "subtitle_en": "16 funny hamster stickers"
+    "subtitle_en": "16 funny hamster stickers",
+    "artistID": "lumee_team"
+  },
+  {
+    "id": "liquidGlass",
+    "name": "琉璃",
+    "subtitle": "iOS 26 透明玻璃風格",
+    "coinPrice": 30,
+    "supportedTypes": [
+      "weather",
+      "countdown",
+      "daily",
+      "mood",
+      "todo",
+      "steps",
+      "restTimer",
+      "exchangeRate",
+      "worldTime",
+      "horoscope",
+      "stock",
+      "trending"
+    ],
+    "coverIcon": "drop.degreesign.fill",
+    "coverGradient": [
+      "#667EEA",
+      "#9F7AEA"
+    ],
+    "entitlementKey": "liquidGlassUnlocked",
+    "petType": "none",
+    "iconStickers": [],
+    "defaultStickerKey": null,
+    "bundledStickerIDs": [],
+    "sortOrder": 99,
+    "isNew": true,
+    "isTesting": false,
+    "packType": "theme",
+    "colors": {
+      "background": "#00000000",
+      "card": "#00000000",
+      "textPrimary": "#000000",
+      "textSecondary": "#3C3C43",
+      "textTertiary": "#48484A",
+      "accent": "#007AFF",
+      "buttonForeground": "#FFFFFF",
+      "useGlass": true
+    },
+    "features": [
+      {
+        "icon": "drop.fill",
+        "title": "透明玻璃",
+        "title_en": "Liquid Glass",
+        "description": "iOS 26 原生毛玻璃效果",
+        "description_en": "Native iOS 26 glass material"
+      },
+      {
+        "icon": "eye.fill",
+        "title": "透出桌布",
+        "title_en": "See Through",
+        "description": "背景透明，與桌布融合",
+        "description_en": "Transparent background blends with wallpaper"
+      },
+      {
+        "icon": "square.grid.2x2.fill",
+        "title": "12 種 Widget",
+        "title_en": "12 Widgets",
+        "description": "支援所有工具型 Widget",
+        "description_en": "Supports all tool widgets"
+      }
+    ],
+    "createdAt": "2026-04-16",
+    "name_en": "Liquid Glass",
+    "subtitle_en": "iOS 26 Transparent Glass Style",
+    "artistID": "lumee_team"
   }
 ]

@@ -32,6 +32,9 @@ async function upload(key, buffer, contentType) {
 async function main() {
   const files = [
     { path: 'docs/r2_config/themes.json', key: 'lumee_config/themes.json' },
+    { path: 'docs/r2_config/banners.json', key: 'lumee_config/banners.json' },
+    { path: 'docs/r2_config/stickers.json', key: 'lumee_config/stickers.json' },
+    { path: 'docs/r2_config/artists.json', key: 'lumee_config/artists.json' },
     { path: 'docs/r2_config/version.json', key: 'lumee_config/version.json' },
   ];
 

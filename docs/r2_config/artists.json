@@ -1,0 +1,18 @@
+[
+  {
+    "id": "lumee_team",
+    "name": "Lumee Team",
+    "bio": "Lumee 官方設計團隊，打造你的回憶桌面",
+    "avatarURL": "https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/artists/lumee_avatar.png",
+    "socialLinks": [
+      {
+        "platform": "instagram",
+        "url": "https://instagram.com/lumee.app.widget",
+        "displayName": "@lumee.app.widget"
+      }
+    ],
+    "themePackIDs": ["basic", "diy", "premiumBlack", "lovePack", "dogPack", "catTheme", "cuteFaces", "animalPack", "ghostPack", "liquidGlass"],
+    "stickerPackIDs": ["stickerPack_hamster"],
+    "wallpaperPackIDs": []
+  }
+]

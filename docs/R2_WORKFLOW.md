@@ -29,7 +29,9 @@ charonyu-icons/
 │   ├── version.json       ← { "version": N }
 │   ├── themes.json        ← 所有主題包定義
 │   ├── banners.json       ← 探索頁 banner
-│   └── stickers.json      ← 所有貼圖定義（含 URL）
+│   ├── stickers.json      ← 所有貼圖定義（含 URL）
+│   ├── artists.json       ← 插畫家 / 作者資訊（含 social links）
+│   └── wallpapers.json    ← 桌布包定義（尚未上線）
 │
 └── stickers/              ← 貼圖圖片，按主題分資料夾
     ├── nature/            ← 自然元素（愛心、雲朵、月亮…）
@@ -157,9 +159,10 @@ App 下次打開會自動偵測版本變更並更新。
 
 ```
 https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_config/version.json
-https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_config/stickers.json
 https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_config/themes.json
 https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_config/banners.json
+https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_config/stickers.json
+https://pub-c54e74352c804aeca33e003f2539764c.r2.dev/lumee_config/artists.json
 ```
 
 ---
