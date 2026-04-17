@@ -7,12 +7,87 @@
 // Helpers
 // ---------------------------------------------------------------------------
 
+/** 內容標籤關鍵字 — 讓前端可選擇隱藏特定類型新聞 */
+const TAG_KEYWORDS = {
+  political: [
+    // 政黨
+    '民進黨', '國民黨', '民眾黨', 'DPP', 'KMT', 'TPP',
+    // 政治人物
+    '賴清德', '蔡英文', '柯文哲', '侯友宜', '韓國瑜', '蕭美琴',
+    '黃國昌', '王世堅', '鄭文燦', '陳建仁', '卓榮泰', '鄭麗君',
+    '趙少康', '朱立倫', '馬英九', '蘇貞昌', '林佳龍', '盧秀燕',
+    '習近平', '川普', 'Trump',
+    // 政治相關詞彙
+    '立法院', '立委', '總統', '行政院', '內閣', '閣揆',
+    '選舉', '投票', '公投', '罷免', '彈劾', '質詢',
+    '兩岸', '統獨', '統一', '台獨', '九二共識',
+    '國防', '軍購', '共軍', '解放軍', '飛彈',
+    '外交部', '國台辦', '陸委會',
+    '政黨', '黨團', '黨主席', '黨產',
+  ],
+  crime: [
+    // 兇殺 / 暴力犯罪
+    '兇殺', '殺人', '命案', '殺害', '砍殺', '刺殺', '槍殺',
+    '棄屍', '分屍', '碎屍', '焚屍', '埋屍', '屍體',
+    '虐殺', '虐童', '虐死', '家暴致死',
+    '隨機殺', '隨機砍', '隨機攻擊',
+    '性侵', '強暴', '猥褻', '性騷擾',
+    '綁架', '擄人', '擄走', '撕票',
+    '詐騙集團', '販毒', '毒品', '吸毒',
+    '槍擊', '開槍', '持刀', '持槍', '揮刀',
+    '行刑式', '滅門', '血案', '慘案', '凶案',
+  ],
+};
+
+/** 根據標題回傳匹配的標籤陣列 */
+function getTags(title) {
+  const tags = [];
+  for (const [tag, keywords] of Object.entries(TAG_KEYWORDS)) {
+    if (keywords.some(kw => title.includes(kw))) {
+      tags.push(tag);
+    }
+  }
+  return tags;
+}
+
 /** Fetch with a timeout (default 10s) */
 async function fetchWithTimeout(url, options = {}, timeoutMs = 10000) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
   try {
     const res = await fetch(url, { ...options, signal: controller.signal });
+    return res;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+/**
+ * Fetch PTT through Cloudflare Worker proxy.
+ * Set PTT_PROXY_WORKER_URL + PTT_PROXY_SECRET in .env.
+ * Falls back to direct fetch if not configured.
+ */
+async function fetchWithProxy(url, options = {}, timeoutMs = 10000) {
+  const workerUrl = process.env.PTT_PROXY_WORKER_URL;
+  const workerSecret = process.env.PTT_PROXY_SECRET;
+
+  // 沒設定 Worker → 直連
+  if (!workerUrl || !workerSecret) {
+    return fetchWithTimeout(url, options, timeoutMs);
+  }
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(workerUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Proxy-Secret': workerSecret,
+      },
+      body: JSON.stringify({ url }),
+      signal: controller.signal,
+    });
     return res;
   } finally {
     clearTimeout(timeoutId);
@@ -53,7 +128,8 @@ async function fetchGoogleTrends() {
       titleEn: '',
       source: 'google_trends',
       url: item.url,
-      score: 100 - i * 10 // top item = 100, decreasing
+      score: 100 - i * 10, // top item = 100, decreasing
+      tags: getTags(item.title),
     }));
   } catch (err) {
     console.error('[trending] fetchGoogleTrends error:', err.message);
@@ -76,48 +152,11 @@ async function fetchGoogleNews() {
       titleEn: '',
       source: 'google_news',
       url: item.url,
-      score: 100 - i * 10
+      score: 100 - i * 10,
+      tags: getTags(item.title),
     }));
   } catch (err) {
     console.error('[trending] fetchGoogleNews error:', err.message);
-    return [];
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Reddit /r/popular
-// ---------------------------------------------------------------------------
-
-async function fetchRedditPopular() {
-  try {
-    const redditUrl = 'https://old.reddit.com/r/popular/.json';
-    console.log(`[trending] Reddit: fetching ${redditUrl}`);
-    const res = await fetchWithTimeout(redditUrl, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; Lumee/1.0; +https://charonyu.cc)'
-      }
-    });
-    console.log(`[trending] Reddit: HTTP ${res.status}, headers:`, Object.fromEntries(res.headers.entries()));
-    if (!res.ok) {
-      const body = await res.text();
-      console.error(`[trending] Reddit: error body (first 500):`, body.substring(0, 500));
-      throw new Error(`HTTP ${res.status}`);
-    }
-    const json = await res.json();
-    const posts = (json.data?.children || []).slice(0, 10);
-    console.log(`[trending] Reddit: got ${posts.length} posts`);
-    return posts.map((child) => {
-      const d = child.data;
-      return {
-        title: d.title || '',
-        titleEn: d.title || '',
-        source: 'reddit',
-        url: `https://www.reddit.com${d.permalink || ''}`,
-        score: d.score || 0
-      };
-    });
-  } catch (err) {
-    console.error('[trending] fetchRedditPopular error:', err.message);
     return [];
   }
 }
@@ -144,7 +183,8 @@ async function fetchHackerNews() {
             titleEn: item.title || '',
             source: 'hackernews',
             url: item.url || `https://news.ycombinator.com/item?id=${id}`,
-            score: item.score || 0
+            score: item.score || 0,
+            tags: [],
           };
         } catch {
           return null;
@@ -167,8 +207,10 @@ async function fetchPTTHot() {
   try {
     // PTT 需要 over18 cookie 才能看八卦版等看板
     const headers = {
-      'User-Agent': 'Mozilla/5.0 (compatible; Lumee-TrendingBot/1.0)',
-      'Cookie': 'over18=1'
+      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+      'Cookie': 'over18=1',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      'Accept-Language': 'zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7'
     };
 
     // 爬多個熱門看板的最新文章
@@ -178,14 +220,18 @@ async function fetchPTTHot() {
     const boardResults = await Promise.all(
       boards.map(async (board) => {
         try {
-          // 爬最新頁
-          const res = await fetchWithTimeout(
+          // 爬最新頁（走 proxy）
+          const res = await fetchWithProxy(
             `https://www.ptt.cc/bbs/${board}/index.html`,
             { headers },
             8000
           );
-          if (!res.ok) return [];
+          if (!res.ok) {
+            console.error(`[trending] PTT ${board}: HTTP ${res.status}`);
+            return [];
+          }
           const html = await res.text();
+          console.log(`[trending] PTT ${board}: HTML length=${html.length}, has r-ent=${html.includes('r-ent')}`);
           const items = parsePTTBoard(html, board);
 
           // 如果最新頁不夠，爬前一頁
@@ -193,7 +239,7 @@ async function fetchPTTHot() {
             const prevMatch = html.match(/href="\/bbs\/[^/]+\/index(\d+)\.html">&lsaquo;/);
             if (prevMatch) {
               try {
-                const prevRes = await fetchWithTimeout(
+                const prevRes = await fetchWithProxy(
                   `https://www.ptt.cc/bbs/${board}/index${prevMatch[1]}.html`,
                   { headers },
                   8000
@@ -206,7 +252,8 @@ async function fetchPTTHot() {
             }
           }
           return items;
-        } catch {
+        } catch (err) {
+          console.error(`[trending] PTT ${board}: fetch error:`, err.message);
           return [];
         }
       })
@@ -216,6 +263,8 @@ async function fetchPTTHot() {
       allItems.push(...items);
     }
 
+    console.log(`[trending] PTT total items across all boards: ${allItems.length}`);
+
     // 按推文數排序，取前 10
     allItems.sort((a, b) => b.score - a.score);
     const top10 = allItems.slice(0, 10);
@@ -224,7 +273,7 @@ async function fetchPTTHot() {
     await Promise.all(
       top10.map(async (item) => {
         try {
-          const res = await fetchWithTimeout(item.url, { headers }, 5000);
+          const res = await fetchWithProxy(item.url, { headers }, 5000);
           if (!res.ok) return;
           const html = await res.text();
           item.excerpt = extractPTTExcerpt(html);
@@ -300,7 +349,8 @@ function parsePTTBoard(html, board) {
       titleEn: title, // PTT titles are mostly Chinese, keep as-is
       source: 'ptt',
       url: `https://www.ptt.cc${href}`,
-      score: pushCount
+      score: pushCount,
+      tags: getTags(title),
     });
   }
 
@@ -310,7 +360,6 @@ function parsePTTBoard(html, board) {
 module.exports = {
   fetchGoogleTrends,
   fetchGoogleNews,
-  fetchRedditPopular,
   fetchHackerNews,
   fetchPTTHot
 };

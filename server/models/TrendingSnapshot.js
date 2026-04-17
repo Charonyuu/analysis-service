@@ -5,7 +5,8 @@ const TrendingItemSchema = new mongoose.Schema({
   titleEn: { type: String, default: '' },
   source: { type: String, required: true },
   url: { type: String, default: '' },
-  score: { type: Number, default: 0 }
+  score: { type: Number, default: 0 },
+  tags: { type: [String], default: [] },
 }, { _id: false });
 
 const TrendingCategorySchema = new mongoose.Schema({

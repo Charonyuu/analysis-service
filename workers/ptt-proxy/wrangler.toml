@@ -1,0 +1,6 @@
+name = "ptt-proxy"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+PROXY_SECRET = "lumee_ptt_proxy_s3cret"

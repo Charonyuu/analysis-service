@@ -3,7 +3,6 @@ const TrendingSnapshot = require('../models/TrendingSnapshot');
 const {
   fetchGoogleTrends,
   fetchGoogleNews,
-  fetchRedditPopular,
   fetchHackerNews,
   fetchPTTHot
 } = require('./trendingSources');
@@ -12,10 +11,9 @@ async function runTrendingFetch() {
   try {
     console.log('[trending] Starting fetch...');
 
-    const [twTrends, news, reddit, hn, ptt] = await Promise.all([
+    const [twTrends, news, hn, ptt] = await Promise.all([
       fetchGoogleTrends(),
       fetchGoogleNews(),
-      fetchRedditPopular(),
       fetchHackerNews(),
       fetchPTTHot()
     ]);
@@ -38,12 +36,6 @@ async function runTrendingFetch() {
         label: '📋 PTT 熱門',
         labelEn: '📋 PTT Hot',
         items: ptt
-      },
-      {
-        id: 'reddit',
-        label: '💬 Reddit 熱門',
-        labelEn: '💬 Reddit Popular',
-        items: reddit
       },
       {
         id: 'hackernews',

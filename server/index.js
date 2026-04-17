@@ -15,6 +15,7 @@ const iconsRoutes = require('./routes/icons');
 const iapRoutes = require('./routes/iap');
 const iapAdminRoutes = require('./routes/iapAdmin');
 const trendingRoutes = require('./routes/trending');
+const horoscopeRoutes = require('./routes/horoscope');
 const coupleRoutes = require('./routes/couple');
 const assetsRoutes = require('./routes/assets');
 const adminRoutes = require('./routes/admin');
@@ -22,6 +23,7 @@ const DashboardUser = require('./models/DashboardUser');
 const seedAdmin = require('./services/seedAdmin');
 require('./services/cleanupCron');
 require('./services/trendingCron');
+require('./services/horoscopeCron');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -77,6 +79,9 @@ app.use('/api/admin', authBearer, adminRoutes);
 
 // Trending topics API (public, rate-limited)
 app.use('/api/trending', trendingRoutes);
+
+// Horoscope API (public, rate-limited)
+app.use('/api/horoscope', horoscopeRoutes);
 
 // Couple API (rate-limited, secret check via header)
 app.use('/api/couple', coupleRoutes);

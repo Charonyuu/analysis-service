@@ -9,6 +9,11 @@
         "platform": "instagram",
         "url": "https://instagram.com/lumee.app.widget",
         "displayName": "@lumee.app.widget"
+      },
+      {
+        "platform": "website",
+        "url": "https://lumee-landing-page-pi.vercel.app/",
+        "displayName": "lumee.app"
       }
     ],
     "themePackIDs": ["basic", "diy", "premiumBlack", "lovePack", "dogPack", "catTheme", "cuteFaces", "animalPack", "ghostPack", "liquidGlass"],

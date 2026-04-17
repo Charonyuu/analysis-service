@@ -26,10 +26,21 @@ router.get('/', async (req, res) => {
     }
 
     let { categories } = snapshot;
-    const { category } = req.query;
+    const { category, hideTags } = req.query;
 
     if (category) {
       categories = categories.filter((c) => c.id === category);
+    }
+
+    // Filter out items by tags: ?hideTags=political,crime
+    if (hideTags) {
+      const tagsToHide = hideTags.split(',').map((t) => t.trim()).filter(Boolean);
+      categories = categories.map((c) => ({
+        ...c,
+        items: c.items.filter((item) =>
+          !item.tags?.some((t) => tagsToHide.includes(t))
+        ),
+      }));
     }
 
     res.json({
@@ -48,7 +59,6 @@ router.get('/refresh', async (req, res) => {
     const {
       fetchGoogleTrends,
       fetchGoogleNews,
-      fetchRedditPopular,
       fetchHackerNews,
       fetchPTTHot
     } = require('../services/trendingSources');
@@ -60,7 +70,6 @@ router.get('/refresh', async (req, res) => {
       { key: 'tw_trends', fn: fetchGoogleTrends },
       { key: 'news', fn: fetchGoogleNews },
       { key: 'ptt', fn: fetchPTTHot },
-      { key: 'reddit', fn: fetchRedditPopular },
       { key: 'hackernews', fn: fetchHackerNews }
     ];
 
@@ -82,7 +91,6 @@ router.get('/refresh', async (req, res) => {
       { id: 'tw_trends', label: '🔥 台灣熱搜', labelEn: '🔥 TW Trending', items: results.tw_trends.items },
       { id: 'news', label: '📰 新聞頭條', labelEn: '📰 Top News', items: results.news.items },
       { id: 'ptt', label: '📋 PTT 熱門', labelEn: '📋 PTT Hot', items: results.ptt.items },
-      { id: 'reddit', label: '💬 Reddit 熱門', labelEn: '💬 Reddit Popular', items: results.reddit.items },
       { id: 'hackernews', label: '💻 Hacker News', labelEn: '💻 Hacker News', items: results.hackernews.items }
     ];
 
@@ -116,13 +124,30 @@ router.get('/ptt-article', async (req, res) => {
       return res.status(400).json({ ok: false, error: 'invalid PTT URL' });
     }
 
-    const response = await fetch(url, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; Lumee-TrendingBot/1.0)',
-        'Cookie': 'over18=1'
-      },
-      signal: AbortSignal.timeout(10000)
-    });
+    // Use CF Worker proxy if available (PTT blocks datacenter IPs)
+    const workerUrl = process.env.PTT_PROXY_WORKER_URL;
+    const workerSecret = process.env.PTT_PROXY_SECRET;
+
+    let response;
+    if (workerUrl && workerSecret) {
+      response = await fetch(workerUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Proxy-Secret': workerSecret,
+        },
+        body: JSON.stringify({ url }),
+        signal: AbortSignal.timeout(10000),
+      });
+    } else {
+      response = await fetch(url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+          'Cookie': 'over18=1',
+        },
+        signal: AbortSignal.timeout(10000),
+      });
+    }
 
     if (!response.ok) {
       return res.status(502).json({ ok: false, error: `PTT returned ${response.status}` });
