@@ -64,12 +64,12 @@ async function runTrendingFetch() {
   }
 }
 
-// Schedule: every 2 hours
-cron.schedule('0 */2 * * *', runTrendingFetch, {
+// Schedule: every 30 minutes
+cron.schedule('*/30 * * * *', runTrendingFetch, {
   timezone: 'Asia/Taipei'
 });
 
-console.log('[trending] Cron scheduled: fetch trending topics every 2 hours (Asia/Taipei)');
+console.log('[trending] Cron scheduled: fetch trending topics every 30 minutes (Asia/Taipei)');
 
 // Run once on startup so there's data immediately
 runTrendingFetch();

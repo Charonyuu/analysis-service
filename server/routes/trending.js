@@ -118,117 +118,79 @@ router.get('/refresh', async (req, res) => {
 
 // GET /api/trending/ptt-article?url=https://www.ptt.cc/bbs/Stock/M.xxx.html
 router.get('/ptt-article', async (req, res) => {
+  const { chromium } = require('playwright');
+  let browser;
   try {
     const { url } = req.query;
     if (!url || !url.startsWith('https://www.ptt.cc/bbs/')) {
       return res.status(400).json({ ok: false, error: 'invalid PTT URL' });
     }
 
-    // Use CF Worker proxy if available (PTT blocks datacenter IPs)
-    const workerUrl = process.env.PTT_PROXY_WORKER_URL;
-    const workerSecret = process.env.PTT_PROXY_SECRET;
+    browser = await chromium.launch({ headless: true });
+    const context = await browser.newContext({
+      userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+      locale: 'zh-TW',
+    });
+    await context.addCookies([{ name: 'over18', value: '1', domain: '.ptt.cc', path: '/' }]);
+    const page = await context.newPage();
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 10000 });
 
-    let response;
-    if (workerUrl && workerSecret) {
-      response = await fetch(workerUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Proxy-Secret': workerSecret,
-        },
-        body: JSON.stringify({ url }),
-        signal: AbortSignal.timeout(10000),
+    const article = await page.evaluate(() => {
+      // Meta
+      const meta = {};
+      document.querySelectorAll('.article-metaline').forEach(el => {
+        const tag = el.querySelector('.article-meta-tag')?.textContent.trim();
+        const val = el.querySelector('.article-meta-value')?.textContent.trim();
+        if (tag === '作者') meta.author = val;
+        else if (tag === '標題') meta.title = val;
+        else if (tag === '時間') meta.date = val;
       });
-    } else {
-      response = await fetch(url, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-          'Cookie': 'over18=1',
-        },
-        signal: AbortSignal.timeout(10000),
+      const boardEl = document.querySelector('.article-metaline-right .article-meta-value');
+      if (boardEl) meta.board = boardEl.textContent.trim();
+
+      // Content
+      const main = document.getElementById('main-content');
+      let content = '';
+      if (main) {
+        const clone = main.cloneNode(true);
+        clone.querySelectorAll('.article-metaline, .article-metaline-right, .push, .f2').forEach(e => e.remove());
+        content = clone.textContent.trim();
+      }
+
+      // Pushes
+      const pushes = [];
+      document.querySelectorAll('.push').forEach(el => {
+        const tag = el.querySelector('.push-tag')?.textContent.trim() || '';
+        const user = el.querySelector('.push-userid')?.textContent.trim() || '';
+        const text = (el.querySelector('.push-content')?.textContent || '').replace(/^:\s*/, '').trim();
+        const time = el.querySelector('.push-ipdatetime')?.textContent.trim() || '';
+        let type = 'neutral';
+        if (tag.includes('推')) type = 'push';
+        else if (tag.includes('噓')) type = 'boo';
+        pushes.push({ type, user, text, time });
       });
-    }
 
-    if (!response.ok) {
-      return res.status(502).json({ ok: false, error: `PTT returned ${response.status}` });
-    }
+      return {
+        author: meta.author || '',
+        board: meta.board || '',
+        title: meta.title || '',
+        date: meta.date || '',
+        content,
+        pushes,
+        pushCount: pushes.filter(p => p.type === 'push').length,
+        booCount: pushes.filter(p => p.type === 'boo').length,
+        neutralCount: pushes.filter(p => p.type === 'neutral').length,
+      };
+    });
 
-    const html = await response.text();
-    const article = parsePTTArticle(html);
     article.url = url;
-
+    await browser.close();
     res.json({ ok: true, article });
   } catch (err) {
     console.error('[trending] ptt-article error:', err.message);
+    if (browser) await browser.close().catch(() => {});
     res.status(500).json({ ok: false, error: 'failed to fetch article' });
   }
 });
-
-/**
- * Parse PTT article HTML into structured data.
- */
-function parsePTTArticle(html) {
-  // Extract meta fields (author, board, title, date)
-  const metaRegex = /<div class="article-metaline">\s*<span class="article-meta-tag">([^<]*)<\/span>\s*<span class="article-meta-value">([^<]*)<\/span>/g;
-  const meta = {};
-  let m;
-  while ((m = metaRegex.exec(html)) !== null) {
-    const key = m[1].trim();
-    const value = m[2].trim();
-    if (key === '作者') meta.author = value;
-    else if (key === '標題') meta.title = value;
-    else if (key === '時間') meta.date = value;
-  }
-
-  // Extract board from metaline-right
-  const boardMatch = html.match(/<div class="article-metaline-right">[\s\S]*?<span class="article-meta-value">([^<]*)<\/span>/);
-  if (boardMatch) meta.board = boardMatch[1].trim();
-
-  // Extract main content: everything in #main-content after metalines, before pushes
-  let content = '';
-  const mainMatch = html.match(/<div id="main-content"[^>]*>([\s\S]*?)<\/div>\s*<\/div>\s*<\/div>/);
-  if (mainMatch) {
-    let body = mainMatch[1];
-    // Remove metalines
-    body = body.replace(/<div class="article-metaline[^"]*">[\s\S]*?<\/div>/g, '');
-    // Remove everything from first push onward
-    const pushIdx = body.indexOf('<div class="push">');
-    if (pushIdx !== -1) body = body.substring(0, pushIdx);
-    // Remove HTML tags but keep line breaks
-    body = body.replace(/<br\s*\/?>/gi, '\n');
-    body = body.replace(/<span[^>]*>/gi, '').replace(/<\/span>/gi, '');
-    body = body.replace(/<[^>]+>/g, '');
-    // Decode HTML entities
-    body = body.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
-    content = body.trim();
-  }
-
-  // Extract pushes (comments)
-  const pushes = [];
-  const pushRegex = /<div class="push">\s*<span class="[^"]*push-tag">([^<]*)<\/span>\s*<span class="[^"]*push-userid">([^<]*)<\/span>\s*<span class="[^"]*push-content">([^<]*)<\/span>\s*<span class="push-ipdatetime">([^<]*)<\/span>/g;
-  let pm;
-  while ((pm = pushRegex.exec(html)) !== null) {
-    const tag = pm[1].trim();   // "推 " / "→ " / "噓 "
-    const user = pm[2].trim();
-    const text = pm[3].replace(/^:\s*/, '').trim();
-    const time = pm[4].trim();
-    let type = 'neutral';
-    if (tag.includes('推')) type = 'push';
-    else if (tag.includes('噓')) type = 'boo';
-    pushes.push({ type, user, text, time });
-  }
-
-  return {
-    author: meta.author || '',
-    board: meta.board || '',
-    title: meta.title || '',
-    date: meta.date || '',
-    content,
-    pushes,
-    pushCount: pushes.filter(p => p.type === 'push').length,
-    booCount: pushes.filter(p => p.type === 'boo').length,
-    neutralCount: pushes.filter(p => p.type === 'neutral').length
-  };
-}
 
 module.exports = router;

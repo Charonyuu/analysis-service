@@ -1,7 +1,9 @@
 /**
- * Horoscope data source — scrapes daily horoscope from Elle Taiwan.
+ * Horoscope data source — scrapes daily horoscope from Elle Taiwan via Playwright.
  * https://www.elle.com/tw/starsigns/today/
  */
+
+const { chromium } = require('playwright');
 
 // ---------------------------------------------------------------------------
 // Sign definitions & URL mapping
@@ -25,139 +27,129 @@ const SIGNS = [
 const BASE_URL = 'https://www.elle.com';
 
 // ---------------------------------------------------------------------------
-// Helpers
+// Scrape a single sign page via Playwright
 // ---------------------------------------------------------------------------
 
-async function fetchWithTimeout(url, options = {}, timeoutMs = 15000) {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    const res = await fetch(url, { ...options, signal: controller.signal });
-    return res;
-  } finally {
-    clearTimeout(timeoutId);
-  }
-}
+async function scrapeSingleSign(page, sign) {
+  const url = `${BASE_URL}${sign.path}`;
+  await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 });
 
-// ---------------------------------------------------------------------------
-// Parser — extract horoscope data from Elle sign page HTML
-// ---------------------------------------------------------------------------
+  // Wait for article body to appear
+  await page.waitForSelector('.article-body-content', { timeout: 10000 });
 
-function parseElleHoroscope(html) {
-  const result = {
-    summary: '',
-    luckyNumber: '',
-    luckyColor: '',
-    luckyDirection: '',
-    luckyTime: '',
-    luckySign: '',
-    overall: { rating: 0, text: '' },
-    love: { rating: 0, text: '' },
-    career: { rating: 0, text: '' },
-    money: { rating: 0, text: '' },
+  const data = await page.evaluate(() => {
+    const result = {
+      summary: '',
+      luckyNumber: '',
+      luckyColor: '',
+      luckyDirection: '',
+      luckyTime: '',
+      luckySign: '',
+      overall: { rating: 0, text: '' },
+      love: { rating: 0, text: '' },
+      career: { rating: 0, text: '' },
+      money: { rating: 0, text: '' },
+    };
+
+    // ---- Quick info from <li> ----
+    const lis = document.querySelectorAll('.article-body-content li');
+    for (const li of lis) {
+      const t = li.textContent.trim();
+      if (t.startsWith('今日短評：')) result.summary = t.replace('今日短評：', '').trim();
+      else if (t.startsWith('幸運數字：')) result.luckyNumber = t.replace('幸運數字：', '').trim();
+      else if (t.startsWith('幸運顏色：')) result.luckyColor = t.replace('幸運顏色：', '').trim();
+      else if (t.startsWith('開運方位：')) result.luckyDirection = t.replace('開運方位：', '').trim();
+      else if (t.startsWith('今日吉時：')) result.luckyTime = t.replace('今日吉時：', '').trim();
+      else if (t.startsWith('幸運星座：')) result.luckySign = t.replace('幸運星座：', '').trim();
+    }
+
+    // ---- Sections: 整體運勢, 愛情運勢, 事業運勢, 財運運勢 ----
+    const sectionMap = [
+      { key: 'overall', label: '整體運勢' },
+      { key: 'love',    label: '愛情運勢' },
+      { key: 'career',  label: '事業運勢' },
+      { key: 'money',   label: '財運運勢' },
+    ];
+
+    const h2s = document.querySelectorAll('.article-body-content h2');
+    for (const { key, label } of sectionMap) {
+      // Find the matching h2
+      const h2 = [...h2s].find(el => el.textContent.trim() === label);
+      if (!h2) continue;
+
+      // Walk siblings after h2 to collect rating + text
+      let el = h2.nextElementSibling;
+      let rating = 0;
+      let texts = [];
+
+      while (el) {
+        // Stop at next h2
+        if (el.tagName === 'H2') break;
+
+        // Rating: count star-fill images
+        const stars = el.querySelectorAll('img[src*="star-fill"]');
+        if (stars.length > 0) rating = stars.length;
+
+        // Text: grab <p> content
+        if (el.tagName === 'P') {
+          const t = el.textContent.trim();
+          if (t && !t.startsWith('延伸閱讀') && !t.includes('追蹤 ELLE')) {
+            texts.push(t);
+          }
+        }
+
+        el = el.nextElementSibling;
+      }
+
+      result[key].rating = Math.min(rating, 5);
+      result[key].text = texts.join(' ');
+    }
+
+    return result;
+  });
+
+  return {
+    signId: sign.id,
+    name: sign.name,
+    nameEN: sign.nameEN,
+    emoji: sign.emoji,
+    dateRange: sign.dateRange,
+    ...data,
   };
-
-  // ---- Extract quick info from <li> items ----
-  const liRegex = /<li[^>]*>([\s\S]*?)<\/li>/gi;
-  let liMatch;
-  while ((liMatch = liRegex.exec(html)) !== null) {
-    const text = liMatch[1].replace(/<[^>]+>/g, '').trim();
-    if (text.startsWith('今日短評：')) result.summary = text.replace('今日短評：', '').trim();
-    else if (text.startsWith('幸運數字：')) result.luckyNumber = text.replace('幸運數字：', '').trim();
-    else if (text.startsWith('幸運顏色：')) result.luckyColor = text.replace('幸運顏色：', '').trim();
-    else if (text.startsWith('開運方位：')) result.luckyDirection = text.replace('開運方位：', '').trim();
-    else if (text.startsWith('今日吉時：')) result.luckyTime = text.replace('今日吉時：', '').trim();
-    else if (text.startsWith('幸運星座：')) result.luckySign = text.replace('幸運星座：', '').trim();
-  }
-
-  // ---- Extract sections: 整體運勢, 愛情運勢, 事業運勢, 財運運勢 ----
-  const sectionMap = [
-    { key: 'overall', label: '整體運勢' },
-    { key: 'love',    label: '愛情運勢' },
-    { key: 'career',  label: '事業運勢' },
-    { key: 'money',   label: '財運運勢' },
-  ];
-
-  const bodyStart = html.indexOf('article-body-content');
-  if (bodyStart === -1) return result;
-  const body = html.substring(bodyStart);
-
-  for (let i = 0; i < sectionMap.length; i++) {
-    const { key, label } = sectionMap[i];
-    const sIdx = body.indexOf(label);
-    if (sIdx === -1) continue;
-
-    // Determine section boundary
-    const nextLabel = i < sectionMap.length - 1 ? sectionMap[i + 1].label : null;
-    const eIdx = nextLabel ? body.indexOf(nextLabel, sIdx) : body.length;
-    const section = body.substring(sIdx, eIdx);
-
-    // Count star-fill icons for rating
-    const starFills = (section.match(/star-fill/g) || []).length;
-    result[key].rating = Math.min(starFills, 5);
-
-    // Extract text from <p data-journey-content="true">
-    const pMatches = [...section.matchAll(/<p[^>]*data-journey-content="true"[^>]*>([\s\S]*?)<\/p>/gi)];
-    const texts = pMatches
-      .map(m => m[1].replace(/<[^>]+>/g, '').trim())
-      .filter(t => t && !t.startsWith('延伸閱讀'));
-    let text = texts.join(' ');
-    // Strip ELLE promo text that sometimes leaks in
-    text = text.replace(/\s*追蹤 ELLE[\s\S]*$/, '').trim();
-    result[key].text = text;
-  }
-
-  return result;
 }
 
 // ---------------------------------------------------------------------------
-// Main fetch function — scrape all 12 signs
+// Main — scrape all 12 signs, reusing one browser instance
 // ---------------------------------------------------------------------------
 
 async function fetchAllHoroscopes() {
-  const results = [];
+  let browser;
+  try {
+    browser = await chromium.launch({ headless: true });
+    const context = await browser.newContext({
+      userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+      locale: 'zh-TW',
+    });
+    const page = await context.newPage();
 
-  // Fetch in batches of 4 to avoid overwhelming the server
-  for (let i = 0; i < SIGNS.length; i += 4) {
-    const batch = SIGNS.slice(i, i + 4);
-    const batchResults = await Promise.all(
-      batch.map(async (sign) => {
-        try {
-          const url = `${BASE_URL}${sign.path}`;
-          const res = await fetchWithTimeout(url, {
-            headers: {
-              'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-              'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-              'Accept-Language': 'zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7',
-            }
-          });
+    const results = [];
+    for (const sign of SIGNS) {
+      try {
+        const data = await scrapeSingleSign(page, sign);
+        results.push(data);
+        console.log(`[horoscope] ${sign.emoji} ${sign.name}: ★${data.overall.rating} — ${data.summary.substring(0, 20)}`);
+      } catch (err) {
+        console.error(`[horoscope] ${sign.id}: scrape error:`, err.message);
+      }
+    }
 
-          if (!res.ok) {
-            console.error(`[horoscope] ${sign.id}: HTTP ${res.status}`);
-            return null;
-          }
-
-          const html = await res.text();
-          const data = parseElleHoroscope(html);
-
-          return {
-            signId: sign.id,
-            name: sign.name,
-            nameEN: sign.nameEN,
-            emoji: sign.emoji,
-            dateRange: sign.dateRange,
-            ...data,
-          };
-        } catch (err) {
-          console.error(`[horoscope] ${sign.id}: fetch error:`, err.message);
-          return null;
-        }
-      })
-    );
-    results.push(...batchResults);
+    await browser.close();
+    return results;
+  } catch (err) {
+    console.error('[horoscope] Browser launch error:', err.message);
+    if (browser) await browser.close().catch(() => {});
+    return [];
   }
-
-  return results.filter(Boolean);
 }
 
 module.exports = { fetchAllHoroscopes, SIGNS };
