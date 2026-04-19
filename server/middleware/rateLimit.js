@@ -16,4 +16,12 @@ const statsLimiter = rateLimit({
   legacyHeaders: false
 });
 
-module.exports = { collectLimiter, statsLimiter };
+const notionLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 20,                  // 20 requests/min
+  message: { ok: false, error: 'rate limit exceeded' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+module.exports = { collectLimiter, statsLimiter, notionLimiter };

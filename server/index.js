@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const connectDB = require('./config/db');
 const createCorsMiddleware = require('./middleware/cors');
-const { collectLimiter, statsLimiter } = require('./middleware/rateLimit');
+const { collectLimiter, statsLimiter, notionLimiter } = require('./middleware/rateLimit');
 const { authBearer, dashboardAuth, requireRole } = require('./middleware/auth');
 const collectRoutes = require('./routes/collect');
 const statsRoutes = require('./routes/stats');
@@ -19,6 +19,7 @@ const horoscopeRoutes = require('./routes/horoscope');
 const coupleRoutes = require('./routes/couple');
 const assetsRoutes = require('./routes/assets');
 const adminRoutes = require('./routes/admin');
+const notionRoutes = require('./routes/notion');
 const DashboardUser = require('./models/DashboardUser');
 const seedAdmin = require('./services/seedAdmin');
 require('./services/cleanupCron');
@@ -85,6 +86,9 @@ app.use('/api/horoscope', horoscopeRoutes);
 
 // Couple API (rate-limited, secret check via header)
 app.use('/api/couple', coupleRoutes);
+
+// Notion API (rate-limited, public for iOS app)
+app.use('/api/notion', notionLimiter, notionRoutes);
 
 // IAP public API — POST /iap/verify, GET /iap/user/:userId, POST /iap/coupon/redeem
 app.use('/iap', iapRoutes);
