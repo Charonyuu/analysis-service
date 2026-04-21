@@ -5,7 +5,7 @@
 require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
-const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+const { S3Client, PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 
 const BUCKET = process.env.R2_BUCKET_NAME;
 const PUBLIC_URL = process.env.R2_PUBLIC_URL;
@@ -29,34 +29,57 @@ async function upload(key, buffer, contentType) {
   }));
 }
 
-async function main() {
-  const files = [
-    { path: 'docs/r2_config/themes.json', key: 'lumee_config/themes.json' },
-    { path: 'docs/r2_config/banners.json', key: 'lumee_config/banners.json' },
-    { path: 'docs/r2_config/stickers.json', key: 'lumee_config/stickers.json' },
-    { path: 'docs/r2_config/artists.json', key: 'lumee_config/artists.json' },
-    { path: 'docs/r2_config/version.json', key: 'lumee_config/version.json' },
-  ];
+const CONFIG_FILES = ['themes.json', 'banners.json', 'stickers.json', 'artists.json', 'version.json'];
 
+async function deleteKey(key) {
+  await client.send(new DeleteObjectCommand({ Bucket: BUCKET, Key: key }));
+}
+
+async function main() {
+  // 1. 上傳到 noirly_config/
+  console.log('=== 上傳 noirly_config/ ===');
   let uploaded = 0;
   let errors = 0;
 
-  for (const file of files) {
+  for (const filename of CONFIG_FILES) {
+    const key = `noirly_config/${filename}`;
     try {
-      const filePath = path.join(__dirname, '..', file.path);
+      const filePath = path.join(__dirname, '..', 'docs/r2_config', filename);
       const buffer = fs.readFileSync(filePath);
-      
-      console.log(`📤 上傳 ${file.key}...`);
-      await upload(file.key, buffer, 'application/json');
-      console.log(`✓ ${PUBLIC_URL}/${file.key}`);
+      console.log(`📤 上傳 ${key}...`);
+      await upload(key, buffer, 'application/json');
+      console.log(`✓ ${PUBLIC_URL}/${key}`);
       uploaded++;
     } catch (err) {
-      console.error(`✗ ${file.key}: ${err.message}`);
+      console.error(`✗ ${key}: ${err.message}`);
       errors++;
     }
   }
 
-  console.log(`\n完成！${uploaded} 個檔案上傳，${errors} 個錯誤`);
+  console.log(`\n上傳完成：${uploaded} 個成功，${errors} 個錯誤`);
+
+  if (errors > 0) {
+    console.error('有上傳失敗，中止刪除舊 lumee_config/');
+    process.exit(1);
+  }
+
+  // 2. 刪除舊 lumee_config/
+  console.log('\n=== 刪除舊 lumee_config/ ===');
+  let deleted = 0;
+
+  for (const filename of CONFIG_FILES) {
+    const key = `lumee_config/${filename}`;
+    try {
+      console.log(`🗑  刪除 ${key}...`);
+      await deleteKey(key);
+      console.log(`✓ 已刪除 ${key}`);
+      deleted++;
+    } catch (err) {
+      console.error(`✗ ${key}: ${err.message}`);
+    }
+  }
+
+  console.log(`\n完成！刪除 ${deleted} 個舊檔案`);
 }
 
 main().catch(err => {

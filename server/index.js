@@ -20,6 +20,7 @@ const coupleRoutes = require('./routes/couple');
 const assetsRoutes = require('./routes/assets');
 const adminRoutes = require('./routes/admin');
 const notionRoutes = require('./routes/notion');
+const petPushRoutes = require('./routes/petPush');
 const DashboardUser = require('./models/DashboardUser');
 const seedAdmin = require('./services/seedAdmin');
 require('./services/cleanupCron');
@@ -89,6 +90,7 @@ app.use('/api/couple', coupleRoutes);
 
 // Notion API (rate-limited, public for iOS app)
 app.use('/api/notion', notionLimiter, notionRoutes);
+app.use('/api/pet-push', petPushRoutes);
 
 // IAP public API — POST /iap/verify, GET /iap/user/:userId, POST /iap/coupon/redeem
 app.use('/iap', iapRoutes);

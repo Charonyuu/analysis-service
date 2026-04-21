@@ -1,99 +1,170 @@
 /**
- * Notion Integration Routes
+ * Notion Integration Routes — OAuth Flow
+ *
+ * OAuth 流程：
+ *   1. iOS 呼叫 GET /api/notion/oauth/authorize?redirect_uri=xxx&state=xxx
+ *      → 返回 Notion OAuth URL，iOS 在 Safari 開啟
+ *   2. 使用者在 Notion 授權後，重定向回 redirect_uri?code=xxx&state=xxx
+ *   3. iOS 接收 code，呼叫 POST /api/notion/oauth/callback
+ *      → 後端交換 access token，加密存儲到 DB，返回 userId
  *
  * API 端點：
- *   POST   /api/notion/auth          — 驗證 Notion Token + 加密存儲
- *          Body: { userId, token, databaseId }
- *          Response: { ok, message, auth: { userId, databaseId, createdAt } }
+ *   GET    /api/notion/oauth/authorize    — 取得 OAuth 授權 URL
+ *          Query: userId, redirect_uri, state
+ *          Response: { ok, authUrl }
  *
- *   GET    /api/notion/pages          — 拉取 Notion database 頁面
+ *   POST   /api/notion/oauth/callback     — 交換 authorization code → access token
+ *          Body: { userId, code, redirect_uri, databaseId? }
+ *          Response: { ok, auth: { userId, workspaceName, databaseId } }
+ *
+ *   GET    /api/notion/pages              — 拉取 Notion database 頁面
  *          Query: userId (required)
  *          Response: { pages, databaseId, updatedAt }
  *
- *   DELETE /api/notion/auth           — 撤銷 Notion 連結
+ *   DELETE /api/notion/auth               — 撤銷 Notion 連結
  *          Query: userId (required)
  *          Response: { ok, message }
  *
- * 錯誤碼：
- *   400 — Missing params / Invalid database ID
- *   401 — Invalid or expired Notion token
- *   404 — Notion account not linked
- *   429 — Rate limited
- *   500 — Internal error
- *
- * 使用範例：
- *   curl -X POST http://localhost:3000/api/notion/auth \
- *     -H "Content-Type: application/json" \
- *     -d '{"userId":"device-123","token":"ntn_xxx","databaseId":"abc123"}'
- *
- *   curl http://localhost:3000/api/notion/pages?userId=device-123
- *
- *   curl -X DELETE http://localhost:3000/api/notion/auth?userId=device-123
+ * 環境變數：
+ *   NOTION_OAUTH_CLIENT_ID         — Notion OAuth app client ID
+ *   NOTION_OAUTH_CLIENT_SECRET     — Notion OAuth app client secret
+ *   NOTION_ENCRYPTION_KEY          — AES-256-GCM key (32 bytes)
+ *   REDIS_HOST, REDIS_PORT, etc.   — Optional caching
  */
 
 const express = require('express');
 const router = express.Router();
+const https = require('https');
 const { Client } = require('@notionhq/client');
 const NotionAuth = require('../models/NotionAuth');
 const { encryptToken, decryptToken } = require('../utils/encryption');
 const { fetchNotionPages, clearCache } = require('../services/notionSources');
 
+// 環境變數驗證
+const NOTION_CLIENT_ID = process.env.NOTION_OAUTH_CLIENT_ID;
+const NOTION_CLIENT_SECRET = process.env.NOTION_OAUTH_CLIENT_SECRET;
+
+if (!NOTION_CLIENT_ID || !NOTION_CLIENT_SECRET) {
+  console.warn('[notion] OAuth credentials not configured, OAuth endpoints will fail');
+}
+
 // ---------------------------------------------------------------------------
-// POST /auth — 驗證 + 加密存儲 Notion Token
+// GET /oauth/authorize — 生成 OAuth 授權 URL
 // ---------------------------------------------------------------------------
 
-router.post('/auth', async (req, res) => {
+router.get('/oauth/authorize', (req, res) => {
   try {
-    const { userId, token, databaseId } = req.body;
+    const { userId, redirect_uri, state } = req.query;
 
-    if (!userId || !token) {
-      return res.status(400).json({ ok: false, error: 'Missing userId or token' });
+    if (!userId || !redirect_uri || !state) {
+      return res.status(400).json({
+        ok: false,
+        error: 'Missing required params: userId, redirect_uri, state'
+      });
     }
 
-    // 1. 驗證 Notion Token 有效性
-    const notion = new Client({ auth: token });
-    let workspaceId = null;
+    if (!NOTION_CLIENT_ID) {
+      return res.status(500).json({
+        ok: false,
+        error: 'OAuth not configured on backend'
+      });
+    }
+
+    // 組建 Notion OAuth URL
+    const authUrl = new URL('https://api.notion.com/v1/oauth/authorize');
+    authUrl.searchParams.append('client_id', NOTION_CLIENT_ID);
+    authUrl.searchParams.append('redirect_uri', redirect_uri);
+    authUrl.searchParams.append('response_type', 'code');
+    authUrl.searchParams.append('state', state);
+
+    res.json({
+      ok: true,
+      authUrl: authUrl.toString()
+    });
+  } catch (err) {
+    console.error('[notion] OAuth authorize error:', err.message);
+    res.status(500).json({ ok: false, error: 'Failed to generate auth URL' });
+  }
+});
+
+// ---------------------------------------------------------------------------
+// POST /oauth/callback — 交換 authorization code → access token
+// ---------------------------------------------------------------------------
+
+router.post('/oauth/callback', async (req, res) => {
+  try {
+    const { userId, code, redirect_uri, databaseId } = req.body;
+
+    if (!userId || !code || !redirect_uri) {
+      return res.status(400).json({
+        ok: false,
+        error: 'Missing required params: userId, code, redirect_uri'
+      });
+    }
+
+    if (!NOTION_CLIENT_ID || !NOTION_CLIENT_SECRET) {
+      return res.status(500).json({
+        ok: false,
+        error: 'OAuth not configured on backend'
+      });
+    }
+
+    // 1. 用 code 交換 access token
+    const accessToken = await exchangeCodeForToken(code, redirect_uri);
+    if (!accessToken) {
+      return res.status(401).json({
+        ok: false,
+        error: 'Failed to exchange authorization code'
+      });
+    }
+
+    // 2. 驗證 token 有效性
+    const notion = new Client({ auth: accessToken });
     let workspaceName = null;
 
     try {
       const me = await notion.users.me({});
-      // bot user 的 workspace 資訊
       if (me.bot && me.bot.workspace_name) {
         workspaceName = me.bot.workspace_name;
       }
-      console.log('[notion] Token validated for user:', userId);
+      console.log('[notion] OAuth token validated for user:', userId);
     } catch (err) {
       console.error('[notion] Token validation failed:', err.message);
-      return res.status(401).json({ ok: false, error: 'Invalid Notion token' });
+      return res.status(401).json({
+        ok: false,
+        error: 'Invalid Notion token after OAuth exchange'
+      });
     }
 
-    // 2. 如果提供了 databaseId，驗證可存取性
+    // 3. 如果提供了 databaseId，驗證可存取性
     if (databaseId) {
       try {
         await notion.databases.retrieve({ database_id: databaseId });
         console.log('[notion] Database verified:', databaseId);
       } catch (err) {
         console.error('[notion] Database access failed:', err.message);
-        return res.status(400).json({ ok: false, error: 'Invalid or inaccessible database ID' });
+        return res.status(400).json({
+          ok: false,
+          error: 'Invalid or inaccessible database ID'
+        });
       }
     }
 
-    // 3. 加密 Token
+    // 4. 加密 Token
     let encryptedToken;
     try {
-      encryptedToken = encryptToken(token);
+      encryptedToken = encryptToken(accessToken);
     } catch (err) {
       console.error('[notion] Encryption error:', err.message);
       return res.status(500).json({ ok: false, error: 'Encryption failed' });
     }
 
-    // 4. 存入 DB（upsert）
+    // 5. 存入 DB（upsert）
     const auth = await NotionAuth.findOneAndUpdate(
       { userId },
       {
         encryptedToken,
         databaseId: databaseId || null,
-        workspaceId,
         workspaceName,
         status: 'active',
         lastUsedAt: new Date(),
@@ -101,11 +172,11 @@ router.post('/auth', async (req, res) => {
       { upsert: true, new: true }
     );
 
-    console.log('[notion] Auth saved for user:', userId);
+    console.log('[notion] OAuth completed for user:', userId);
 
     res.json({
       ok: true,
-      message: 'Notion account linked',
+      message: 'Notion account linked via OAuth',
       auth: {
         userId: auth.userId,
         databaseId: auth.databaseId,
@@ -114,10 +185,62 @@ router.post('/auth', async (req, res) => {
       },
     });
   } catch (err) {
-    console.error('[notion] Auth error:', err.message);
-    res.status(500).json({ ok: false, error: 'Failed to link Notion' });
+    console.error('[notion] OAuth callback error:', err.message);
+    res.status(500).json({ ok: false, error: 'Failed to complete OAuth' });
   }
 });
+
+// ---------------------------------------------------------------------------
+// Helper: Exchange authorization code for access token
+// ---------------------------------------------------------------------------
+
+function exchangeCodeForToken(code, redirectUri) {
+  return new Promise((resolve, reject) => {
+    const postData = JSON.stringify({
+      grant_type: 'authorization_code',
+      code,
+      redirect_uri: redirectUri,
+    });
+
+    const options = {
+      hostname: 'api.notion.com',
+      path: '/v1/oauth/token',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': postData.length,
+        'Authorization': `Basic ${Buffer.from(`${NOTION_CLIENT_ID}:${NOTION_CLIENT_SECRET}`).toString('base64')}`
+      }
+    };
+
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', (chunk) => { data += chunk; });
+      res.on('end', () => {
+        try {
+          const response = JSON.parse(data);
+          if (response.access_token) {
+            resolve(response.access_token);
+          } else {
+            console.error('[notion] Token exchange failed:', response);
+            resolve(null);
+          }
+        } catch (err) {
+          console.error('[notion] Failed to parse token response:', err.message);
+          resolve(null);
+        }
+      });
+    });
+
+    req.on('error', (err) => {
+      console.error('[notion] Token exchange request failed:', err.message);
+      reject(err);
+    });
+
+    req.write(postData);
+    req.end();
+  });
+}
 
 // ---------------------------------------------------------------------------
 // GET /pages — 拉取 Notion database 頁面
