@@ -21,6 +21,7 @@ const assetsRoutes = require('./routes/assets');
 const adminRoutes = require('./routes/admin');
 const notionRoutes = require('./routes/notion');
 const petPushRoutes = require('./routes/petPush');
+const pushRoutes = require('./routes/push');
 const DashboardUser = require('./models/DashboardUser');
 const seedAdmin = require('./services/seedAdmin');
 require('./services/cleanupCron');
@@ -91,6 +92,9 @@ app.use('/api/couple', coupleRoutes);
 // Notion API (rate-limited, public for iOS app)
 app.use('/api/notion', notionLimiter, notionRoutes);
 app.use('/api/pet-push', petPushRoutes);
+
+// Push notifications API（register-device 用 X-IAP-Secret，admin 端用 authBearer，都在 routes 內處理）
+app.use('/api/push', pushRoutes);
 
 // IAP public API — POST /iap/verify, GET /iap/user/:userId, POST /iap/coupon/redeem
 app.use('/iap', iapRoutes);

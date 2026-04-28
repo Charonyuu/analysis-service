@@ -4,3 +4,6 @@ node_modules/
 
 docs/output/
 .docs/plan.md
+
+# APNs 私鑰（千萬不要 commit）
+*.p8
