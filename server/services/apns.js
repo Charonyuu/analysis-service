@@ -7,9 +7,12 @@
  * 環境變數需要設：
  *   APNS_KEY_ID       — Apple Developer 後台 Keys 拿到的 10 字元 Key ID
  *   APNS_TEAM_ID      — Apple Developer Membership 頁的 Team ID
- *   APNS_KEY_PATH     — .p8 檔絕對路徑（建議 ~/.apns/AuthKey_XXX.p8，不要進 git）
  *   APNS_BUNDLE_ID    — APNs topic, default com.pixelframe.app
  *   APNS_PRODUCTION   — "true" 走正式環境 (api.push.apple.com), 預設 false 走 sandbox
+ *
+ *   .p8 二選一：
+ *     APNS_KEY_PATH     — .p8 檔絕對路徑（local 開發用）
+ *     APNS_KEY_CONTENT  — .p8 檔 base64 字串（遠端部署用，不用 mount file）
  */
 const apn = require('@parse/node-apn');
 const path = require('path');
@@ -21,21 +24,30 @@ let provider = null;
 function getProvider() {
   if (provider) return provider;
 
-  const keyPath = process.env.APNS_KEY_PATH;
   const keyId = process.env.APNS_KEY_ID;
   const teamId = process.env.APNS_TEAM_ID;
-
-  if (!keyPath || !keyId || !teamId) {
-    throw new Error('APNS env not set: need APNS_KEY_PATH, APNS_KEY_ID, APNS_TEAM_ID');
+  if (!keyId || !teamId) {
+    throw new Error('APNS env not set: need APNS_KEY_ID + APNS_TEAM_ID');
   }
 
-  const resolvedPath = keyPath.startsWith('/') ? keyPath : path.resolve(keyPath);
-  if (!fs.existsSync(resolvedPath)) {
-    throw new Error(`APNS .p8 file not found at ${resolvedPath}`);
+  let keyMaterial;
+  if (process.env.APNS_KEY_CONTENT) {
+    // base64 字串（遠端部署）— 解碼成 PEM 字串給 node-apn
+    keyMaterial = Buffer.from(process.env.APNS_KEY_CONTENT, 'base64').toString('utf8');
+  } else if (process.env.APNS_KEY_PATH) {
+    const resolvedPath = process.env.APNS_KEY_PATH.startsWith('/')
+      ? process.env.APNS_KEY_PATH
+      : path.resolve(process.env.APNS_KEY_PATH);
+    if (!fs.existsSync(resolvedPath)) {
+      throw new Error(`APNS .p8 file not found at ${resolvedPath}`);
+    }
+    keyMaterial = resolvedPath;
+  } else {
+    throw new Error('APNS env not set: need APNS_KEY_PATH or APNS_KEY_CONTENT');
   }
 
   provider = new apn.Provider({
-    token: { key: resolvedPath, keyId, teamId },
+    token: { key: keyMaterial, keyId, teamId },
     production: process.env.APNS_PRODUCTION === 'true',
   });
 
